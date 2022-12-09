@@ -1,0 +1,12 @@
+[
+    RawActor(
+        name: "Gary",
+        ai: Aggressive,
+        vision_range: 8,
+        vision: [Normal],
+        movement: [Walk],
+        stats: RawStats(
+            max_hp: 10,
+        ),
+    )
+]

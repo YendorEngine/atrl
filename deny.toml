@@ -1,0 +1,53 @@
+[advisories]
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/rustsec/advisory-db"]
+ignore = [
+    "RUSTSEC-2020-0056", # from stdweb 0.4.20 - unmaintained - https://github.com/koute/stdweb/issues/403
+    "RUSTSEC-2022-0048", # from xml-rs v0.8.4 - unmaintained - https://github.com/netvl/xml-rs/issues/221
+]
+notice = "deny"
+unmaintained = "deny"
+vulnerability = "deny"
+yanked = "deny"
+
+[licenses]
+allow = [
+    "MIT",
+    "MIT-0",
+    "Apache-2.0",
+    "BSD-3-Clause",
+    "ISC",
+    "Zlib",
+    "0BSD",
+    "BSD-2-Clause",
+    "CC0-1.0",
+    "BSL-1.0",
+    "BlueOak-1.0.0",
+    "LGPL-2.1",
+]
+copyleft = "deny"
+default = "deny"
+exceptions = [{ name = "unicode-ident", allow = ["Unicode-DFS-2016"] }]
+unlicensed = "warn"
+
+[bans]
+highlight         = "all"
+multiple-versions = "allow"
+wildcards         = "allow"
+# Certain crates/versions that will be skipped when doing duplicate detection.
+skip = [
+    { name = "rand_core", version = "0.6" },
+    { name = "rand", version = "0.8" },
+    { name = "rand_chacha", version = "0.3" },
+    { name = "wasi", version = "0.11" },
+    { name = "png", version = "0.17" },
+    { name = "parking_lot", version = "0.12" },
+    { name = "nix", version = "0.24" },
+
+]
+
+[sources]
+allow-git        = []
+allow-registry   = ["https://github.com/rust-lang/crates.io-index"]
+unknown-git      = "allow"
+unknown-registry = "deny"

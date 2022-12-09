@@ -1,0 +1,4 @@
+(
+    name: "target",
+    tile: Standard("images/tilesets/atrl/ui/cursor/target.png")
+)

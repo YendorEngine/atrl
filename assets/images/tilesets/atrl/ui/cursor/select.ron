@@ -1,0 +1,4 @@
+(
+    name: "select",
+    tile: Standard("images/tilesets/atrl/ui/cursor/select.png")
+)

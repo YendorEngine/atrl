@@ -1,0 +1,4 @@
+(
+    name: "cursor_red",
+    tile: Standard("images/tilesets/dcss/misc/cursor_red.png")
+)

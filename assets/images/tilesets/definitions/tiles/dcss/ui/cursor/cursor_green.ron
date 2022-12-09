@@ -1,0 +1,5 @@
+(
+    name: "cursor_green",
+    tile: Standard("images/tilesets/dcss/misc/tutorial_cursor.png")
+    // tile: Standard("images/tilesets/dcss/misc/cursor_green.png")
+)

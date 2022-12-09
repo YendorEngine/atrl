@@ -1,0 +1,10 @@
+(
+    name: Some("ui"),
+    id: 1,
+    tiles: {
+        0: "./tiles/empty.ron",
+        1: "../atrl/ui/cursor/cursor.ron",
+        2: "../atrl/ui/cursor/target.ron",
+        3: "../atrl/ui/cursor/select.ron",
+    }
+)

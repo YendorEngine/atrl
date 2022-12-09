@@ -1,0 +1,4 @@
+(
+    name: "wall",
+    tile: Standard("images/tilesets/dcss/dungeon/wall/brick_gray_0.png")
+)

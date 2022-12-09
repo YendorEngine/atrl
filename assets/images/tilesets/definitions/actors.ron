@@ -1,0 +1,8 @@
+(
+    name: Some("actors"),
+    id: 2,
+    tiles: {
+        0: "./tiles/empty.ron",
+        1: "./tiles/dcss/actors/ogre.ron",
+    }
+)

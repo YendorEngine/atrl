@@ -1,0 +1,9 @@
+RawActor(
+    name: "Bob the Builder",
+    vision_range: 16,
+    vision: [Normal],
+    movement: [Walk, Swim],
+    stats: RawStats(
+        max_hp: 10,
+    ),
+)

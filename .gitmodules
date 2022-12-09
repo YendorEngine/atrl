@@ -1,0 +1,3 @@
+[submodule "docs/.obsidian"]
+	path = docs/.obsidian
+	url = https://github.com/lecoqjacob/obsidian-setup

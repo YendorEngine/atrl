@@ -1,0 +1,7 @@
+(
+    name: Some("items"),
+    id: 3,
+    tiles: {
+        0: "./tiles/empty.ron",
+    }
+)

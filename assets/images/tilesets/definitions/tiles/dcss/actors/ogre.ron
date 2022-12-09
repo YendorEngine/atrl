@@ -1,0 +1,4 @@
+(
+    name: "ogre",
+    tile: Standard("images/tilesets/dcss/player/base/ogre_male.png")
+)
