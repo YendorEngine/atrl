@@ -1,6 +1,6 @@
 pub mod actor {
-    mod action_type;
-    pub use action_type::*;
+    mod action;
+    pub use action::*;
 
     mod equipment_slot;
     pub use equipment_slot::*;

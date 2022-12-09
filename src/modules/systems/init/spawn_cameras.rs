@@ -1,7 +1,4 @@
-use crate::prelude::{
-    *,
-    resources::*,
-};
+use crate::prelude::{resources::camera::*, *};
 
 pub fn spawn_cameras(mut commands: Commands, mut camera_settings: ResMut<CameraSettingsResource>) {
     let mut loaded_cameras = LoadedCameras::new();

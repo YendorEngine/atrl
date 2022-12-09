@@ -1,9 +1,4 @@
-use crate::prelude::{
-    *,
-    resources::camera::*,
-    systems::camera::*,
-    types::camera::*,
-};
+use crate::prelude::{resources::camera::*, systems::camera::*, types::camera::*, *};
 
 pub struct CameraPlugin {
     camera_settings: Vec<CameraSettings>,

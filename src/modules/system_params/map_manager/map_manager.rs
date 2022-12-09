@@ -1,8 +1,4 @@
-use crate::prelude::{
-    *,
-    resources::*,
-    systems::*,
-};
+use crate::prelude::{resources::*, systems::*, *};
 
 /// MapManager SystemParam used for interacting with the maps.
 #[derive(SystemParam)]
@@ -413,7 +409,7 @@ pub fn startup_map_manager(
     ));
 
     // AppState::Loading(LoadingState::InitGame) -> AppState::Loading(LoadingState::WorldGen)
-    switch_app_state!(AppState::Loading(LoadingState::WorldGen))
+    switch_app_state!(AppState::Loading(LoadingState::WorldGen));
 }
 
 pub fn set_current_map_to_current_player(
@@ -620,9 +616,7 @@ impl<'w, 's> FovProvider for MapManager<'w, 's> {
 
 // Implement PathProvider
 impl<'w, 's> PathProvider for MapManager<'w, 's> {
-    fn cost(&mut self, position: Position, _movement_type: u8) -> u32 {
-        1
-    }
+    fn cost(&mut self, position: Position, _movement_type: u8) -> u32 { 1 }
 
     fn is_walkable(
         &mut self,

@@ -1,3 +1,5 @@
+pub mod camera {}
+
 pub mod init {
     mod spawn_cameras;
     pub use spawn_cameras::*;
@@ -17,11 +19,7 @@ pub mod functions {
 }
 pub use functions::*;
 
-pub mod run {
-}
+pub mod run {}
 pub use run::*;
-
-
-
 
 pub mod systems_plugin;

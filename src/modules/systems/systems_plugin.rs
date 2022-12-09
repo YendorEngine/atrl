@@ -1,9 +1,6 @@
 use crate::prelude::{
+    systems::{init::*, *},
     *,
-    systems::{
-        *,
-        init,
-    },
 };
 
 pub struct SystemsPlugin;
@@ -15,168 +12,176 @@ impl Plugin for SystemsPlugin {
             switch_app_state!(AppState::Loading(LoadingState::Assets)),
         );
 
-        // LoadingState
-        {
-            app.add_enter_system_set(
-                AppState::Loading(LoadingState::Assets),
-                ConditionSet::new()
-                .with_system(spawn_cameras) // TODO: Rewrite camera stuff
-                .into()
-            );
+        self.loading_state(app).menu_state(app).game_state(app).quit_state(app);
+    }
+}
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
+impl SystemsPlugin {
+    // LoadingState
+    fn loading_state(self, app: &mut App) -> Self {
+        app.add_enter_system_set(
+            AppState::Loading(LoadingState::Assets),
+            ConditionSet::new()
+            .with_system(spawn_cameras) // TODO: Rewrite camera stuff
+            .into(),
+        );
+
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
                 .run_in_state(AppState::Loading(LoadingState::Assets))
                 .with_system(init_white_pixel)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
                 .run_in_state(AppState::Loading(LoadingState::InitGame))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
                 .run_in_state(AppState::Loading(LoadingState::WorldGen))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Loading(LoadingState::MapGen(MapGenState::Terrain)))
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+                .run_in_state(AppState::Loading(LoadingState::MapGen(
+                    MapGenState::Terrain,
+                )))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Loading(LoadingState::MapGen(MapGenState::Features)))
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+                .run_in_state(AppState::Loading(LoadingState::MapGen(
+                    MapGenState::Features,
+                )))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
                 .run_in_state(AppState::Loading(LoadingState::MapGen(MapGenState::Items)))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
                 .run_in_state(AppState::Loading(LoadingState::MapGen(MapGenState::Actors)))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
                 .run_in_state(AppState::Loading(LoadingState::Ready))
                 .with_system(system)
-                .into()
-            );
-        }
-        
-        // MenuState
-        {
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Menu(MenuState::MainMenu))
-                .with_system(system)
-                .into()
-            );
+                .into(),
+        );
+    }
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Menu(MenuState::Settings))
-                .with_system(system)
-                .into()
-            );
+    // MenuState
+    fn menu_state(self, app: &mut App) -> Self {
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new().run_in_state(AppState::Menu(MenuState::MainMenu)).with_system(system).into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Menu(MenuState::WorldCreation(WorldCreationState::Screen1)))
-                .with_system(system)
-                .into()
-            );
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new().run_in_state(AppState::Menu(MenuState::Settings)).with_system(system).into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Menu(MenuState::WorldCreation(WorldCreationState::Screen2)))
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+                .run_in_state(AppState::Menu(MenuState::WorldCreation(
+                    WorldCreationState::Screen1,
+                )))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Menu(MenuState::CharacterCreation(CharacterCreationState::RaceClass)))
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+                .run_in_state(AppState::Menu(MenuState::WorldCreation(
+                    WorldCreationState::Screen2,
+                )))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Menu(MenuState::CharacterCreation(CharacterCreationState::Attributes)))
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+                .run_in_state(AppState::Menu(MenuState::CharacterCreation(
+                    CharacterCreationState::RaceClass,
+                )))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Menu(MenuState::CharacterCreation(CharacterCreationState::Skills)))
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+                .run_in_state(AppState::Menu(MenuState::CharacterCreation(
+                    CharacterCreationState::Attributes,
+                )))
                 .with_system(system)
-                .into()
-            );
+                .into(),
+        );
 
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Menu(MenuState::CharacterCreation(CharacterCreationState::Feats)))
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+                .run_in_state(AppState::Menu(MenuState::CharacterCreation(
+                    CharacterCreationState::Skills,
+                )))
                 .with_system(system)
-                .into()
-            );
-        }
+                .into(),
+        );
 
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+                .run_in_state(AppState::Menu(MenuState::CharacterCreation(
+                    CharacterCreationState::Feats,
+                )))
+                .with_system(system)
+                .into(),
+        );
+    }
 
-        // GameState
-        {
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::InGame)
-                .with_system(system)
-                .into()
-            );
-        }
-        
-        // Quit
-        {
-            app.add_system_set_to_stage(
-                CoreStage::Update,
-                ConditionSet::new()
-                .run_in_state(AppState::Quit)
-                .with_system(system)
-                .into()
-            );
-        }
+    // GameState
+    fn game_state(self, app: &mut App) -> Self {
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new().run_in_state(AppState::InGame).with_system(system).into(),
+        );
+        self
+    }
+
+    // Quit
+    fn quit_state(self, app: &mut App) -> Self {
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new().run_in_state(AppState::Quit).with_system(system).into(),
+        );
     }
 }

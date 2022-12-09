@@ -1,7 +1,4 @@
-use crate::prelude::{
-    *,
-    resources::*,
-};
+use crate::prelude::{resources::camera::*, *};
 
 #[derive(SystemParam)]
 pub struct Cameras<'w, 's> {

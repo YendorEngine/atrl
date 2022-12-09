@@ -13,11 +13,11 @@ pub enum AppState {
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum LoadingState {
-    Assets,                 // SplashScreen / Asset Loading
-    InitGame,               // Initialize resources for the game
-    WorldGen,               // Happens once on new game
-    MapGen(MapGenState),    // Generate map terrain
-    Ready,                  // On new/load game, alert the player we are ready and await input.
+    Assets,              // SplashScreen / Asset Loading
+    InitGame,            // Initialize resources for the game
+    WorldGen,            // Happens once on new game
+    MapGen(MapGenState), // Generate map terrain
+    Ready,               // On new/load game, alert the player we are ready and await input.
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]

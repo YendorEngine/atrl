@@ -1,10 +1,9 @@
 use crate::prelude::*;
 
-#[derive(Reflect, Component, Default, Clone, Copy)]
-#[reflect(Component)]
+#[derive(Component, Default)]
 pub struct AIComponent {
     ai_type: AIType,
-    pub preferred_action: Option<ActionType>,
+    preferred_action: Option<BoxedAction>,
 }
 
 impl AIComponent {
@@ -15,6 +14,21 @@ impl AIComponent {
             preferred_action: None,
         }
     }
+
+    #[inline]
+    pub fn get_action(&self) -> Option<Box<dyn AtrlAction>> { self.preferred_action.clone() }
+
+    #[inline]
+    pub fn take_action(&mut self) -> Option<BoxedAction> { self.preferred_action.take() }
+
+    #[inline]
+    pub fn set_action(&mut self, action: BoxedAction) { self.preferred_action = Some(action); }
+
+    #[inline]
+    pub fn clear_action(&mut self) { self.preferred_action = None; }
+
+    #[inline]
+    pub fn has_action(&self) -> bool { self.preferred_action.is_some() }
 }
 
 impl AIComponent {
