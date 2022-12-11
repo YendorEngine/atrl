@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use crate::prelude::*;
 
 pub struct ScatterBuilder<T> {
-    shapes: Vec<BoxedShape>,
+    shapes: Vec<Box<dyn Shape>>,
     values: Vec<u32>,
 
     phantom: PhantomData<T>,
@@ -18,7 +18,7 @@ impl<T> ScatterBuilder<T> {
         })
     }
 
-    pub fn with_shape<S: Into<BoxedShape>>(mut self, shape: S) -> Box<Self> {
+    pub fn with_shape(mut self, shape: impl Shape) -> Box<Self> {
         self.shapes.push(shape.into());
         Box::new(self)
     }
@@ -44,7 +44,7 @@ impl<T> ScatterBuilder<T> {
         Box::new(self)
     }
 
-    fn apply_shape<S: Into<BoxedShape>>(&mut self, shape: S, data: &mut MapGenData<T>, values: &Vec<u32>) {
+    fn apply_shape(&mut self, shape: impl Shape, data: &mut MapGenData<T>, values: &Vec<u32>) {
         let shape: BoxedShape = shape.into();
         // let world_position = data.world_position;
         let rng = &mut data.random.prng;

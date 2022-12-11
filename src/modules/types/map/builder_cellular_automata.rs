@@ -8,7 +8,7 @@ const ALIVE_VALUE: u32 = 1;
 
 pub struct CellularAutomataBuilder<T> {
     phantom: PhantomData<T>,
-    shapes: Vec<BoxedShape>,
+    shapes: Vec<Box<dyn Shape>>,
 
     number_of_iterations: u32,
     alive_value: u32,
@@ -26,8 +26,8 @@ impl<T> CellularAutomataBuilder<T> {
         })
     }
 
-    pub fn with_shape<S: Into<BoxedShape>>(mut self, shape: S) -> Box<Self> {
-        self.shapes.push(shape.into());
+    pub fn with_shape(mut self, shape: impl Shape) -> Box<Self> {
+        self.shapes.push(Box::new(shape));
         Box::new(self)
     }
 
@@ -65,13 +65,12 @@ impl<T> CellularAutomataBuilder<T> {
         neighbors
     }
 
-    fn apply_shape<S: Into<BoxedShape>>(
+    fn apply_shape(
         &self,
-        shape: S,
+        shape: impl Shape,
         world_position: WorldPosition,
         output_grid: &mut Grid<u32>,
     ) {
-        let shape: BoxedShape = shape.into();
         for position in shape.boxed_iter() {
             if world_position == position.get_world_position() {
                 let grid_point = position.gridpoint().as_ivec2();

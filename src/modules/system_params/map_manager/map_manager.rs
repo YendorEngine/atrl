@@ -180,7 +180,7 @@ impl<'w, 's> MapManager<'w, 's> {
 impl<'w, 's> MapManager<'w, 's> {
     pub fn get_current_world_position(&self) -> WorldPosition { self.map_manager.current_map.0 }
 
-    pub fn set_visibility(&mut self, visibility_map: VisibilityMap) {
+    pub fn set_visibility(&mut self, visibility_map: HashSet<Position>) {
         for position in visibility_map.iter() {
             let Some(map) = self.get_map(position.get_world_position()) else { return; };
             map.explored_tiles.insert(position.gridpoint());

@@ -6,7 +6,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new(size: impl Size2d) -> Self {
+    pub fn new(size: impl Dimensions) -> Self {
         let string = str::repeat(" ", size.count());
         Self {
             size: size.as_uvec2(),
@@ -14,12 +14,12 @@ impl Canvas {
         }
     }
 
-    pub fn put(&mut self, pos: impl GridPoint, glyph: char) {
+    pub fn put(&mut self, pos: impl Point, glyph: char) {
         let i = self.to_index(pos);
         self.string.replace_range(i..i + 1, std::str::from_utf8(&[glyph as u8]).unwrap());
     }
 
-    fn to_index(&self, point: impl GridPoint) -> usize { point.as_index_unchecked(self.size.width()) }
+    fn to_index(&self, point: impl Point) -> usize { point.as_index_unchecked(self.size.width()) }
 
     pub fn print(&self) {
         let width = self.size.width();

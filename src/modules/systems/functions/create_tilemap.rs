@@ -6,7 +6,7 @@ pub fn create_tilemap_parent(commands: &mut Commands, name: &str) -> Entity {
 
 pub fn create_tilemap<ZLevel: Into<f32>>(
     commands: &mut Commands,
-    size: impl Size2d,
+    size: impl Dimensions,
     z_level: ZLevel,
     tileset: &Tileset,
     tile_scale: f32,
@@ -19,7 +19,7 @@ pub fn create_tilemap<ZLevel: Into<f32>>(
 pub fn create_tilemap_on_entity<ZLevel: Into<f32>>(
     commands: &mut Commands,
     entity: Entity,
-    size: impl Size2d,
+    size: impl Dimensions,
     z_level: ZLevel,
     tileset: &Tileset,
     tile_scale: f32,

@@ -10,7 +10,7 @@ pub struct RectIter {
 }
 
 impl RectIter {
-    pub fn new(min: impl GridPoint, max: impl GridPoint) -> Self {
+    pub fn new(min: impl Point, max: impl Point) -> Self {
         let min = min.as_ivec2();
         let max = max.as_ivec2();
         let size = max - min;

@@ -6,7 +6,7 @@ use crate::prelude::*;
 pub struct MapManagerResource {
     pub current_map: (WorldPosition, Map),
     pub loaded_maps: HashMap<WorldPosition, Map>,
-    pub visible_tiles: VisibilityMap,
+    pub visible_tiles: HashSet<Position>,
     pub terrain_layer: Entity,
     pub features_layer: Entity,
 }
@@ -22,7 +22,7 @@ impl MapManagerResource {
         Self {
             current_map: (world_position, map),
             loaded_maps: HashMap::new(),
-            visible_tiles: VisibilityMap::new(),
+            visible_tiles: HashSet::new(),
             terrain_layer,
             features_layer,
         }

@@ -31,16 +31,16 @@ impl PlayerAction {
         Self::West,
     ];
 
-    pub const fn direction(self) -> Option<GridDirection> {
+    pub const fn direction(self) -> Option<Direction> {
         match self {
-            Self::NorthWest => Some(GridDirection::NorthWest),
-            Self::North => Some(GridDirection::North),
-            Self::NorthEast => Some(GridDirection::NorthEast),
-            Self::East => Some(GridDirection::East),
-            Self::SouthEast => Some(GridDirection::SouthEast),
-            Self::South => Some(GridDirection::South),
-            Self::SouthWest => Some(GridDirection::SouthWest),
-            Self::West => Some(GridDirection::West),
+            Self::NorthWest => Some(Direction::NorthWest),
+            Self::North => Some(Direction::North),
+            Self::NorthEast => Some(Direction::NorthEast),
+            Self::East => Some(Direction::East),
+            Self::SouthEast => Some(Direction::SouthEast),
+            Self::South => Some(Direction::South),
+            Self::SouthWest => Some(Direction::SouthWest),
+            Self::West => Some(Direction::West),
             _ => None,
         }
     }

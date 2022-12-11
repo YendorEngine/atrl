@@ -4,7 +4,7 @@ use crate::prelude::*;
 
 pub struct SetBuilder<T> {
     value: u32,
-    shapes: Vec<BoxedShape>,
+    shapes: Vec<Box<dyn Shape>>,
     phantom: PhantomData<T>,
 }
 
@@ -17,7 +17,7 @@ impl<T> SetBuilder<T> {
         })
     }
 
-    pub fn with_shape<S: Into<BoxedShape>>(mut self, shape: S) -> Box<Self> {
+    pub fn with_shape(mut self, shape: impl Shape) -> Box<Self> {
         self.shapes.push(shape.into());
         Box::new(self)
     }
@@ -27,7 +27,7 @@ impl<T> SetBuilder<T> {
         Box::new(self)
     }
 
-    fn apply_shape<S: Into<BoxedShape>>(&self, shape: S, data: &mut MapGenData<T>) {
+    fn apply_shape(&self, shape: impl Shape, data: &mut MapGenData<T>) {
         let shape: BoxedShape = shape.into();
         for position in shape.boxed_iter() {
             if data.world_position == position.get_world_position() {

@@ -12,7 +12,7 @@ impl Default for Rectangle {
 
 impl Rectangle {
     #[inline]
-    pub fn new(min: impl GridPoint, max: impl GridPoint) -> Self {
+    pub fn new(min: impl Point, max: impl Point) -> Self {
         let min = min.as_ivec2();
         let max = max.as_ivec2();
         Self {
@@ -22,7 +22,7 @@ impl Rectangle {
     }
 
     #[inline]
-    pub fn new_with_size(min: impl GridPoint, size: impl Size2d) -> Self {
+    pub fn new_with_size(min: impl Point, size: impl Dimensions) -> Self {
         let min = min.as_ivec2();
         Self::new(min, min + size.as_ivec2())
     }

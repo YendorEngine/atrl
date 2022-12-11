@@ -25,8 +25,3 @@ pub mod query_extensions {
     mod query_extensions;
     pub use query_extensions::*;
 }
-
-pub mod range {
-    mod range;
-    pub use range::*;
-}
