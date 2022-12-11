@@ -5,11 +5,11 @@
 authors     = ["Laocoon <laocoon7@gmail.com>", "BigBanana <lecoqjacob@gmail.com>"]
 description = "Away Team Roguelike Game"
 edition     = "2021"
-homepage    = "https://github.com/Laocoon7/atrl"
+homepage    = "https://github.com/YendorEngine/atrl"
 license     = "BlueOak-1.0.0"
 name        = "atrl"
 readme      = "README.md"
-repository  = "https://github.com/Laocoon7/atrl"
+repository  = "https://github.com/YendorEngine/atrl"
 version     = "0.1.0"
 #license-file = "LICENSE"
 categories = ["games"]
@@ -245,6 +245,11 @@ version  = "1.0.1"
 [dependencies.bitvec]
 workspace = true
 
+[workspace.dependencies.dyn-clone]
+version = "1"
+[dependencies.dyn-clone]
+workspace = true
+
 [workspace.dependencies.index_list]
 version = "0.2.7"
 [dependencies.index_list]
@@ -281,19 +286,17 @@ version = "1"
 [dependencies.thiserror]
 workspace = true
 
-[workspace.dependencies.pathfinding]
-version = "4"
-[dependencies.pathfinding]
+[workspace.dependencies.yendor]
+git = "https://github.com/YendorEngine/yendor"
+[dependencies.yendor]
 workspace = true
 
-[workspace.dependencies.ordered-float]
-features = ["serde"]
-version  = "3"
-[dependencies.ordered-float]
-workspace = true
-
-[dependencies.dyn-clone]
-version = "1"
+# this was only for pathfinding??
+#[workspace.dependencies.ordered-float]
+#features = ["serde"]
+#version  = "3"
+#[dependencies.ordered-float]
+#workspace = true
 
 ######################################
 ######################################
