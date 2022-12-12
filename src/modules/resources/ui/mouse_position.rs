@@ -16,13 +16,8 @@ impl FromWorld for MousePosition {
     fn from_world(world: &mut World) -> Self {
         let mut system_state: SystemState<MapManager> = SystemState::from_world(world);
         let world_position = system_state.get_mut(world).get_current_world_position();
-        
-        Self::new(
-            Position::new(
-                world_position,
-                LocalPosition::new(0, 0, MapLayer::UI as u32),
-            )
-        )
+
+        Self::new(Position::new(world_position, LocalPosition::new(0, 0)))
     }
 }
 

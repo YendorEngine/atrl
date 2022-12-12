@@ -57,8 +57,6 @@ impl TargetVisualizer {
         mut start: Position,
         mut end: Position,
     ) {
-        start.set_layer(MapLayer::UI as u32);
-        end.set_layer(MapLayer::UI as u32);
         self.start = Some(start);
         self.end = Some(end);
 
@@ -87,7 +85,9 @@ impl TargetVisualizer {
                                 ..Default::default()
                             },
                             texture_atlas: tileset.atlas().clone(),
-                            transform: Transform::from_translation(position.translation()),
+                            transform: Transform::from_translation(
+                                position.get_local_position().as_vec2().extend(MapLayer::UI as i32 as f32),
+                            ),
                             ..default()
                         })
                         .id(),

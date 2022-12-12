@@ -22,10 +22,7 @@ impl Default for Wander {
     fn default() -> Self {
         Self {
             destination: None,
-            my_previous_location: Position::new(
-                WorldPosition::ZERO,
-                LocalPosition::new(0, 0, MapLayer::Actors as u32),
-            ),
+            my_previous_location: Position::new(WorldPosition::ZERO, LocalPosition::new(0, 0)),
         }
     }
 }

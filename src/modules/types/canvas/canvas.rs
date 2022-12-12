@@ -7,7 +7,7 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn new(size: impl Dimensions) -> Self {
-        let string = str::repeat(" ", size.count());
+        let string = str::repeat(" ", size.size());
         Self {
             size: size.as_uvec2(),
             string,

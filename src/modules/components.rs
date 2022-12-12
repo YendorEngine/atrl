@@ -28,6 +28,9 @@ pub use mob::*;
 mod movement;
 pub use movement::*;
 
+mod position_component;
+pub use position_component::*;
+
 mod target_visualizer;
 pub use target_visualizer::*;
 

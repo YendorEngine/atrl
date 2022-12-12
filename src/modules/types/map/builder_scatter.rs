@@ -19,7 +19,7 @@ impl<T> ScatterBuilder<T> {
     }
 
     pub fn with_shape(mut self, shape: impl Shape) -> Box<Self> {
-        self.shapes.push(shape.into());
+        self.shapes.push(Box::new(shape));
         Box::new(self)
     }
 
@@ -44,8 +44,7 @@ impl<T> ScatterBuilder<T> {
         Box::new(self)
     }
 
-    fn apply_shape(&mut self, shape: impl Shape, data: &mut MapGenData<T>, values: &Vec<u32>) {
-        let shape: BoxedShape = shape.into();
+    fn apply_shape(&mut self, shape: Box<dyn Shape>, data: &mut MapGenData<T>, values: &Vec<u32>) {
         // let world_position = data.world_position;
         let rng = &mut data.random.prng;
         let length = values.len() as u32 - 1;
@@ -75,7 +74,10 @@ impl<T> MapArchitect<T> for ScatterBuilder<T> {
             }
         } else {
             self.apply_shape(
-                GridRectangle::new_grid_sized(data.world_position),
+                Box::new(GridRectangle::new(
+                    Position::new_grid_min(data.world_position),
+                    Position::new_grid_max(data.world_position),
+                )),
                 data,
                 &values,
             );

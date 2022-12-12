@@ -18,7 +18,7 @@ impl<T> SetBuilder<T> {
     }
 
     pub fn with_shape(mut self, shape: impl Shape) -> Box<Self> {
-        self.shapes.push(shape.into());
+        self.shapes.push(Box::new(shape));
         Box::new(self)
     }
 
@@ -27,8 +27,7 @@ impl<T> SetBuilder<T> {
         Box::new(self)
     }
 
-    fn apply_shape(&self, shape: impl Shape, data: &mut MapGenData<T>) {
-        let shape: BoxedShape = shape.into();
+    fn apply_shape(&self, shape: Box<dyn Shape>, data: &mut MapGenData<T>) {
         for position in shape.boxed_iter() {
             if data.world_position == position.get_world_position() {
                 data.output_grid.set_unchecked(position.gridpoint(), self.value);
@@ -48,7 +47,13 @@ impl<T> MapArchitect<T> for SetBuilder<T> {
                 }
             }
         } else {
-            self.apply_shape(GridRectangle::new_grid_sized(data.world_position), data);
+            self.apply_shape(
+                Box::new(GridRectangle::new(
+                    Position::new_grid_min(data.world_position),
+                    Position::new_grid_max(data.world_position),
+                )),
+                data,
+            );
         }
     }
 }

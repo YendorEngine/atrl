@@ -6,7 +6,7 @@ pub struct ActorBundle {
     pub name: Name,
     pub health: Health,
     pub ai: AIComponent,
-    pub position: Position,
+    pub position: PositionComponent,
 
     pub fov: FieldOfView,
     pub vision_component: Vision,

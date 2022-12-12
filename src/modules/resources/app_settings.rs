@@ -1,9 +1,6 @@
 use std::time::Duration;
 
-use crate::prelude::{
-    *,
-    utilities::file::*,
-};
+use crate::prelude::{utilities::file::*, *};
 
 const DEFAULT_UNSAFE_MS: u64 = 500;
 const DEFAULT_REPEAT_MS: u64 = 500;

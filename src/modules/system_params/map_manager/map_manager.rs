@@ -11,7 +11,7 @@ pub struct MapManager<'w, 's> {
 // Perform actor functions on maps
 impl<'w, 's> MapManager<'w, 's> {
     pub fn is_visible(&self, position: Position) -> bool {
-        self.map_manager.visible_tiles.get_visible(position)
+        self.map_manager.visible_tiles.contains(&position)
     }
 
     /// Works the same as `add_actor()` / `move_actor()` without
@@ -338,7 +338,7 @@ impl<'w, 's> MapManager<'w, 's> {
                 .with_shape(Circle::new(
                     Position::new(
                         world_position,
-                        LocalPosition::new(GRID_WIDTH / 2, GRID_HEIGHT / 2, MapLayer::Features as u32),
+                        LocalPosition::new(GRID_WIDTH / 2, GRID_HEIGHT / 2),
                     ),
                     5u32,
                 )),
@@ -347,28 +347,17 @@ impl<'w, 's> MapManager<'w, 's> {
             SetBuilder::new().set_value(0).with_shape(GridRectangle::new(
                 Position::new(
                     world_position,
-                    LocalPosition::new(
-                        GRID_WIDTH / 2 - 4,
-                        GRID_HEIGHT / 2 - 4,
-                        MapLayer::Features as u32,
-                    ),
+                    LocalPosition::new(GRID_WIDTH / 2 - 4, GRID_HEIGHT / 2 - 4),
                 ),
                 Position::new(
                     world_position,
-                    LocalPosition::new(
-                        GRID_WIDTH / 2 + 4,
-                        GRID_HEIGHT / 2 + 4,
-                        MapLayer::Features as u32,
-                    ),
+                    LocalPosition::new(GRID_WIDTH / 2 + 4, GRID_HEIGHT / 2 + 4),
                 ),
             )),
         )
         .generate();
 
-        let mut position = Position::new(
-            world_position,
-            LocalPosition::new(0, 0, MapLayer::Features as u32),
-        );
+        let mut position = Position::new(world_position, LocalPosition::new(0, 0));
         for y in 0..GRID_HEIGHT {
             position.add_y(1);
             for x in 0..GRID_WIDTH {
@@ -415,9 +404,10 @@ pub fn startup_map_manager(
 pub fn set_current_map_to_current_player(
     mut map_manager: MapManager,
     player_entity: Res<PlayerEntity>,
-    q_positions: Query<&Position>,
+    q_positions: Query<&PositionComponent>,
 ) {
-    if let Ok(position) = q_positions.get(player_entity.current()) {
+    if let Ok(pc) = q_positions.get(player_entity.current()) {
+        let position = pc.position;
         if map_manager.map_manager.current_map.0 != position.get_world_position() {
             info!(
                 "Switching map to: WorldPosition:{}",
@@ -436,7 +426,7 @@ pub fn update_tilemaps(
     // TODO: Component for holding image index on features???
     mut q_visibility: ParamSet<(
         Query<&mut Visibility>,
-        Query<(&mut Visibility, &Position), With<Mob>>,
+        Query<(&mut Visibility, &PositionComponent), With<Mob>>,
     )>,
 ) {
     // Get storages
@@ -532,10 +522,10 @@ pub fn update_tilemaps(
 
     let mut position = Position::new(
         map_manager.map_manager.current_map.0,
-        LocalPosition::new(0, 0, MapLayer::Terrain as u32), // MapLayer is ignored
+        LocalPosition::new(0, 0),
     );
 
-    let visible_tiles = map_manager.map_manager.visible_tiles.get_all();
+    let visible_tiles = &map_manager.map_manager.visible_tiles;
     // refresh mutable reference for borrow checker...
     let (current_world_position, map) = &mut map_manager.map_manager.current_map;
 
@@ -573,9 +563,10 @@ pub fn update_tilemaps(
     }
 
     // Actors
-    for (mut visibility, position) in q_visibility.p1().iter_mut() {
+    for (mut visibility, pc) in q_visibility.p1().iter_mut() {
+        let position = pc.position;
         if position.get_world_position() == *current_world_position {
-            visibility.is_visible = visible_tiles.contains(position);
+            visibility.is_visible = visible_tiles.contains(&position);
         } else {
             visibility.is_visible = false;
         }
@@ -583,17 +574,16 @@ pub fn update_tilemaps(
 }
 
 // Implement FovProvider
-impl<'w, 's> FovProvider for MapManager<'w, 's> {
+impl<'w, 's> FovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for MapManager<'w, 's> {
     fn is_opaque(
         &mut self,
         position: Position,
-        vision_type: u8,
-        q_blocks_vision: &Query<&BlocksVision>,
+        pass_through_data: &mut VisionPassThroughData<'w, 's>,
     ) -> bool {
         if let Some(actors) = self.get_actors(position) {
             for &entity in actors {
-                if let Ok(blocks_vision) = q_blocks_vision.get(entity) {
-                    if blocks_vision.is_blocked(vision_type) {
+                if let Ok(blocks_vision) = pass_through_data.q_blocks_vision.get(entity) {
+                    if blocks_vision.is_blocked(pass_through_data.vision_type) {
                         return true;
                     }
                 }
@@ -602,8 +592,8 @@ impl<'w, 's> FovProvider for MapManager<'w, 's> {
 
         if let Some(features) = self.get_features(position) {
             for &entity in features {
-                if let Ok(blocks_vision) = q_blocks_vision.get(entity) {
-                    if blocks_vision.is_blocked(vision_type) {
+                if let Ok(blocks_vision) = pass_through_data.q_blocks_vision.get(entity) {
+                    if blocks_vision.is_blocked(pass_through_data.vision_type) {
                         return true;
                     }
                 }
@@ -615,21 +605,44 @@ impl<'w, 's> FovProvider for MapManager<'w, 's> {
 }
 
 // Implement PathProvider
-impl<'w, 's> PathProvider for MapManager<'w, 's> {
-    fn cost(&mut self, position: Position, _movement_type: u8) -> u32 { 1 }
-
-    fn is_walkable(
-        &mut self,
+impl<'w, 's> PathProvider<PathPassThroughData<'w, 's>, GRID_SIZE> for MapManager<'w, 's> {
+    fn get_neighbors(
+        &self,
         position: Position,
-        movement_type: u8,
-        q_blocks_movement: &Query<&BlocksMovement>,
-    ) -> bool {
-        let Some(map) = self.get_map(position.get_world_position()) else { return false; };
+        pass_through_data: &mut PathPassThroughData<'w, 's>,
+    ) -> Vec<Position> {
+        let Some(map) = self.get_map(position.get_world_position()) else { return Vec::new() };
+        let neighbors = Vec::new();
 
-        map.can_place_actor(
-            position.get_local_position(),
-            movement_type,
-            q_blocks_movement,
-        )
+        for direction in Direction::all() {
+            let p = position + direction.coord();
+            if map.can_place_actor(
+                p.get_local_position(),
+                pass_through_data.movement_type,
+                pass_through_data.q_blocks_movement,
+            ) {
+                neighbors.push(p);
+            }
+        }
+
+        // Example adding 3rd dimension around a stairs feature
+        // if let Some(features) = map.get_features(position) {
+        // for feature in features {
+        // if let Ok(feature) = pass_through_data.q_features.get(feature) {
+        // if (feature & Features::StairsUp != 0) | (feature & Features::StairsDown != 0) {
+        // for direction in VerticalDirection::all() {
+        // let p = position + direction.coord();
+        // if let Some(map) = self.get_map(p.get_world_position()) {
+        // if map.can_place_actor(p.get_local_position(), pass_through_data.movement_type,
+        // pass_through_data.q_blocks_movement) { neighbors.push(p);
+        // }
+        // }
+        // }
+        // }
+        // }
+        // }
+        // }
+
+        neighbors
     }
 }

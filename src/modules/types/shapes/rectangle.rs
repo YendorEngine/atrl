@@ -24,7 +24,7 @@ impl Rectangle {
     #[inline]
     pub fn new_with_size(min: impl Point, size: impl Dimensions) -> Self {
         let min = min.as_ivec2();
-        Self::new(min, min + size.as_ivec2())
+        Self::new(min, min.as_uvec2() + size.as_uvec2())
     }
 }
 

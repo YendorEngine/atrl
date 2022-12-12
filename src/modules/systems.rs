@@ -8,14 +8,8 @@ pub mod init {
 }
 
 pub mod functions {
-    mod shadowcast;
-    pub use shadowcast::*;
     mod create_tilemap;
     pub use create_tilemap::*;
-    mod astar;
-    pub use astar::*;
-    mod dijkstra;
-    pub use dijkstra::*;
 }
 pub use functions::*;
 

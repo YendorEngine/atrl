@@ -57,16 +57,16 @@ pub mod map {
     pub use map_pass_through_data::*;
     mod map;
     pub use map::*;
+    mod path_pass_through_data;
+    pub use path_pass_through_data::*;
+    mod vision_pass_through_data;
+    pub use vision_pass_through_data::*;
 }
 pub use map::*;
 
 pub mod random {
-    mod noise;
-    pub use self::noise::*;
     mod prht;
     pub use prht::*;
-    mod prng;
-    pub use prng::*;
     mod random;
     pub use random::*;
 }

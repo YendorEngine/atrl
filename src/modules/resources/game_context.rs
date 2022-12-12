@@ -1,7 +1,4 @@
-use crate::prelude::{
-    *,
-    types::random::*,
-};
+use crate::prelude::{types::random::*, *};
 
 #[derive(Resource)]
 pub struct GameContext {

@@ -1,7 +1,4 @@
-use crate::prelude::{
-    *,
-    types::camera::*,
-};
+use crate::prelude::{types::camera::*, *};
 
 #[derive(Resource)]
 pub struct LoadedCameras {

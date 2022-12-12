@@ -8,7 +8,7 @@ pub struct MapPassThroughData {
 
 impl From<MapGenData<MapPassThroughData>> for Map {
     fn from(data: MapGenData<MapPassThroughData>) -> Self {
-        let mut terrain_types = Grid::new_default(data.size);
+        let mut terrain_types = Grid::new_default();
         for y in 0..data.size.height() {
             for x in 0..data.size.width() {
                 let v = *data.output_grid.get_unchecked((x, y));
@@ -28,8 +28,8 @@ impl From<MapGenData<MapPassThroughData>> for Map {
             explored_tiles: HashSet::new(),
 
             terrain: terrain_types,
-            features: Grid::new_default(data.size),
-            actors: Grid::new_default(data.size),
+            features: Grid::new_default(),
+            actors: Grid::new_default(),
         }
     }
 }

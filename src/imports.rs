@@ -1,5 +1,3 @@
-use crate::globals::GRID_SIZE;
-
 pub use arrayvec::ArrayVec;
 pub use bevy::{
     app::AppExit,
@@ -28,7 +26,7 @@ pub use iyes_loopless::prelude::*;
 pub use iyes_progress::prelude::*;
 pub use kayak_ui::{prelude::*, widgets::*};
 pub use leafwing_input_manager::{action_state::ActionState, prelude::*};
-pub use noise::{NoiseFn, Perlin as PerlinNoise};
+pub use noise::{Fbm, NoiseFn, Perlin};
 pub use num_derive::*;
 pub use num_traits::*;
 pub use parking_lot::{Mutex, MutexGuard};
@@ -47,15 +45,17 @@ pub use serde::{
 pub use smart_default::SmartDefault;
 pub use thiserror::Error;
 pub use xxhash_rust::xxh3::*;
-pub use yendor::prelude::*;
-pub use yendor::types::Direction;
-pub use yendor::types::Grid as YendorGrid;
-pub use yendor::types::Position as YendorPosition;
-pub use yendor::types::WorldPosition as YendorWorldPosition;
-pub use yendor::types::Random as YendorRandom; // This is only because we have a type named "Random" right now...
+pub use yendor::prelude::{
+    Direction, Grid as YendorGrid, GridRectangle as YendorRectangle, Position as YendorPosition,
+    Random as YendorRandom, Shape as YendorShape, *,
+};
+
+use crate::globals::GRID_SIZE;
+pub use crate::prelude::Random;
 pub type Grid<T> = YendorGrid<T, GRID_SIZE>;
 pub type Position = YendorPosition<GRID_SIZE>;
-pub type WorldPosition = YendorWorldPosition<GRID_SIZE>;
+pub trait Shape = YendorShape<GRID_SIZE>;
+pub type GridRectangle = YendorRectangle<GRID_SIZE>;
 
 #[cfg(feature = "debug")]
 mod debug {
