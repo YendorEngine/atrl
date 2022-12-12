@@ -80,8 +80,8 @@ impl<T> CellularAutomataBuilder<T> {
     }
 }
 
-impl<T, const DIM: UVec2> MapArchitect<T, DIM> for CellularAutomataBuilder<T> {
-    fn generate(&mut self, data: &mut MapGenData<T, DIM>) {
+impl<T> MapArchitect<T> for CellularAutomataBuilder<T> {
+    fn generate(&mut self, data: &mut MapGenData<T>) {
         for _ in 0..self.number_of_iterations {
             let mut new_grid = data.output_grid.clone();
 

@@ -2,13 +2,13 @@ use std::marker::PhantomData;
 
 use crate::prelude::*;
 
-pub struct SetBuilder<T, const DIM: UVec2> {
+pub struct SetBuilder<T> {
     value: u32,
     phantom: PhantomData<T>,
     shapes: Vec<Box<dyn Shape>>,
 }
 
-impl<T, const DIM: UVec2> SetBuilder<T, DIM> {
+impl<T> SetBuilder<T> {
     pub fn new() -> Box<Self> {
         Box::new(Self {
             value: u32::MIN,
@@ -27,7 +27,7 @@ impl<T, const DIM: UVec2> SetBuilder<T, DIM> {
         Box::new(self)
     }
 
-    fn apply_shape(&self, shape: Box<dyn Shape>, data: &mut MapGenData<T, DIM>) {
+    fn apply_shape(&self, shape: Box<dyn Shape>, data: &mut MapGenData<T>) {
         for position in shape.boxed_iter() {
             if data.world_position == position.get_world_position() {
                 data.output_grid.set_unchecked(position.gridpoint(), self.value);
@@ -35,8 +35,8 @@ impl<T, const DIM: UVec2> SetBuilder<T, DIM> {
         }
     }
 }
-impl<T, const DIM: UVec2> MapArchitect<T, DIM> for SetBuilder<T, DIM> {
-    fn generate(&mut self, data: &mut MapGenData<T, DIM>) {
+impl<T> MapArchitect<T> for SetBuilder<T> {
+    fn generate(&mut self, data: &mut MapGenData<T>) {
         if !self.shapes.is_empty() {
             loop {
                 let shape = self.shapes.pop().unwrap();

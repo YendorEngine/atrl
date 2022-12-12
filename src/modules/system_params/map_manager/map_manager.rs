@@ -349,18 +349,16 @@ impl<'w, 's> MapManager<'w, 's> {
                     5u32,
                 )),
         )
-        .with(
-            SetBuilder::new().set_value(0).with_shape(Rectangle::new(
-                Position::new(
-                    world_position,
-                    LocalPosition::new(GRID_WIDTH / 2 - 4, GRID_HEIGHT / 2 - 4),
-                ),
-                Position::new(
-                    world_position,
-                    LocalPosition::new(GRID_WIDTH / 2 + 4, GRID_HEIGHT / 2 + 4),
-                ),
-            )),
-        )
+        .with(SetBuilder::new().set_value(0).with_shape(Rectangle::new(
+            Position::new(
+                world_position,
+                LocalPosition::new(GRID_WIDTH / 2 - 4, GRID_HEIGHT / 2 - 4),
+            ),
+            Position::new(
+                world_position,
+                LocalPosition::new(GRID_WIDTH / 2 + 4, GRID_HEIGHT / 2 + 4),
+            ),
+        )))
         .generate();
 
         let mut position = Position::new(world_position, LocalPosition::new(0, 0));
@@ -389,7 +387,6 @@ impl<'w, 's> MapManager<'w, 's> {
 pub fn startup_map_manager(
     tilesets: Tilesets,
     mut commands: Commands,
-    state: Res<CurrentAppState>,
     mut game_context: ResMut<GameContext>,
 ) {
     // TODO: Deserialize map
@@ -404,7 +401,7 @@ pub fn startup_map_manager(
     ));
 
     // AppState::Loading(LoadingState::InitGame) -> AppState::Loading(LoadingState::WorldGen)
-    switch_app_state!(AppState::Loading(LoadingState::WorldGen));
+    switch_app_state!(commands, AppState::Loading(LoadingState::WorldGen));
 }
 
 pub fn set_current_map_to_current_player(
@@ -614,7 +611,7 @@ impl<'w, 's> FovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for MapManage
 struct MapPathFinder;
 
 // Implement PathProvider
-impl<'a, 'b, 'w, 's> PathProvider<PathPassThroughData<'a, 'w, 's>, GRID_SIZE> for MapPathFinder {
+impl<'a, 'w, 's> PathProvider<PathPassThroughData<'a, 'w, 's>, GRID_SIZE> for MapPathFinder {
     fn get_neighbors(
         &self,
         position: Position,
@@ -623,16 +620,16 @@ impl<'a, 'b, 'w, 's> PathProvider<PathPassThroughData<'a, 'w, 's>, GRID_SIZE> fo
         let Some(map) = pass_through_data.map_manager.get_map(position.get_world_position()) else { return Vec::new() };
         let mut neighbors = Vec::new();
 
-        // for direction in Direction::all() {
-        //     let p = position + direction.coord();
-        //     if map.can_place_actor(
-        //         p.get_local_position(),
-        //         pass_through_data.movement_type,
-        //         pass_through_data.q_blocks_movement,
-        //     ) {
-        //         neighbors.push(p);
-        //     }
-        // }
+        for direction in Direction::all() {
+            let p = position + direction.coord();
+            if map.can_place_actor(
+                p.get_local_position(),
+                pass_through_data.movement_type,
+                &pass_through_data.q_blocks_movement,
+            ) {
+                neighbors.push(p);
+            }
+        }
 
         // Example adding 3rd dimension around a stairs feature
         // if let Some(features) = map.get_features(position) {
@@ -654,16 +651,4 @@ impl<'a, 'b, 'w, 's> PathProvider<PathPassThroughData<'a, 'w, 's>, GRID_SIZE> fo
 
         neighbors
     }
-}
-
-fn sys<'a, 'w, 's>(
-    q_blocks_movement: Query<'w, 's, &'a BlocksMovement>,
-    mut map_manager: MapManager<'w, 's>,
-) {
-    PathFinder::Astar.compute(
-        Position::ZERO,
-        Position::ZERO,
-        &mut MapPathFinder,
-        PathPassThroughData::new(0, map_manager, &q_blocks_movement),
-    );
 }

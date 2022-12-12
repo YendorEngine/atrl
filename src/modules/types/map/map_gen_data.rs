@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-pub struct MapGenData<T, const DIM: UVec2> {
+pub struct MapGenData<T> {
     pub user_data: T,
 
     pub size: UVec2,
@@ -9,10 +9,10 @@ pub struct MapGenData<T, const DIM: UVec2> {
     pub world_position: WorldPosition,
 
     pub output_grid: Grid<u32>,
-    pub rooms: Vec<Rectangle<DIM>>,
+    pub rooms: Vec<Rectangle>,
 }
 
-impl<T, const DIM: UVec2> MapGenData<T, DIM> {
+impl<T> MapGenData<T> {
     pub(crate) fn new(world_position: WorldPosition, random: Random, user_data: T) -> Self {
         let size = UVec2::new(GRID_WIDTH, GRID_HEIGHT);
 
