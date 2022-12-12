@@ -288,6 +288,7 @@ workspace = true
 
 [workspace.dependencies.yendor]
 git = "https://github.com/YendorEngine/yendor"
+# path = "../../yendor/yendor"
 [dependencies.yendor]
 workspace = true
 

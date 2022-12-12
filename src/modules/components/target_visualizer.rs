@@ -54,8 +54,8 @@ impl TargetVisualizer {
         commands: &mut Commands,
         map_manager: &MapManager,
         tilesets: &Tilesets,
-        mut start: Position,
-        mut end: Position,
+        start: Position,
+        end: Position,
     ) {
         self.start = Some(start);
         self.end = Some(end);

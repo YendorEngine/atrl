@@ -100,6 +100,12 @@ impl<'w, 's> MapManager<'w, 's> {
 
         map.get_actors(position.get_local_position())
     }
+
+    /// Grab map_manager's visible tiles
+    pub fn get_visible_tiles(&self) -> &HashSet<Position> { &self.map_manager.visible_tiles }
+
+    /// Grab map_manager's current map
+    pub fn get_current_map(&self) -> &(WorldPosition, Map) { &self.map_manager.current_map }
 }
 
 // Perform feature functions on maps
@@ -525,9 +531,10 @@ pub fn update_tilemaps(
         LocalPosition::new(0, 0),
     );
 
-    let visible_tiles = &map_manager.map_manager.visible_tiles;
+    // let visible_tiles = map_manager.map_manager.visible_tiles;
+    let visible_tiles = map_manager.get_visible_tiles();
     // refresh mutable reference for borrow checker...
-    let (current_world_position, map) = &mut map_manager.map_manager.current_map;
+    let (current_world_position, map) = &mut map_manager.get_current_map();
 
     for y in 0..map.size.height() {
         position.set_y(y);
@@ -604,26 +611,28 @@ impl<'w, 's> FovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for MapManage
     }
 }
 
+struct MapPathFinder;
+
 // Implement PathProvider
-impl<'w, 's> PathProvider<PathPassThroughData<'w, 's>, GRID_SIZE> for MapManager<'w, 's> {
+impl<'a, 'b, 'w, 's> PathProvider<PathPassThroughData<'a, 'w, 's>, GRID_SIZE> for MapPathFinder {
     fn get_neighbors(
         &self,
         position: Position,
-        pass_through_data: &mut PathPassThroughData<'w, 's>,
+        pass_through_data: &mut PathPassThroughData<'a, 'w, 's>,
     ) -> Vec<Position> {
-        let Some(map) = self.get_map(position.get_world_position()) else { return Vec::new() };
-        let neighbors = Vec::new();
+        let Some(map) = pass_through_data.map_manager.get_map(position.get_world_position()) else { return Vec::new() };
+        let mut neighbors = Vec::new();
 
-        for direction in Direction::all() {
-            let p = position + direction.coord();
-            if map.can_place_actor(
-                p.get_local_position(),
-                pass_through_data.movement_type,
-                pass_through_data.q_blocks_movement,
-            ) {
-                neighbors.push(p);
-            }
-        }
+        // for direction in Direction::all() {
+        //     let p = position + direction.coord();
+        //     if map.can_place_actor(
+        //         p.get_local_position(),
+        //         pass_through_data.movement_type,
+        //         pass_through_data.q_blocks_movement,
+        //     ) {
+        //         neighbors.push(p);
+        //     }
+        // }
 
         // Example adding 3rd dimension around a stairs feature
         // if let Some(features) = map.get_features(position) {
@@ -645,4 +654,16 @@ impl<'w, 's> PathProvider<PathPassThroughData<'w, 's>, GRID_SIZE> for MapManager
 
         neighbors
     }
+}
+
+fn sys<'a, 'w, 's>(
+    q_blocks_movement: Query<'w, 's, &'a BlocksMovement>,
+    mut map_manager: MapManager<'w, 's>,
+) {
+    PathFinder::Astar.compute(
+        Position::ZERO,
+        Position::ZERO,
+        &mut MapPathFinder,
+        PathPassThroughData::new(0, map_manager, &q_blocks_movement),
+    );
 }

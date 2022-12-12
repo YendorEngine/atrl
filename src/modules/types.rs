@@ -72,18 +72,6 @@ pub mod random {
 }
 pub use random::*;
 
-pub mod shapes {
-    pub mod iter {
-        mod rect_iter;
-        pub use rect_iter::*;
-    }
-    pub use iter::*;
-
-    mod rectangle;
-    pub use rectangle::*;
-}
-pub use shapes::*;
-
 pub mod white_pixel {
     mod white_pixel;
     pub use white_pixel::*;

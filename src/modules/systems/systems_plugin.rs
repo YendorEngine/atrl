@@ -3,7 +3,9 @@ use crate::prelude::{
     *,
 };
 
+#[derive(Clone, Copy)]
 pub struct SystemsPlugin;
+
 impl Plugin for SystemsPlugin {
     fn build(&self, app: &mut App) {
         // Initialize states an move to next state immediately

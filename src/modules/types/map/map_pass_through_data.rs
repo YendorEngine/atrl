@@ -6,8 +6,8 @@ pub struct MapPassThroughData {
     // new HashSet pub explored_tiles: HashSet<UVec2>
 }
 
-impl From<MapGenData<MapPassThroughData>> for Map {
-    fn from(data: MapGenData<MapPassThroughData>) -> Self {
+impl<const DIM: UVec2> From<MapGenData<MapPassThroughData, DIM>> for Map {
+    fn from(data: MapGenData<MapPassThroughData, DIM>) -> Self {
         let mut terrain_types = Grid::new_default();
         for y in 0..data.size.height() {
             for x in 0..data.size.width() {

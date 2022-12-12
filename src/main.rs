@@ -3,6 +3,7 @@
 #![allow(clippy::too_many_arguments)] // Bevy has a lot of arguments, so we shush clippy
 #![allow(unused_imports)] // TODO: REMOVE ME
 #![feature(trait_alias)]
+#![feature(adt_const_params)]
 
 #[cfg(feature = "debug")]
 mod debug {

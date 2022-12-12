@@ -2,14 +2,14 @@ use std::marker::PhantomData;
 
 use crate::prelude::*;
 
-pub struct ScatterBuilder<T> {
+pub struct ScatterBuilder<T, const DIM: UVec2> {
     shapes: Vec<Box<dyn Shape>>,
     values: Vec<u32>,
 
     phantom: PhantomData<T>,
 }
 
-impl<T> ScatterBuilder<T> {
+impl<T, const DIM: UVec2> ScatterBuilder<T, DIM> {
     pub fn new() -> Box<Self> {
         Box::new(Self {
             shapes: Vec::new(),
@@ -18,7 +18,7 @@ impl<T> ScatterBuilder<T> {
         })
     }
 
-    pub fn with_shape(mut self, shape: impl Shape) -> Box<Self> {
+    pub fn with_shape(mut self, shape: impl Shape + 'static) -> Box<Self> {
         self.shapes.push(Box::new(shape));
         Box::new(self)
     }
@@ -44,7 +44,7 @@ impl<T> ScatterBuilder<T> {
         Box::new(self)
     }
 
-    fn apply_shape(&mut self, shape: Box<dyn Shape>, data: &mut MapGenData<T>, values: &Vec<u32>) {
+    fn apply_shape(&mut self, shape: Box<dyn Shape>, data: &mut MapGenData<T, DIM>, values: &Vec<u32>) {
         // let world_position = data.world_position;
         let rng = &mut data.random.prng;
         let length = values.len() as u32 - 1;
@@ -57,8 +57,8 @@ impl<T> ScatterBuilder<T> {
     }
 }
 
-impl<T> MapArchitect<T> for ScatterBuilder<T> {
-    fn generate(&mut self, data: &mut MapGenData<T>) {
+impl<T, const DIM: UVec2> MapArchitect<T, DIM> for ScatterBuilder<T, DIM> {
+    fn generate(&mut self, data: &mut MapGenData<T, DIM>) {
         let mut values = self.values.clone();
         if values.is_empty() {
             values.push(0);

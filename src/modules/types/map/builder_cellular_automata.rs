@@ -26,7 +26,7 @@ impl<T> CellularAutomataBuilder<T> {
         })
     }
 
-    pub fn with_shape(mut self, shape: impl Shape) -> Box<Self> {
+    pub fn with_shape(mut self, shape: impl Shape + 'static) -> Box<Self> {
         self.shapes.push(Box::new(shape));
         Box::new(self)
     }
@@ -80,8 +80,8 @@ impl<T> CellularAutomataBuilder<T> {
     }
 }
 
-impl<T> MapArchitect<T> for CellularAutomataBuilder<T> {
-    fn generate(&mut self, data: &mut MapGenData<T>) {
+impl<T, const DIM: UVec2> MapArchitect<T, DIM> for CellularAutomataBuilder<T> {
+    fn generate(&mut self, data: &mut MapGenData<T, DIM>) {
         for _ in 0..self.number_of_iterations {
             let mut new_grid = data.output_grid.clone();
 

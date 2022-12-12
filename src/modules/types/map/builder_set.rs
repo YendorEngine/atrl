@@ -2,13 +2,13 @@ use std::marker::PhantomData;
 
 use crate::prelude::*;
 
-pub struct SetBuilder<T> {
+pub struct SetBuilder<T, const DIM: UVec2> {
     value: u32,
-    shapes: Vec<Box<dyn Shape>>,
     phantom: PhantomData<T>,
+    shapes: Vec<Box<dyn Shape>>,
 }
 
-impl<T> SetBuilder<T> {
+impl<T, const DIM: UVec2> SetBuilder<T, DIM> {
     pub fn new() -> Box<Self> {
         Box::new(Self {
             value: u32::MIN,
@@ -17,7 +17,7 @@ impl<T> SetBuilder<T> {
         })
     }
 
-    pub fn with_shape(mut self, shape: impl Shape) -> Box<Self> {
+    pub fn with_shape(mut self, shape: impl Shape + 'static) -> Box<Self> {
         self.shapes.push(Box::new(shape));
         Box::new(self)
     }
@@ -27,7 +27,7 @@ impl<T> SetBuilder<T> {
         Box::new(self)
     }
 
-    fn apply_shape(&self, shape: Box<dyn Shape>, data: &mut MapGenData<T>) {
+    fn apply_shape(&self, shape: Box<dyn Shape>, data: &mut MapGenData<T, DIM>) {
         for position in shape.boxed_iter() {
             if data.world_position == position.get_world_position() {
                 data.output_grid.set_unchecked(position.gridpoint(), self.value);
@@ -35,8 +35,8 @@ impl<T> SetBuilder<T> {
         }
     }
 }
-impl<T> MapArchitect<T> for SetBuilder<T> {
-    fn generate(&mut self, data: &mut MapGenData<T>) {
+impl<T, const DIM: UVec2> MapArchitect<T, DIM> for SetBuilder<T, DIM> {
+    fn generate(&mut self, data: &mut MapGenData<T, DIM>) {
         if !self.shapes.is_empty() {
             loop {
                 let shape = self.shapes.pop().unwrap();
