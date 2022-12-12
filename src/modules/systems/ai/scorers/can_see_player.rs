@@ -3,7 +3,7 @@ use crate::{prelude::*, resources::*};
 pub fn can_see_player<'w, 's>(
     player_entity: Res<PlayerEntity>,
     mut map_manager: MapManager<'w, 's>,
-    mobs_q: Query<(&Position, &FieldOfView, &Vision)>,
+    mobs_q: Query<(&PositionComponent, &FieldOfView, &Vision)>,
     q_blocks_vision: Query<'w, 's, &'static BlocksVision>,
     mut query: Query<(&Actor, &mut Score, &CanSeePlayer)>,
 ) {

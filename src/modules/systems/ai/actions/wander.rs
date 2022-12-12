@@ -10,18 +10,20 @@ pub fn wander_action(
     q_blocks_movement: Query<&BlocksMovement>,
     mut target_q: Query<&mut TargetVisualizer>,
     mut action_q: Query<(&Actor, &mut BigBrainActionState, &mut Wander)>,
-    mut spatial_q: Query<(&Position, &Movement, &Name, &mut AIComponent)>,
+    mut spatial_q: Query<(&PositionComponent, &Movement, &Name, &mut AIComponent)>,
 ) {
     use BigBrainActionState::*;
 
     for (Actor(actor), mut action_state, mut wander) in action_q.iter_mut() {
         let rng = ai_context.random.get_prng();
 
-        let Ok((ai_position, movement,name, mut ai_component)) =
+        let Ok((pc, movement,name, mut ai_component)) =
         spatial_q.get_mut(*actor) else {
             info!("Actor must have spatial components");
             continue
             };
+
+        let ai_position = pc.position;
 
         if ai_component.has_action() {
             // already wandering, quick return;

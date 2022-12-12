@@ -1,8 +1,8 @@
 use crate::prelude::*;
 
-pub fn entity_in_fov<Range: Into<u32>>(
-    map_manager: &mut MapManager,
-    q_blocks_vision: &Query<'static, 'static, &'static BlocksVision>,
+pub fn entity_in_fov<'w, 's, Range: Into<u32>>(
+    map_manager: &mut MapManager<'w, 's>,
+    q_blocks_vision: &Query<'w, 's, &'static BlocksVision>,
     range: Range,
     vision: &Vision,
     current_pos: Position,

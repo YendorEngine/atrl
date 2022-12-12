@@ -7,7 +7,6 @@ pub fn chase_action<'w, 's>(
     player_entity: Res<PlayerEntity>,
     mut map_manager: MapManager,
 
-    player_q: Query<&Position>,
     mut target_q: Query<&mut TargetVisualizer>,
     mut action_q: Query<(&Actor, &mut BigBrainActionState, &mut ChaseActor)>,
 
@@ -17,7 +16,7 @@ pub fn chase_action<'w, 's>(
     )>,
 
     mut mobs_q: Query<(
-        &Position,
+        &PositionComponent,
         &FieldOfView,
         &Movement,
         &Vision,
@@ -27,9 +26,12 @@ pub fn chase_action<'w, 's>(
 ) {
     use BigBrainActionState::*;
 
-    let Ok(player_position) = player_q.get(player_entity.current()) else {
-        info!("No player found!");
-        return;
+    let player_position = match mobs_q.get(player_entity.current()) {
+        Ok((p, ..)) => p.position.copied(),
+        Err() => {
+            info!("No player found!");
+            return;
+        }
     };
 
     for (Actor(actor), mut action_state, mut chase) in action_q.iter_mut() {
