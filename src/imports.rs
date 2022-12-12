@@ -60,7 +60,7 @@ pub use yendor::prelude::{
     Dimensions,
     FovProvider,
     PathProvider,
-    // *,
+    *,
 };
 
 use crate::globals::GRID_SIZE;
