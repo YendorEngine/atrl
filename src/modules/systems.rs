@@ -1,3 +1,20 @@
+pub mod big_brain {
+    mod scorers {
+        mod can_see_player;
+        pub use can_see_player::*;
+    }
+    pub use scorers::*;
+    mod actions {
+        mod attack;
+        pub use attack::*;
+        mod chase;
+        pub use chase::*;
+        mod wander;
+        pub use wander::*;
+    }
+    pub use actions::*;
+}
+
 pub mod camera {}
 
 pub mod init {
@@ -27,6 +44,14 @@ pub mod functions {
         pub use try_move::*;
     }
     pub use actions::*;
+
+    pub mod queries {
+        mod entity_in_fov;
+        pub use entity_in_fov::*;
+        mod in_attack_range;
+        pub use in_attack_range::*;
+    }
+    pub use queries::*;
 
     mod create_tilemap;
     pub use create_tilemap::*;

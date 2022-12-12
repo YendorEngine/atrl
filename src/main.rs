@@ -3,6 +3,7 @@
 // Features
 #![feature(trait_alias)]
 #![feature(adt_const_params)]
+#![feature(control_flow_enum)]
 // Allows
 #![allow(clippy::type_complexity)]
 #![allow(clippy::too_many_arguments)] // Bevy has a lot of arguments, so we shush clippy

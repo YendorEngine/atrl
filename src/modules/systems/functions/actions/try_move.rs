@@ -24,8 +24,8 @@ pub fn try_move(world: &mut World, entity: Entity, destination: Position) -> Res
                         destination,
                         &mut MapPathFinder,
                         PathPassThroughData {
-                            movement_type: 0,
                             map_manager: &mut map_manager,
+                            movement_type: movement_component.0,
                             q_blocks_movement: &q_blocks_movement,
                         },
                     )

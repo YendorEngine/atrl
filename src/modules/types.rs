@@ -29,6 +29,8 @@ pub use actor::*;
 pub mod app {
     mod app_state;
     pub use app_state::*;
+    mod app_stage;
+    pub use app_stage::*;
 }
 pub use app::*;
 
@@ -59,16 +61,6 @@ pub mod map {
     }
     pub use map_gen::*;
 
-    mod pass_through {
-        mod map_pass_through_data;
-        pub use map_pass_through_data::*;
-        mod path_pass_through_data;
-        pub use path_pass_through_data::*;
-        mod vision_pass_through_data;
-        pub use vision_pass_through_data::*;
-    }
-    pub use pass_through::*;
-
     mod map;
     pub use map::*;
     mod map_layer;
@@ -77,6 +69,16 @@ pub mod map {
     pub use map_path_finder::*;
 }
 pub use map::*;
+
+mod pass_through {
+    mod map_pass_through_data;
+    pub use map_pass_through_data::*;
+    mod path_pass_through_data;
+    pub use path_pass_through_data::*;
+    mod vision_pass_through_data;
+    pub use vision_pass_through_data::*;
+}
+pub use pass_through::*;
 
 pub mod random {
     mod prht;
