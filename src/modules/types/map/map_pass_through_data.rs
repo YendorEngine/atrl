@@ -9,8 +9,8 @@ pub struct MapPassThroughData {
 impl From<MapGenData<MapPassThroughData>> for Map {
     fn from(data: MapGenData<MapPassThroughData>) -> Self {
         let mut terrain_types = Grid::new_default();
-        for y in 0..data.size.height() {
-            for x in 0..data.size.width() {
+        for y in 0..GRID_HEIGHT {
+            for x in 0..GRID_WIDTH {
                 let v = *data.output_grid.get_unchecked((x, y));
                 terrain_types.set((x, y), v as usize);
             }
@@ -18,7 +18,6 @@ impl From<MapGenData<MapPassThroughData>> for Map {
 
         Self {
             entity: data.user_data.map_entity,
-            size: data.size,
             world_position: data.world_position,
             random: data.random,
 

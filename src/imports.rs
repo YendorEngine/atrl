@@ -46,21 +46,9 @@ pub use smart_default::SmartDefault;
 pub use thiserror::Error;
 pub use xxhash_rust::xxh3::*;
 pub use yendor::prelude::{
-    Direction,
-    Grid as YendorGrid,
-    Position as YendorPosition,
-    Random as YendorRandom,
-    Shape as YendorShape,
-    Rectangle as YendorRectangle,
-    Circle as YendorCircle,
-    Line as YendorLine,
-    WorldPosition,
-    LocalPosition,
-    Point,
-    Dimensions,
-    FovProvider,
-    PathProvider,
-    *,
+    Circle as YendorCircle, Dimensions, Direction, FovProvider, Grid as YendorGrid, Line as YendorLine,
+    LocalPosition, PathProvider, Point, Position as YendorPosition, Random as YendorRandom,
+    Rectangle as YendorRectangle, Shape as YendorShape, WorldPosition, *,
 };
 
 use crate::globals::GRID_SIZE;

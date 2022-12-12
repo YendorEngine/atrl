@@ -4,7 +4,6 @@ use crate::prelude::*;
 #[derive(Debug)]
 pub struct Map {
     // Map Definitions
-    pub size: UVec2,
     pub entity: Entity,
     pub random: Random,
     pub world_position: WorldPosition,
@@ -38,7 +37,7 @@ impl Map {
         movement_type: u8,
         q_blocks_movement: &Query<&BlocksMovement>,
     ) -> bool {
-        let Some(index) = position.grid_index(self.size) else { return false; };
+        let Some(index) = position.grid_index(GRID_SIZE) else { return false; };
 
         !self.is_blocked(index, movement_type, q_blocks_movement)
     }
@@ -52,7 +51,7 @@ impl Map {
         movement_type: u8,
         q_blocks_movement: &Query<&BlocksMovement>,
     ) -> bool {
-        let Some(index) = position.grid_index(self.size) else { return false; };
+        let Some(index) = position.grid_index(GRID_SIZE) else { return false; };
 
         if self.can_place_actor(position, movement_type, q_blocks_movement) {
             if self.actors[index].is_none() {
@@ -73,7 +72,7 @@ impl Map {
     /// Do not use this function!!!
     /// Use MapManager::remove_actor instead!!!
     pub fn remove_actor(&mut self, actor: Entity, position: LocalPosition) {
-        let Some(index) = position.grid_index(self.size) else { return; };
+        let Some(index) = position.grid_index(GRID_SIZE) else { return; };
 
         if let Some(actors) = self.actors[index].as_mut() {
             actors.retain(|&x| x != actor);
@@ -87,7 +86,7 @@ impl Map {
     /// Do not use this function!!!
     /// Use MapManager::get_actors instead!!!
     pub fn get_actors(&self, position: LocalPosition) -> Option<&Vec<Entity>> {
-        let Some(index) = position.grid_index(self.size) else { return None; };
+        let Some(index) = position.grid_index(GRID_SIZE) else { return None; };
         self.actors[index].as_ref()
     }
 }
@@ -97,7 +96,7 @@ impl Map {
     /// Do not use this function!!!
     /// Use MapManager::add_feature instead!!!
     pub fn add_feature(&mut self, feature: Entity, position: LocalPosition) -> bool {
-        let Some(index) = position.grid_index(self.size) else { return false; };
+        let Some(index) = position.grid_index(GRID_SIZE) else { return false; };
 
         if self.features[index].is_none() {
             self.features[index] = Some(Vec::new());
@@ -114,7 +113,7 @@ impl Map {
     /// Do not use this function!!!
     /// Use MapManager::remove_feature instead!!!
     pub fn remove_feature(&mut self, feature: Entity, position: LocalPosition) {
-        let Some(index) = position.grid_index(self.size) else { return; };
+        let Some(index) = position.grid_index(GRID_SIZE) else { return; };
 
         if let Some(features) = self.features[index].as_mut() {
             features.retain(|&x| x != feature);
@@ -128,7 +127,7 @@ impl Map {
     /// Do not use this function!!!
     /// Use MapManager::get_features instead!!!
     pub fn get_features(&self, position: LocalPosition) -> Option<&Vec<Entity>> {
-        let Some(index) = position.grid_index(self.size) else { return None; };
+        let Some(index) = position.grid_index(GRID_SIZE) else { return None; };
 
         self.features[index].as_ref()
     }

@@ -447,8 +447,8 @@ pub fn update_tilemaps(
     let map = &mut map_manager.map_manager.current_map.1;
 
     if map.update_all {
-        for y in 0..map.size.height() {
-            for x in 0..map.size.width() {
+        for y in 0..GRID_HEIGHT {
+            for x in 0..GRID_WIDTH {
                 let tile_pos = TilePos::new(x, y);
 
                 // Update Terrain
@@ -533,9 +533,9 @@ pub fn update_tilemaps(
     // refresh mutable reference for borrow checker...
     let (current_world_position, map) = &mut map_manager.get_current_map();
 
-    for y in 0..map.size.height() {
+    for y in 0..GRID_HEIGHT {
         position.set_y(y);
-        for x in 0..map.size.width() {
+        for x in 0..GRID_WIDTH {
             position.set_x(x);
 
             let tile_pos = TilePos::new(x, y);
