@@ -68,8 +68,7 @@ pub use crate::prelude::Random;
 pub type Grid<T> = YendorGrid<T, GRID_SIZE>;
 pub type Position = YendorPosition<GRID_SIZE>;
 pub trait Shape = YendorShape<GRID_SIZE>;
-pub type GridRectangle = YendorRectangle<GRID_SIZE>;
-pub use crate::prelude::Rectangle;
+pub type Rectangle = YendorRectangle<GRID_SIZE>;
 pub type Circle = YendorCircle<GRID_SIZE>;
 pub type Line = YendorLine<GRID_SIZE>;
 

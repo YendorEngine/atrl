@@ -96,7 +96,7 @@ impl<T, const DIM: UVec2> MapArchitect<T, DIM> for CellularAutomataBuilder<T> {
                 }
             } else {
                 self.apply_shape(
-                    Box::new(GridRectangle::new(
+                    Box::new(Rectangle::new(
                         Position::new_grid_min(data.world_position),
                         Position::new_grid_max(data.world_position),
                     )),

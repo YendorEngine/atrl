@@ -350,7 +350,7 @@ impl<'w, 's> MapManager<'w, 's> {
                 )),
         )
         .with(
-            SetBuilder::new().set_value(0).with_shape(GridRectangle::new(
+            SetBuilder::new().set_value(0).with_shape(Rectangle::new(
                 Position::new(
                     world_position,
                     LocalPosition::new(GRID_WIDTH / 2 - 4, GRID_HEIGHT / 2 - 4),
