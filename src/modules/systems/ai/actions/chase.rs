@@ -5,14 +5,16 @@ use crate::{prelude::*, resources::*};
 pub fn chase_action<'w, 's>(
     mut commands: Commands,
     player_entity: Res<PlayerEntity>,
-    mut map_manager: MapManager<'w, 's>,
+    mut map_manager: MapManager,
 
     player_q: Query<&Position>,
     mut target_q: Query<&mut TargetVisualizer>,
     mut action_q: Query<(&Actor, &mut BigBrainActionState, &mut ChaseActor)>,
 
-    q_blocks_vision: Query<&'static BlocksVision>,
-    q_blocks_movement: Query<'w, 's, &'static BlocksMovement>,
+    mut blocking_set: ParamSet<(
+        Query<'w, 's, &'static BlocksVision>,
+        Query<'w, 's, &'static BlocksMovement>,
+    )>,
 
     mut mobs_q: Query<(
         &Position,
@@ -81,7 +83,7 @@ pub fn chase_action<'w, 's>(
 
         let position = if entity_in_fov(
             &mut map_manager,
-            &q_blocks_vision,
+            &blocking_set.p0(),
             fov.0 as u32 + 2,
             vision,
             ai_position,
@@ -120,7 +122,7 @@ pub fn chase_action<'w, 's>(
                     last_seen,
                     movement.0,
                     &mut map_manager,
-                    &q_blocks_movement,
+                    &blocking_set.p1(),
                 );
 
                 let point = path.first().unwrap_or(&last_seen);

@@ -2,7 +2,7 @@ use crate::prelude::*;
 
 pub fn entity_in_fov<Range: Into<u32>>(
     map_manager: &mut MapManager,
-    q_blocks_vision: &Query<&'static BlocksVision>,
+    q_blocks_vision: &Query<'static, 'static, &'static BlocksVision>,
     range: Range,
     vision: &Vision,
     current_pos: Position,
@@ -14,12 +14,16 @@ pub fn entity_in_fov<Range: Into<u32>>(
     if distance <= range {
         let octant = current_pos.octant_to(target_pos);
         let direction = Direction::from_octant(octant);
-        Fov::ShadowcastDirection(direction).compute(current_pos, range, map_manager, VisionPassThroughData {
-            q_blocks_vision,
-            vision_type: vision.0,
-        });
-
-        false
+        Fov::ShadowcastDirection(direction).within_fov(
+            current_pos,
+            target_pos,
+            range,
+            map_manager,
+            VisionPassThroughData {
+                q_blocks_vision,
+                vision_type: vision.0,
+            },
+        )
     } else {
         false
     }

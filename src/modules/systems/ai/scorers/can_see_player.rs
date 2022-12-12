@@ -1,10 +1,10 @@
 use crate::{prelude::*, resources::*};
 
-pub fn can_see_player(
-    mut map_manager: MapManager,
+pub fn can_see_player<'w, 's>(
     player_entity: Res<PlayerEntity>,
+    mut map_manager: MapManager<'w, 's>,
     mobs_q: Query<(&Position, &FieldOfView, &Vision)>,
-    q_blocks_vision: Query<&'static BlocksVision>,
+    q_blocks_vision: Query<'w, 's, &'static BlocksVision>,
     mut query: Query<(&Actor, &mut Score, &CanSeePlayer)>,
 ) {
     let Ok((player_position, ..)) = mobs_q.get(player_entity.current()) else {

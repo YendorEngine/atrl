@@ -29,10 +29,14 @@ impl Plugin for SystemsPlugin {
 
 impl SystemsPlugin {
     fn external_plugins(self, app: &mut App) -> Self {
-        app.insert_resource(TilemapRenderSettings {
+        app
+        // ECS Tilemap
+        .insert_resource(TilemapRenderSettings {
             render_chunk_size: GRID_SIZE,
         })
-        .add_plugin(TilemapPlugin);
+        .add_plugin(TilemapPlugin)
+        // Big Brain
+        .add_plugin(BigBrainPlugin);
         self
     }
 
@@ -244,6 +248,29 @@ impl SystemsPlugin {
         // CoreStage::Update,
         // ConditionSet::new().run_in_state(AppState::Quit).with_system(system).into(),
         // );
+        self
+    }
+
+    fn ai_states(self, app: &mut App) -> Self {
+        app
+            // Scoring Systems
+            .add_system_set_to_stage(
+                BigBrainStage::Scorers,
+                ConditionSet::new()
+                .run_in_state(AppState::InGame)
+                    .with_system(can_see_player)
+                    .into(),
+            )
+            // Action Systems
+            .add_system_set_to_stage(
+                AppStage::AIThinking,
+                ConditionSet::new()
+                    .run_in_state(AppState::InGame)
+                    .with_system(wander_action)
+                    .with_system(chase_action)
+                    .with_system(attack_action)
+                    .into(),
+            );
         self
     }
 }

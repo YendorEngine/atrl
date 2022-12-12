@@ -1,4 +1,4 @@
-pub mod big_brain {
+pub mod ai {
     mod scorers {
         mod can_see_player;
         pub use can_see_player::*;
@@ -14,6 +14,7 @@ pub mod big_brain {
     }
     pub use actions::*;
 }
+pub use ai::*;
 
 pub mod camera {}
 

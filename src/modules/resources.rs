@@ -34,7 +34,7 @@ pub use turn_manager::*;
 
 pub use crate::prelude::{
     resources::{ai_context::*, app_settings::*, game_context::*, player::*, turn_manager::*, ui::*},
-    *,
+    App,
 };
 
 // TODO: How much of this can we turn into loading systems to hide behind a Splash Screen /

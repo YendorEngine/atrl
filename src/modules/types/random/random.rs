@@ -28,9 +28,11 @@ impl Random {
 
     pub fn get_noise(&mut self) -> &mut Fbm<Perlin> { &mut self.noise }
 }
+
 impl Default for Random {
     fn default() -> Self { Self::from_entropy() }
 }
+
 impl std::fmt::Debug for Random {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Random({:?})", self.seed)
