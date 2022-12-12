@@ -4,6 +4,6 @@ use crate::prelude::*;
 pub enum AIType {
     #[default]
     Player,
-    Aggressive,
     Scared,
+    Aggressive,
 }

@@ -5,6 +5,11 @@ pub mod camera {
     pub use loaded_cameras::*;
 }
 
+pub mod player {
+    mod player_timer;
+    pub use player_timer::*;
+}
+
 pub mod ui {
     mod mouse_position;
     pub use mouse_position::*;
@@ -18,6 +23,8 @@ mod app_settings;
 pub use app_settings::*;
 mod game_context;
 pub use game_context::*;
+mod game_settings;
+pub use game_settings::*;
 mod map_manager_resource;
 pub use map_manager_resource::*;
 mod player_entity;
@@ -25,8 +32,8 @@ pub use player_entity::*;
 mod turn_manager;
 pub use turn_manager::*;
 
-use crate::prelude::{
-    resources::{ai_context::*, app_settings::*, game_context::*, turn_manager::*, ui::*},
+pub use crate::prelude::{
+    resources::{ai_context::*, app_settings::*, game_context::*, player::*, turn_manager::*, ui::*},
     *,
 };
 

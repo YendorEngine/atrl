@@ -109,6 +109,16 @@ impl<'w, 's> MapManager<'w, 's> {
 
     /// Grab map_manager's current map mut
     pub fn get_current_map_mut(&mut self) -> &mut (WorldPosition, Map) { &mut self.map_manager.current_map }
+
+    /// attempts to get a map for the current world position
+    pub fn get_map(&mut self, world_position: WorldPosition) -> Option<&mut Map> {
+        self.load_map(world_position);
+        if self.map_manager.current_map.0 == world_position {
+            Some(&mut self.map_manager.current_map.1)
+        } else {
+            self.map_manager.loaded_maps.get_mut(&world_position)
+        }
+    }
 }
 
 // Perform feature functions on maps
@@ -204,15 +214,6 @@ impl<'w, 's> MapManager<'w, 's> {
 
 // Internal MapManager Functions
 impl<'w, 's> MapManager<'w, 's> {
-    fn get_map(&mut self, world_position: WorldPosition) -> Option<&mut Map> {
-        self.load_map(world_position);
-        if self.map_manager.current_map.0 == world_position {
-            Some(&mut self.map_manager.current_map.1)
-        } else {
-            self.map_manager.loaded_maps.get_mut(&world_position)
-        }
-    }
-
     fn load_map(&mut self, world_position: WorldPosition) {
         if self.is_map_loaded(world_position) ||
             self.deserialize_map(world_position) ||
@@ -420,48 +421,15 @@ impl<'w, 's> FovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for MapManage
         false
     }
 }
-
-struct MapPathFinder;
-
-// Implement PathProvider
-impl<'a, 'w, 's> PathProvider<PathPassThroughData<'a, 'w, 's>, GRID_SIZE> for MapPathFinder {
-    fn get_neighbors(
-        &self,
-        position: Position,
-        pass_through_data: &mut PathPassThroughData<'a, 'w, 's>,
-    ) -> Vec<Position> {
-        let Some(map) = pass_through_data.map_manager.get_map(position.get_world_position()) else { return Vec::new() };
-        let mut neighbors = Vec::new();
-
-        for direction in Direction::all() {
-            let p = position + direction.coord();
-            if map.can_place_actor(
-                p.get_local_position(),
-                pass_through_data.movement_type,
-                &pass_through_data.q_blocks_movement,
-            ) {
-                neighbors.push(p);
-            }
-        }
-
-        // Example adding 3rd dimension around a stairs feature
-        // if let Some(features) = map.get_features(position) {
-        // for feature in features {
-        // if let Ok(feature) = pass_through_data.q_features.get(feature) {
-        // if (feature & Features::StairsUp != 0) | (feature & Features::StairsDown != 0) {
-        // for direction in VerticalDirection::all() {
-        // let p = position + direction.coord();
-        // if let Some(map) = self.get_map(p.get_world_position()) {
-        // if map.can_place_actor(p.get_local_position(), pass_through_data.movement_type,
-        // pass_through_data.q_blocks_movement) { neighbors.push(p);
-        // }
-        // }
-        // }
-        // }
-        // }
-        // }
-        // }
-
-        neighbors
-    }
+fn sys(mut map_manager: MapManager, q_blocks_movement: Query<&BlocksMovement>) {
+    PathFinder::Astar.compute(
+        Position::ZERO,
+        Position::ZERO,
+        &mut MapPathFinder,
+        PathPassThroughData {
+            map_manager,
+            movement_type: 0,
+            q_blocks_movement,
+        },
+    );
 }

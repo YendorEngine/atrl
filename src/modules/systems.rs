@@ -20,12 +20,22 @@ pub mod init {
 }
 
 pub mod functions {
+    mod actions {
+        mod try_attack;
+        pub use try_attack::*;
+        mod try_move;
+        pub use try_move::*;
+    }
+    pub use actions::*;
+
     mod create_tilemap;
     pub use create_tilemap::*;
 }
 pub use functions::*;
 
 pub mod run {
+    mod player_input;
+    pub use player_input::*;
     mod set_current_map_to_current_player;
     pub use set_current_map_to_current_player::*;
     mod update_tilesmaps;

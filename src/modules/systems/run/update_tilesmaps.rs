@@ -1,5 +1,4 @@
-use crate::prelude::*;
-use crate::resources::*;
+use crate::{prelude::*, resources::*};
 
 pub fn update_tilemaps(
     mut map_manager: MapManager,
@@ -102,15 +101,12 @@ pub fn update_tilemaps(
         map.update_tiles = check_next;
     }
 
-    let mut position = Position::new(
-        *world_position,
-        LocalPosition::new(0, 0),
-    );
+    let mut position = Position::new(*world_position, LocalPosition::new(0, 0));
 
     // let visible_tiles = map_manager.map_manager.visible_tiles;
     let visible_tiles = map_manager.get_visible_tiles();
     // refresh mutable reference for borrow checker...
-    let (current_world_position, map) = map_manager.get_current_map_mut();
+    let (current_world_position, map) = map_manager.get_current_map();
 
     for y in 0..GRID_HEIGHT {
         position.set_y(y);

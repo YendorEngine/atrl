@@ -1,3 +1,13 @@
+pub mod actions {
+    mod attack_action;
+    pub use attack_action::*;
+    mod movement_action;
+    pub use movement_action::*;
+    mod wait_action;
+    pub use wait_action::*;
+}
+pub use actions::*;
+
 pub mod actor {
     mod action;
     pub use action::*;
@@ -30,37 +40,41 @@ pub mod camera {
     pub use settings::*;
 }
 
-pub mod canvas {
-    mod canvas;
-    pub use canvas::*;
-}
-pub use canvas::*;
-
 pub mod map {
-    mod architect;
-    pub use architect::*;
-    mod builder_cellular_automata;
-    pub use builder_cellular_automata::*;
-    mod builder_noise;
-    pub use builder_noise::*;
-    mod builder_scatter;
-    pub use builder_scatter::*;
-    mod builder_set;
-    pub use builder_set::*;
-    mod map_gen_data;
-    pub use map_gen_data::*;
-    mod map_generator;
-    pub use map_generator::*;
-    mod map_layer;
-    pub use map_layer::*;
-    mod map_pass_through_data;
-    pub use map_pass_through_data::*;
+    mod map_gen {
+        mod architect;
+        pub use architect::*;
+        mod builder_cellular_automata;
+        pub use builder_cellular_automata::*;
+        mod builder_noise;
+        pub use builder_noise::*;
+        mod builder_scatter;
+        pub use builder_scatter::*;
+        mod builder_set;
+        pub use builder_set::*;
+        mod map_gen_data;
+        pub use map_gen_data::*;
+        mod map_generator;
+        pub use map_generator::*;
+    }
+    pub use map_gen::*;
+
+    mod pass_through {
+        mod map_pass_through_data;
+        pub use map_pass_through_data::*;
+        mod path_pass_through_data;
+        pub use path_pass_through_data::*;
+        mod vision_pass_through_data;
+        pub use vision_pass_through_data::*;
+    }
+    pub use pass_through::*;
+
     mod map;
     pub use map::*;
-    mod path_pass_through_data;
-    pub use path_pass_through_data::*;
-    mod vision_pass_through_data;
-    pub use vision_pass_through_data::*;
+    mod map_layer;
+    pub use map_layer::*;
+    mod map_path_finder;
+    pub use map_path_finder::*;
 }
 pub use map::*;
 

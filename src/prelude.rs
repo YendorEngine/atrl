@@ -4,6 +4,7 @@ pub use crate::{
     modules::{
         components::*,
         system_params::*,
+        systems::*,
         types::*,
         utilities::error, // error is ambiguous otherwise.
         *,

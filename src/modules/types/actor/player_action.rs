@@ -33,14 +33,14 @@ impl PlayerAction {
 
     pub const fn direction(self) -> Option<Direction> {
         match self {
-            Self::NorthWest => Some(Direction::NORTH_WEST),
-            Self::North => Some(Direction::NORTH),
-            Self::NorthEast => Some(Direction::NORTH_EAST),
-            Self::East => Some(Direction::EAST),
-            Self::SouthEast => Some(Direction::SOUTH_EAST),
-            Self::South => Some(Direction::SOUTH),
-            Self::SouthWest => Some(Direction::SOUTH_WEST),
             Self::West => Some(Direction::WEST),
+            Self::East => Some(Direction::EAST),
+            Self::North => Some(Direction::NORTH),
+            Self::South => Some(Direction::SOUTH),
+            Self::NorthEast => Some(Direction::NORTH_EAST),
+            Self::SouthEast => Some(Direction::SOUTH_EAST),
+            Self::SouthWest => Some(Direction::SOUTH_WEST),
+            Self::NorthWest => Some(Direction::NORTH_WEST),
             _ => None,
         }
     }
