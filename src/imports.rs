@@ -46,8 +46,21 @@ pub use smart_default::SmartDefault;
 pub use thiserror::Error;
 pub use xxhash_rust::xxh3::*;
 pub use yendor::prelude::{
-    Direction, Grid as YendorGrid, GridRectangle as YendorRectangle, Position as YendorPosition,
-    Random as YendorRandom, Shape as YendorShape, *,
+    Direction,
+    Grid as YendorGrid,
+    Position as YendorPosition,
+    Random as YendorRandom,
+    Shape as YendorShape,
+    Rectangle as YendorRectangle,
+    Circle as YendorCircle,
+    Line as YendorLine,
+    WorldPosition,
+    LocalPosition,
+    Point,
+    Dimensions,
+    FovProvider,
+    PathProvider,
+    // *,
 };
 
 use crate::globals::GRID_SIZE;
@@ -56,6 +69,8 @@ pub type Grid<T> = YendorGrid<T, GRID_SIZE>;
 pub type Position = YendorPosition<GRID_SIZE>;
 pub trait Shape = YendorShape<GRID_SIZE>;
 pub type GridRectangle = YendorRectangle<GRID_SIZE>;
+pub type Circle = YendorCircle<GRID_SIZE>;
+pub type Line = YendorLine<GRID_SIZE>;
 
 #[cfg(feature = "debug")]
 mod debug {
