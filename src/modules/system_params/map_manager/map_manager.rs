@@ -421,15 +421,3 @@ impl<'w, 's> FovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for MapManage
         false
     }
 }
-fn sys(mut map_manager: MapManager, q_blocks_movement: Query<&BlocksMovement>) {
-    PathFinder::Astar.compute(
-        Position::ZERO,
-        Position::ZERO,
-        &mut MapPathFinder,
-        PathPassThroughData {
-            map_manager,
-            movement_type: 0,
-            q_blocks_movement,
-        },
-    );
-}
