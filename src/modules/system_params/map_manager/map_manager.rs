@@ -106,6 +106,9 @@ impl<'w, 's> MapManager<'w, 's> {
 
     /// Grab map_manager's current map
     pub fn get_current_map(&self) -> &(WorldPosition, Map) { &self.map_manager.current_map }
+
+    /// Grab map_manager's current map mut
+    pub fn get_current_map_mut(&mut self) -> &mut (WorldPosition, Map) { &mut self.map_manager.current_map }
 }
 
 // Perform feature functions on maps
@@ -186,6 +189,10 @@ impl<'w, 's> MapManager<'w, 's> {
 impl<'w, 's> MapManager<'w, 's> {
     pub fn get_current_world_position(&self) -> WorldPosition { self.map_manager.current_map.0 }
 
+    pub fn get_terrain_layer(&self) -> Entity { self.map_manager.terrain_layer }
+
+    pub fn get_features_layer(&self) -> Entity { self.map_manager.features_layer }
+
     pub fn set_visibility(&mut self, visibility_map: HashSet<Position>) {
         for position in visibility_map.iter() {
             let Some(map) = self.get_map(position.get_world_position()) else { return; };
@@ -239,7 +246,7 @@ impl<'w, 's> MapManager<'w, 's> {
         self.map_manager.loaded_maps.insert(world_position, map);
     }
 
-    fn set_current_map(&mut self, world_position: WorldPosition) {
+    pub fn internal_set_current_map(&mut self, world_position: WorldPosition) {
         // Check map is not current already.
         if self.map_manager.current_map.0 != world_position {
             // Verify map is loaded.
@@ -258,7 +265,7 @@ impl<'w, 's> MapManager<'w, 's> {
 
 // "Static" functions
 impl<'w, 's> MapManager<'w, 's> {
-    fn internal_create_tilemaps(commands: &mut Commands, tilesets: &Tilesets) -> (Entity, Entity) {
+    pub fn internal_create_tilemaps(commands: &mut Commands, tilesets: &Tilesets) -> (Entity, Entity) {
         let map_size = UVec2::new(GRID_WIDTH, GRID_HEIGHT);
 
         let tileset = tilesets.get_by_id(&TILESET_TERRAIN_ID).expect("Cannot find TILESET_TERRAIN_ID.");
@@ -287,7 +294,7 @@ impl<'w, 's> MapManager<'w, 's> {
         (terrain_layer_entity, features_layer_entity)
     }
 
-    fn internal_create_map(
+    pub fn internal_create_map(
         commands: &mut Commands,
         game_context: &mut ResMut<GameContext>,
         world_position: WorldPosition,
@@ -380,200 +387,6 @@ impl<'w, 's> MapManager<'w, 's> {
         }
 
         map
-    }
-}
-
-// MapManager Systems
-pub fn startup_map_manager(
-    tilesets: Tilesets,
-    mut commands: Commands,
-    mut game_context: ResMut<GameContext>,
-) {
-    // TODO: Deserialize map
-    let world_position = WorldPosition::new(0, 0, 0);
-    let map = MapManager::internal_create_map(&mut commands, &mut game_context, world_position);
-    let (terrain_layer, features_layer) = MapManager::internal_create_tilemaps(&mut commands, &tilesets);
-    commands.insert_resource(MapManagerResource::new(
-        world_position,
-        map,
-        terrain_layer,
-        features_layer,
-    ));
-
-    // AppState::Loading(LoadingState::InitGame) -> AppState::Loading(LoadingState::WorldGen)
-    switch_app_state!(commands, AppState::Loading(LoadingState::WorldGen));
-}
-
-pub fn set_current_map_to_current_player(
-    mut map_manager: MapManager,
-    player_entity: Res<PlayerEntity>,
-    q_positions: Query<&PositionComponent>,
-) {
-    if let Ok(pc) = q_positions.get(player_entity.current()) {
-        let position = pc.position;
-        if map_manager.map_manager.current_map.0 != position.get_world_position() {
-            info!(
-                "Switching map to: WorldPosition:{}",
-                position.get_world_position()
-            );
-            map_manager.set_current_map(position.get_world_position());
-            map_manager.map_manager.current_map.1.update_all = true;
-        }
-    }
-}
-
-pub fn update_tilemaps(
-    mut map_manager: MapManager,
-    q_storage: Query<&TileStorage>,
-    mut q_tiles: Query<(&mut TileTextureIndex, &mut TileVisible, &mut TileColor)>,
-    // TODO: Component for holding image index on features???
-    mut q_visibility: ParamSet<(
-        Query<&mut Visibility>,
-        Query<(&mut Visibility, &PositionComponent), With<Mob>>,
-    )>,
-) {
-    // Get storages
-    let Ok(terrain_storage) = q_storage.get(map_manager.map_manager.terrain_layer) else {
-        error!("No terrain storage!");
-        return;
-    };
-
-    let Ok(feature_storage) = q_storage.get(map_manager.map_manager.features_layer) else {
-        error!("No feature storage!");
-        return;
-    };
-
-    let mut check_next = HashSet::new();
-    let map = &mut map_manager.map_manager.current_map.1;
-
-    if map.update_all {
-        for y in 0..GRID_HEIGHT {
-            for x in 0..GRID_WIDTH {
-                let tile_pos = TilePos::new(x, y);
-
-                // Update Terrain
-                let Some(entity) = terrain_storage.get(&tile_pos) else {
-                    check_next.insert(UVec2::new(x, y));
-                    continue;
-                };
-                let Ok((mut tile_texture_index, ..)) = q_tiles.get_mut(entity) else {
-                    check_next.insert(UVec2::new(x, y));
-                    continue;
-                };
-                let index = *map.terrain.get_unchecked(UVec2::new(x, y)) as u32;
-                tile_texture_index.0 = index;
-
-                // Update Features
-                let Some(entity) = feature_storage.get(&tile_pos) else {
-                    check_next.insert(UVec2::new(x, y));
-                    continue;
-                };
-                let Ok((mut _tile_texture_index, ..)) = q_tiles.get_mut(entity) else {
-                    check_next.insert(UVec2::new(x, y));
-                    continue;
-                };
-                let Some(list) = map.features.get_unchecked(UVec2::new(x, y)) else {
-                    continue;
-                };
-                let Some(_feature_entity) = list.first() else {
-                    continue;
-                };
-                // Get feature TileId
-                // tile_texture_index.0 = feature_tile_id
-            }
-        }
-
-        map.update_tiles = check_next;
-        map.update_all = false;
-    } else {
-        let mut points = std::mem::take(&mut map.update_tiles);
-        for point in points.drain() {
-            let tile_pos = TilePos::new(point.x, point.y);
-
-            // Update Terrain
-            let Some(entity) = terrain_storage.get(&tile_pos) else {
-                check_next.insert(UVec2::new(point.x, point.y));
-                continue;
-            };
-            let Ok((mut tile_texture_index, ..)) = q_tiles.get_mut(entity) else {
-                check_next.insert(UVec2::new(point.x, point.y));
-                continue;
-            };
-            let index = *map.terrain.get_unchecked(UVec2::new(point.x, point.y)) as u32;
-            tile_texture_index.0 = index;
-
-            // Update Features
-            let Some(entity) = feature_storage.get(&tile_pos) else {
-                check_next.insert(UVec2::new(point.x, point.y));
-                continue;
-            };
-            let Ok((mut _tile_texture_index, ..)) = q_tiles.get_mut(entity) else {
-                check_next.insert(UVec2::new(point.x, point.y));
-                continue;
-            };
-            let Some(list) = map.features.get_unchecked(UVec2::new(point.x, point.y)) else {
-                continue;
-            };
-            let Some(_feature_entity) = list.first() else {
-                continue;
-            };
-            // Get feature TileId
-            // tile_texture_index.0 = feature_tile_id
-        }
-        map.update_tiles = check_next;
-    }
-
-    let mut position = Position::new(
-        map_manager.map_manager.current_map.0,
-        LocalPosition::new(0, 0),
-    );
-
-    // let visible_tiles = map_manager.map_manager.visible_tiles;
-    let visible_tiles = map_manager.get_visible_tiles();
-    // refresh mutable reference for borrow checker...
-    let (current_world_position, map) = &mut map_manager.get_current_map();
-
-    for y in 0..GRID_HEIGHT {
-        position.set_y(y);
-        for x in 0..GRID_WIDTH {
-            position.set_x(x);
-
-            let tile_pos = TilePos::new(x, y);
-            let is_explored = map.explored_tiles.contains(&UVec2::new(x, y));
-
-            // Terrain
-            if let Some(entity) = terrain_storage.get(&tile_pos) {
-                if let Ok(mut visibility) = q_visibility.p0().get_mut(entity) {
-                    visibility.is_visible = is_explored;
-                }
-
-                if let Ok((_index, mut tile_visibility, mut tile_color)) = q_tiles.get_mut(entity) {
-                    tile_visibility.0 = is_explored;
-                    tile_color.0.set_a(0.15);
-                    if visible_tiles.contains(&position) {
-                        tile_color.0.set_a(1.0);
-                    }
-                }
-            }
-
-            // Features
-            if let Some(entity) = feature_storage.get(&tile_pos) {
-                if let Ok(mut visibility) = q_visibility.p0().get_mut(entity) {
-                    visibility.is_visible = map.explored_tiles.contains(&UVec2::new(x, y));
-                }
-            }
-            // tiles too
-        }
-    }
-
-    // Actors
-    for (mut visibility, pc) in q_visibility.p1().iter_mut() {
-        let position = pc.position;
-        if position.get_world_position() == *current_world_position {
-            visibility.is_visible = visible_tiles.contains(&position);
-        } else {
-            visibility.is_visible = false;
-        }
     }
 }
 

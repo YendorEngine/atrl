@@ -3,6 +3,11 @@ use crate::prelude::{
     *,
 };
 
+#[derive(SystemLabel)]
+enum MapLabel {
+    SwitchMaps,
+}
+
 #[derive(Clone, Copy)]
 pub struct SystemsPlugin;
 
@@ -20,6 +25,14 @@ impl Plugin for SystemsPlugin {
 }
 
 impl SystemsPlugin {
+    fn external_plugins(self, app: &mut App) -> Self {
+        app
+            .insert_resource(TilemapRenderSettings { render_chunk_size: GRID_SIZE })
+            .add_plugin(TilemapPlugin)
+        ;
+        self
+    }
+
     // LoadingState
     fn loading_state(self, app: &mut App) -> Self {
         // These are the first systems to run:
@@ -29,18 +42,10 @@ impl SystemsPlugin {
             ConditionSet::new()
             .with_system(spawn_cameras) // TODO: Rewrite camera stuff
             //.with_system(show_splash_screen) // TODO: Splash screen
+            .with_system(init_white_pixel) // We can use white_pixel as a solid color
+            .with_system(init_app_settings) // Load the app_settings from file or default. These will help determine how our app is setup.
+            .with_system(switch_app_state!(AppState::Menu(MenuState::MainMenu)))
             .into(),
-        );
-
-        // Load all of the assets here while the splash screen shows
-        app.add_system_set_to_stage(
-            CoreStage::Update,
-            ConditionSet::new()
-                .run_in_state(AppState::Loading(LoadingState::Assets))
-                .with_system(init_white_pixel) // We can use white_pixel as a solid color
-                .with_system(init_app_settings) // Load the app_settings from file or default. These will help determine how our app is setup.
-                .with_system(switch_app_state!(AppState::Menu(MenuState::MainMenu)))
-                .into(),
         );
 
         /*
@@ -53,74 +58,86 @@ impl SystemsPlugin {
         );
         */
 
-
-        app.add_system_set_to_stage(
-            CoreStage::Update,
+        // Show Loading Screen
+        app.add_enter_system_set(
+            AppState::Loading(LoadingState::InitGame),
             ConditionSet::new()
-            .run_in_state(AppState::Loading(LoadingState::InitGame))
-            .with_system(init_contexts) // Load a saved game or start tracking a new instance
+            //.with_system(show_loading_screen) // TODO: Loading Screen
+            .with_system(init_game_contexts) // Load a saved game or start tracking a new instance
             .with_system(init_mouse_position) // Start tracking the MousePosition
+            .with_system(init_map_manager) // Track maps in the game as we move about
             .with_system(init_turn_manager) // Track mobs in game through their turns
             .with_system(switch_app_state!(AppState::Loading(LoadingState::WorldGen)))
-            .into(),
+            .into()
         );
 
-        
-        app.add_system_set_to_stage(
-            CoreStage::Update,
+        // Generate the overall condition of the world
+        app.add_enter_system_set(
+            AppState::Loading(LoadingState::WorldGen),
             ConditionSet::new()
-            .run_in_state(AppState::Loading(LoadingState::WorldGen))
             .with_system(switch_app_state!(AppState::Loading(LoadingState::MapGen(MapGenState::Terrain))))
             .into(),
         );
         
-        app.add_system_set_to_stage(
-            CoreStage::Update,
+        // Entry point for generating new maps?
+        // Load the terrain for the map
+        app.add_enter_system_set(
+            AppState::Loading(LoadingState::MapGen(MapGenState::Terrain)),
             ConditionSet::new()
-            .run_in_state(AppState::Loading(LoadingState::MapGen(MapGenState::Terrain)))
             .with_system(switch_app_state!(AppState::Loading(LoadingState::MapGen(MapGenState::Features))))
             .into(),
         );
         
-        app.add_system_set_to_stage(
-            CoreStage::Update,
+        // Load the features for the map
+        app.add_enter_system_set(
+            AppState::Loading(LoadingState::MapGen(MapGenState::Features)),
             ConditionSet::new()
-            .run_in_state(AppState::Loading(LoadingState::MapGen(MapGenState::Features)))
             .with_system(switch_app_state!(AppState::Loading(LoadingState::MapGen(MapGenState::Items))))
             .into(),
         );
         
-        app.add_system_set_to_stage(
-            CoreStage::Update,
+        // Load the items for the map
+        app.add_enter_system_set(
+            AppState::Loading(LoadingState::MapGen(MapGenState::Items)),
             ConditionSet::new()
-            .run_in_state(AppState::Loading(LoadingState::MapGen(MapGenState::Items)))
             .with_system(switch_app_state!(AppState::Loading(LoadingState::MapGen(MapGenState::Actors))))
             .into(),
         );
         
-        app.add_system_set_to_stage(
-            CoreStage::Update,
+        // Load the actors for the map
+        app.add_enter_system_set(
+            AppState::Loading(LoadingState::MapGen(MapGenState::Actors)),
             ConditionSet::new()
-            .run_in_state(AppState::Loading(LoadingState::MapGen(MapGenState::Actors)))
+            .with_system(spawn_player)
+            .with_system(spawn_ai)
             .with_system(switch_app_state!(AppState::Loading(LoadingState::Ready)))
             .into(),
         );
         
-        app.add_system_set_to_stage(
-            CoreStage::Update,
+        // Add UI (message?) to Loading Screen letting the player know the game is ready and wait for input
+        app.add_enter_system_set(
+            AppState::Loading(LoadingState::Ready),
             ConditionSet::new()
-            .run_in_state(AppState::Loading(LoadingState::Ready))
             .with_system(switch_app_state!(AppState::InGame))
             .into(),
         );
+
+        /*
+        app.add_exit_system_set(
+            AppState::Loading(LoadingState::Ready),
+            ConditionSet::new()
+            .with_system(despawn_loading_screen) // TODO: Loading Screen
+            .into()
+        );
+        */
         self
     }
 
     // MenuState
     fn menu_state(self, app: &mut App) -> Self {
-        app.add_system_set_to_stage(
-            CoreStage::Update,
-            ConditionSet::new().run_in_state(AppState::Menu(MenuState::MainMenu))
+        app.add_enter_system_set(
+            AppState::Menu(MenuState::MainMenu),
+            ConditionSet::new()
             // TODO: LoadSavedGame or MenuState WorldCreation ->
             .with_system(switch_app_state!(AppState::Loading(LoadingState::InitGame)))
             .into(),
@@ -195,10 +212,33 @@ impl SystemsPlugin {
 
     // GameState
     fn game_state(self, app: &mut App) -> Self {
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new().run_in_state(AppState::InGame).with_system(system).into(),
-        // );
+        /*
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+            .run_in_state(AppState::InGame)
+            .with_system(system)
+            .into(),
+        );
+        */
+
+        // Switch then update tilemaps
+        app.add_system_set_to_stage(
+            CoreStage::Last,
+            ConditionSet::new()
+            .run_in_state(AppState::InGame)
+            .label(MapLabel::SwitchMaps)
+            .with_system(set_current_map_to_current_player)
+            .into(),
+        );
+        app.add_system_set_to_stage(
+            CoreStage::Update,
+            ConditionSet::new()
+            .run_in_state(AppState::InGame)
+            .after(MapLabel::SwitchMaps)
+            .with_system(update_tilemaps)
+            .into(),
+        );
         self
     }
 
