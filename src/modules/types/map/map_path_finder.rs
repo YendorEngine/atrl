@@ -3,11 +3,11 @@ use crate::prelude::*;
 pub struct MapPathFinder;
 
 // Implement PathProvider
-impl<'a, 'w, 's> PathProvider<PathPassThroughData<'a, 'w, 's>, GRID_SIZE> for MapPathFinder {
+impl<'w, 's> PathProvider<PathPassThroughData<'w, 's>, GRID_SIZE> for MapPathFinder {
     fn get_neighbors(
         &self,
         position: Position,
-        pass_through_data: &mut PathPassThroughData<'a, 'w, 's>,
+        pass_through_data: &mut PathPassThroughData<'w, 's>,
     ) -> Vec<Position> {
         let Some(map) = pass_through_data.map_manager.get_map(position.get_world_position()) else { return Vec::new() };
         let mut neighbors = Vec::new();

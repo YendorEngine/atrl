@@ -4,7 +4,7 @@ pub fn entity_in_fov<'w, 's, Range: Into<u32>>(
     map_manager: &mut MapManager<'w, 's>,
     q_blocks_vision: &Query<'w, 's, &'static BlocksVision>,
     range: Range,
-    vision: &Vision,
+    vision_type: u8,
     current_pos: Position,
     target_pos: Position,
 ) -> bool {
@@ -20,8 +20,8 @@ pub fn entity_in_fov<'w, 's, Range: Into<u32>>(
             range,
             map_manager,
             VisionPassThroughData {
+                vision_type,
                 q_blocks_vision,
-                vision_type: vision.0,
             },
         )
     } else {

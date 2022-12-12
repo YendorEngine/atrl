@@ -5,3 +5,8 @@ pub struct PositionComponent {
     pub position: Position,
     pub layer: MapLayer,
 }
+
+impl PositionComponent {
+    #[inline]
+    pub fn get(&self) -> Position { self.position }
+}

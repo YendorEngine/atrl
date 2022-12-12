@@ -392,8 +392,12 @@ impl<'w, 's> MapManager<'w, 's> {
 }
 
 // Implement FovProvider
-impl<'a, 'w, 's> YendorFovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for MapManager<'w, 's> {
-    fn is_opaque(&mut self, position: Position, pass_through_data: &mut VisionPassThroughData<'w, 's>) -> bool {
+impl<'w, 's> YendorFovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for MapManager<'w, 's> {
+    fn is_opaque(
+        &mut self,
+        position: Position,
+        pass_through_data: &mut VisionPassThroughData<'w, 's>,
+    ) -> bool {
         if let Some(actors) = self.get_actors(position) {
             for &entity in actors {
                 if let Ok(blocks_vision) = pass_through_data.q_blocks_vision.get(entity) {

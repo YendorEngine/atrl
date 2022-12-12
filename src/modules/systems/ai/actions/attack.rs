@@ -11,7 +11,7 @@ pub fn attack_action(
     use BigBrainActionState::*;
 
     let player_position = match mobs_q.get(player_entity.current()) {
-        Ok((p, ..)) => p.position.copied(),
+        Ok((p, ..)) => p.get(),
         Err(err) => {
             info!("No player found: {}", err);
             return;
@@ -63,7 +63,7 @@ pub fn attack_action(
             Executing => {},
         }
 
-        if in_attack_range(*ai_position, player_position) {
+        if in_attack_range(ai_position.get(), player_position) {
             println!("{name} is attacking!");
             ai_component.set_action(AttackAction(player_position).boxed());
         } else {

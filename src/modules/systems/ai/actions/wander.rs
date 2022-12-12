@@ -23,8 +23,6 @@ pub fn wander_action(
             continue
             };
 
-        let ai_position = pc.position;
-
         if ai_component.has_action() {
             // already wandering, quick return;
             continue;
@@ -60,13 +58,14 @@ pub fn wander_action(
 
         info!("{} executing wander!", name);
 
+        let ai_position = pc.position;
         let destination = match std::mem::take(&mut wander.destination) {
             Some(destination) => {
                 if ai_position.distance(destination) <= 1 {
                     generate_wander_path(
                         rng,
                         &mut map_manager,
-                        *ai_position,
+                        ai_position,
                         movement.0,
                         &q_blocks_movement,
                     )
@@ -77,14 +76,14 @@ pub fn wander_action(
             None => generate_wander_path(
                 rng,
                 &mut map_manager,
-                *ai_position,
+                ai_position,
                 movement.0,
                 &q_blocks_movement,
             ),
         };
 
         wander.destination = Some(destination);
-        wander.my_previous_location = *ai_position;
+        wander.my_previous_location = ai_position;
         ai_component.set_action(MovementAction(destination).boxed());
     }
 }

@@ -27,11 +27,11 @@ pub fn chase_action<'w, 's>(
     use BigBrainActionState::*;
 
     let player_position = match mobs_q.get(player_entity.current()) {
-        Ok((p, ..)) => p.position.copied(),
-        Err() => {
-            info!("No player found!");
+        Ok((p, ..)) => p.get(),
+        Err(err) => {
+            info!("No player found: {}", err);
             return;
-        }
+        },
     };
 
     for (Actor(actor), mut action_state, mut chase) in action_q.iter_mut() {
@@ -66,8 +66,8 @@ pub fn chase_action<'w, 's>(
                 *action_state = Executing;
 
                 chase.generated_path = false;
-                chase.last_seen_pt = Some(*player_position);
-                ai_component.set_action(MovementAction(*player_position).boxed());
+                chase.last_seen_pt = Some(player_position);
+                ai_component.set_action(MovementAction(player_position).boxed());
 
                 // Enemy AI chasing the player is cause for alarm!
                 // Lets stop all input from the player for a short time so they have a chance to react!
@@ -83,23 +83,24 @@ pub fn chase_action<'w, 's>(
 
         info!("{} executing chase!", name);
 
+        let ai_position = ai_position.get();
         let position = if entity_in_fov(
             &mut map_manager,
             &blocking_set.p0(),
             fov.0 as u32 + 2,
-            vision,
+            vision.0,
             ai_position,
-            *player_position,
+            player_position,
         ) {
-            if in_attack_range(ai_position, *player_position) {
+            if in_attack_range(ai_position, player_position) {
                 info!("{} is in attack range. Moving to attack action", name);
                 *action_state = Success;
                 continue;
             }
 
-            chase.last_seen_pt = Some(*player_position);
+            chase.last_seen_pt = Some(player_position);
             chase.generated_path = false;
-            *player_position
+            player_position
         } else {
             let Some(last_seen) = chase.last_seen_pt else {
                         error!("Executing chase with no target.");
