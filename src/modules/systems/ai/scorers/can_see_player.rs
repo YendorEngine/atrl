@@ -1,12 +1,11 @@
 use crate::{prelude::*, resources::*};
 
-pub fn can_see_player<'w, 's>(
+pub fn can_see_player(
     player_entity: Res<PlayerEntity>,
     mobs_q: Query<(&PositionComponent, &FieldOfView, &Vision)>,
     mut query: Query<(&Actor, &mut Score, &CanSeePlayer)>,
 
-    mut map_manager: MapManager<'w, 's>,
-    q_blocks_vision: Query<'w, 's, &'static BlocksVision>,
+    mut map_manager: MapManager,
 ) {
     let Ok((player_position, ..)) = mobs_q.get(player_entity.current()) else {
         error!("No player!");
@@ -22,7 +21,6 @@ pub fn can_see_player<'w, 's>(
         if let Ok((ai_position, fov, vision)) = mobs_q.get(*actor) {
             if entity_in_fov(
                 &mut map_manager,
-                &q_blocks_vision,
                 fov.0 as u32,
                 vision.0,
                 ai_position.position,

@@ -6,6 +6,8 @@ pub struct MapManager<'w, 's> {
     commands: Commands<'w, 's>,
     game_context: ResMut<'w, GameContext>,
     map_manager: ResMut<'w, MapManagerResource>,
+
+    q_blocks_vision: Query<'w, 's, &'static BlocksVision>,
 }
 
 // Perform actor functions on maps
@@ -26,7 +28,7 @@ impl<'w, 's> MapManager<'w, 's> {
         movement_type: u8,
         q_blocks_movement: &Query<&BlocksMovement>,
     ) -> bool {
-        let Some(map) = self.get_map(position.get_world_position()) else { return false; };
+        let Some(map) = self.get_map_mut(position.get_world_position()) else { return false; };
 
         map.can_place_actor(
             position.get_local_position(),
@@ -47,7 +49,7 @@ impl<'w, 's> MapManager<'w, 's> {
         movement_type: u8,
         q_blocks_movement: &Query<&BlocksMovement>,
     ) -> bool {
-        let Some(map) = self.get_map(position.get_world_position()) else { return false; };
+        let Some(map) = self.get_map_mut(position.get_world_position()) else { return false; };
 
         map.add_actor(
             actor,
@@ -87,7 +89,7 @@ impl<'w, 's> MapManager<'w, 's> {
     ///
     /// Returns `Some(actor_entity)` if the actor was removed.
     pub fn remove_actor(&mut self, actor: Entity, position: Position) {
-        let Some(map) = self.get_map(position.get_world_position()) else { return; };
+        let Some(map) = self.get_map_mut(position.get_world_position()) else { return; };
 
         map.remove_actor(actor, position.get_local_position());
     }
@@ -95,9 +97,8 @@ impl<'w, 's> MapManager<'w, 's> {
     /// Attempts to get a list of all actors at a `Position`
     ///
     /// Returns `Option<&Vec<Entity>>` if there are actors at the `Position`.
-    pub fn get_actors(&mut self, position: Position) -> Option<&Vec<Entity>> {
+    pub fn get_actors(&self, position: Position) -> Option<&Vec<Entity>> {
         let Some(map) = self.get_map(position.get_world_position()) else { return None; };
-
         map.get_actors(position.get_local_position())
     }
 
@@ -111,7 +112,17 @@ impl<'w, 's> MapManager<'w, 's> {
     pub fn get_current_map_mut(&mut self) -> &mut (WorldPosition, Map) { &mut self.map_manager.current_map }
 
     /// attempts to get a map for the current world position
-    pub fn get_map(&mut self, world_position: WorldPosition) -> Option<&mut Map> {
+    pub fn get_map(&self, world_position: WorldPosition) -> Option<&Map> {
+        // self.load_map(world_position);
+        if self.map_manager.current_map.0 == world_position {
+            Some(&self.map_manager.current_map.1)
+        } else {
+            self.map_manager.loaded_maps.get(&world_position)
+        }
+    }
+
+    /// attempts to get a map for the current world position
+    pub fn get_map_mut(&mut self, world_position: WorldPosition) -> Option<&mut Map> {
         self.load_map(world_position);
         if self.map_manager.current_map.0 == world_position {
             Some(&mut self.map_manager.current_map.1)
@@ -129,7 +140,7 @@ impl<'w, 's> MapManager<'w, 's> {
     ///
     /// Returns `true` if the feature was placed at that `Position`.
     pub fn add_feature(&mut self, feature: Entity, position: Position) -> bool {
-        let Some(map) = self.get_map(position.get_world_position()) else { return false; };
+        let Some(map) = self.get_map_mut(position.get_world_position()) else { return false; };
 
         map.add_feature(feature, position.get_local_position())
     }
@@ -157,17 +168,15 @@ impl<'w, 's> MapManager<'w, 's> {
     ///
     /// Returns `Some(feature_entity)` if the feature was removed.
     pub fn remove_feature(&mut self, feature: Entity, position: Position) {
-        let Some(map) = self.get_map(position.get_world_position()) else { return; };
-
+        let Some(map) = self.get_map_mut(position.get_world_position()) else { return; };
         map.remove_feature(feature, position.get_local_position());
     }
 
     /// Attempts to get a list of all features at a `Position`
     ///
     /// Returns `Option<&Vec<Entity>>` if there are features at the `Position`.
-    pub fn get_features(&mut self, position: Position) -> Option<&Vec<Entity>> {
+    pub fn get_features(&self, position: Position) -> Option<&Vec<Entity>> {
         let Some(map) = self.get_map(position.get_world_position()) else { return None; };
-
         map.get_features(position.get_local_position())
     }
 }
@@ -205,7 +214,7 @@ impl<'w, 's> MapManager<'w, 's> {
 
     pub fn set_visibility(&mut self, visibility_map: HashSet<Position>) {
         for position in visibility_map.iter() {
-            let Some(map) = self.get_map(position.get_world_position()) else { return; };
+            let Some(map) = self.get_map_mut(position.get_world_position()) else { return; };
             map.explored_tiles.insert(position.gridpoint());
         }
         self.map_manager.visible_tiles = visibility_map;
@@ -392,15 +401,11 @@ impl<'w, 's> MapManager<'w, 's> {
 }
 
 // Implement FovProvider
-impl<'w, 's> YendorFovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for MapManager<'w, 's> {
-    fn is_opaque(
-        &mut self,
-        position: Position,
-        pass_through_data: &mut VisionPassThroughData<'w, 's>,
-    ) -> bool {
+impl<'w, 's> YendorFovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<'w, 's> {
+    fn is_opaque(&mut self, position: Position, pass_through_data: &mut VisionPassThroughData) -> bool {
         if let Some(actors) = self.get_actors(position) {
             for &entity in actors {
-                if let Ok(blocks_vision) = pass_through_data.q_blocks_vision.get(entity) {
+                if let Ok(blocks_vision) = self.q_blocks_vision.get(entity) {
                     if blocks_vision.is_blocked(pass_through_data.vision_type) {
                         return true;
                     }
@@ -410,7 +415,7 @@ impl<'w, 's> YendorFovProvider<VisionPassThroughData<'w, 's>, GRID_SIZE> for Map
 
         if let Some(features) = self.get_features(position) {
             for &entity in features {
-                if let Ok(blocks_vision) = pass_through_data.q_blocks_vision.get(entity) {
+                if let Ok(blocks_vision) = self.q_blocks_vision.get(entity) {
                     if blocks_vision.is_blocked(pass_through_data.vision_type) {
                         return true;
                     }
