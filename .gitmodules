@@ -1,3 +1,6 @@
 [submodule "docs/.obsidian"]
 	path = docs/.obsidian
 	url = https://github.com/lecoqjacob/obsidian-setup
+[submodule "assets/oryx-image-assets"]
+	path = assets/oryx-image-assets
+	url = https://github.com/YendorEngine/oryx-image-assets
