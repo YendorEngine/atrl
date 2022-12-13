@@ -16,8 +16,8 @@ pub fn can_see_player(
         if *actor == player_entity.current() {
             continue;
         }
-        let mut current_score = 0.0;
 
+        let mut current_score = 0.0;
         if let Ok((ai_position, fov, vision)) = mobs_q.get(*actor) {
             if entity_in_fov(
                 &mut map_manager,

@@ -65,8 +65,6 @@ pub mod map {
     pub use map::*;
     mod map_layer;
     pub use map_layer::*;
-    mod map_path_finder;
-    pub use map_path_finder::*;
 }
 pub use map::*;
 

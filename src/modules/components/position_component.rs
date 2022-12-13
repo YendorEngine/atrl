@@ -8,5 +8,5 @@ pub struct PositionComponent {
 
 impl PositionComponent {
     #[inline]
-    pub fn get(&self) -> Position { self.position }
+    pub const fn get(&self) -> Position { self.position }
 }

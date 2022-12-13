@@ -222,6 +222,8 @@ impl SystemsPlugin {
 
     // GameState
     fn game_state(self, app: &mut App) -> Self {
+        self.ai_states(app);
+
         // Switch then update tilemaps
         app.add_system_set_to_stage(
             CoreStage::Last,
@@ -243,7 +245,7 @@ impl SystemsPlugin {
     }
 
     // Quit
-    fn quit_state(self, app: &mut App) -> Self {
+    fn quit_state(self, _app: &mut App) -> Self {
         // app.add_system_set_to_stage(
         // CoreStage::Update,
         // ConditionSet::new().run_in_state(AppState::Quit).with_system(system).into(),

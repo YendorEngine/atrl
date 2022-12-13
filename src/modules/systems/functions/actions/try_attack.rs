@@ -6,7 +6,7 @@ pub fn try_attack(entity: Entity, position: Position, world: &mut World) -> Resu
         Query<(&mut Health, &Name)>,
         // EventWriter<EffectType>,
     )> = SystemState::new(world);
-    let (mut map_manager, mut health_q) = system_state.get_mut(world);
+    let (map_manager, mut health_q) = system_state.get_mut(world);
 
     let mut actors = Vec::new();
     let mut features = Vec::new();
