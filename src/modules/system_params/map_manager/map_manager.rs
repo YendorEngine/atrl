@@ -5,10 +5,8 @@ use crate::{prelude::*, resources::*, systems::*, types::Random};
 pub struct MapManager<'w, 's> {
     commands: Commands<'w, 's>,
     game_context: ResMut<'w, GameContext>,
+    blocking_params: BlockingParams<'w, 's>,
     map_manager: ResMut<'w, MapManagerResource>,
-
-    q_blocks_vision: Query<'w, 's, &'static BlocksVision>,
-    q_blocks_movement: Query<'w, 's, &'static BlocksMovement>,
 }
 
 // Perform actor functions on maps
@@ -406,7 +404,7 @@ impl<'w, 's> YendorFovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<
     fn is_opaque(&mut self, position: Position, pass_through_data: &mut VisionPassThroughData) -> bool {
         if let Some(actors) = self.get_actors(position) {
             for &entity in actors {
-                if let Ok(blocks_vision) = self.q_blocks_vision.get(entity) {
+                if let Ok(blocks_vision) = self.blocking_params.get_entity_vision(entity) {
                     if blocks_vision.is_blocked(pass_through_data.vision_type) {
                         return true;
                     }
@@ -416,7 +414,7 @@ impl<'w, 's> YendorFovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<
 
         if let Some(features) = self.get_features(position) {
             for &entity in features {
-                if let Ok(blocks_vision) = self.q_blocks_vision.get(entity) {
+                if let Ok(blocks_vision) = self.blocking_params.get_entity_movement(entity) {
                     if blocks_vision.is_blocked(pass_through_data.vision_type) {
                         return true;
                     }
@@ -442,7 +440,7 @@ impl<'w, 's> PathProvider<PathPassThroughData, GRID_SIZE> for MapManager<'w, 's>
             if map.can_place_actor(
                 p.get_local_position(),
                 pass_through_data.movement_type,
-                &self.q_blocks_movement,
+                self.blocking_params.get_q_blocks_movement(),
             ) {
                 neighbors.push(p);
             }
