@@ -1,6 +1,8 @@
 use std::path::Path;
 
-use crate::{prelude::*, utilities::*};
+#[cfg(feature = "debug")]
+use crate::prelude::*;
+use crate::utilities::*;
 
 pub fn find_files_with_extension<P: AsRef<Path>>(path: P, extension: &str) -> AtrlResult<Vec<String>> {
     find_files_with_extensions(path, vec![extension])

@@ -51,11 +51,6 @@ pub use serde::{
 };
 pub use thiserror::Error;
 pub use xxhash_rust::xxh3::*;
-pub use yendor::prelude::{
-    Circle as YendorCircle, Dimensions, Direction, Fov, FovProvider as YendorFovProvider, Grid,
-    Line as YendorLine, LocalPosition, PathFinder, PathProvider, Point, Position as YendorPosition,
-    Random as YendorRandom, Rectangle as YendorRectangle, Shape as YendorShape, WorldPosition,
-};
 
 #[cfg(feature = "debug")]
 mod debug {
@@ -70,3 +65,10 @@ mod debug {
 
 #[cfg(feature = "debug")]
 pub use debug::*;
+
+// This is here to stop with the annoying type conflicts
+#[rustfmt::skip]
+pub use ::yendor::prelude::*;
+pub use ::yendor::prelude::Direction;
+
+pub use crate::types::definitions::yendor::*;

@@ -275,7 +275,7 @@ impl<'w, 's> MapManager<'w, 's> {
 // "Static" functions
 impl<'w, 's> MapManager<'w, 's> {
     pub fn internal_create_tilemaps(commands: &mut Commands, tilesets: &Tilesets) -> (Entity, Entity) {
-        let map_size = UVec2::new(GRID_WIDTH, GRID_HEIGHT);
+        let map_size = UVec2::new(*GRID_WIDTH, *GRID_HEIGHT);
 
         let tileset = tilesets.get_by_id(&TILESET_TERRAIN_ID).expect("Cannot find TILESET_TERRAIN_ID.");
         let terrain_layer_entity = commands.spawn(Name::new("TERRAIN_LAYER".to_string())).id();
@@ -360,7 +360,7 @@ impl<'w, 's> MapManager<'w, 's> {
                 .with_shape(Circle::new(
                     Position::new(
                         world_position,
-                        LocalPosition::new(GRID_WIDTH / 2, GRID_HEIGHT / 2),
+                        LocalPosition::new(*GRID_WIDTH / 2, *GRID_HEIGHT / 2),
                     ),
                     5u32,
                 )),
@@ -368,19 +368,19 @@ impl<'w, 's> MapManager<'w, 's> {
         .with(SetBuilder::new().set_value(0).with_shape(Rectangle::new(
             Position::new(
                 world_position,
-                LocalPosition::new(GRID_WIDTH / 2 - 4, GRID_HEIGHT / 2 - 4),
+                LocalPosition::new(*GRID_WIDTH / 2 - 4, *GRID_HEIGHT / 2 - 4),
             ),
             Position::new(
                 world_position,
-                LocalPosition::new(GRID_WIDTH / 2 + 4, GRID_HEIGHT / 2 + 4),
+                LocalPosition::new(*GRID_WIDTH / 2 + 4, *GRID_HEIGHT / 2 + 4),
             ),
         )))
         .generate();
 
         let mut position = Position::new(world_position, LocalPosition::new(0, 0));
-        for y in 0..GRID_HEIGHT {
+        for y in 0..*GRID_HEIGHT {
             position.add_y(1);
-            for x in 0..GRID_WIDTH {
+            for x in 0..*GRID_WIDTH {
                 position.add_x(1);
 
                 match feature_map.output_grid.get_unchecked((x, y)) {
@@ -400,7 +400,7 @@ impl<'w, 's> MapManager<'w, 's> {
 }
 
 // Implement FovProvider
-impl<'w, 's> YendorFovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<'w, 's> {
+impl<'w, 's> FovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<'w, 's> {
     fn is_opaque(&mut self, position: Position, pass_through_data: &mut VisionPassThroughData) -> bool {
         if let Some(actors) = self.get_actors(position) {
             for &entity in actors {
@@ -426,14 +426,14 @@ impl<'w, 's> YendorFovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<
     }
 }
 
-impl<'w, 's> PathProvider<PathPassThroughData> for MapManager<'w, 's> {
-    fn get_neighbors<const DIM: UVec2>(
+impl<'w, 's> PathProvider<PathPassThroughData, GRID_SIZE> for MapManager<'w, 's> {
+    fn get_neighbors(
         &self,
-        position: YendorPosition<DIM>,
+        position: Position,
         pass_through_data: &mut PathPassThroughData,
-    ) -> Vec<YendorPosition<DIM>> {
+    ) -> Vec<Position> {
         let Some(map) = self.get_map(position.get_world_position()) else { return Vec::new() };
-        let mut neighbors = ArrayVec::<YendorPosition<DIM>, 8>::new();
+        let mut neighbors = ArrayVec::<Position, 8>::new();
 
         for direction in Direction::all() {
             let p = position + direction.coord();
@@ -464,6 +464,6 @@ impl<'w, 's> PathProvider<PathPassThroughData> for MapManager<'w, 's> {
         // }
         // }
 
-        neighbors
+        neighbors.to_vec()
     }
 }

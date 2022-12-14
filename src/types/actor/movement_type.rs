@@ -21,12 +21,7 @@ impl MovementType {
 impl TryFrom<MovementType> for u8 {
     type Error = String;
 
-    fn try_from(value: MovementType) -> Result<Self, Self::Error> {
-        value.to_u8().map_or_else(
-            || Err("Failed to convert `MovementType` to `u8`".to_string()),
-            Ok,
-        )
-    }
+    fn try_from(value: MovementType) -> Result<Self, Self::Error> { value.try_into() }
 }
 
 impl From<u8> for MovementType {

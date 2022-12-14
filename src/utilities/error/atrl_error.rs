@@ -22,4 +22,7 @@ pub enum AtrlError {
 
     #[error(transparent)]
     RonError(#[from] ron::Error),
+
+    #[error(transparent)]
+    TomlSerializationError(#[from] toml::ser::Error),
 }

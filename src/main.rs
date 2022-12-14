@@ -1,7 +1,9 @@
 // Features
+#![feature(adt_const_params)]
+#![feature(control_flow_enum)]
 #![feature(trait_alias)]
-#![feature(const_option)]
 // Clippy
+#![warn(clippy::nursery, clippy::all)]
 #![allow(clippy::module_inception)]
 
 //##############################
@@ -42,7 +44,9 @@ use systems::systems_plugin::*;
 
 fn main() {
     let app_settings = AppSettingsResource::load();
-    set_grid_size(app_settings.get_grid_size());
+    println!("GRID_SIZE: {GRID_SIZE:#?}");
+    println!("AppSettings: {:#?}", app_settings.get_grid_size());
+    println!("GRID_SIZE2: {GRID_SIZE:#?}");
 
     let mut app = App::new();
 

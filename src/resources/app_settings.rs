@@ -47,17 +47,23 @@ impl AppSettingsResource {
     }
 
     // Getters
-    pub fn get_grid_size(&self) -> UVec2 { self.grid_size }
+    #[inline]
+    pub const fn get_grid_size(&self) -> UVec2 { self.grid_size }
 
-    pub fn get_sprite_size(&self) -> UVec2 { self.sprite_size }
+    #[inline]
+    pub const fn get_sprite_size(&self) -> UVec2 { self.sprite_size }
 
-    pub fn get_window_size(&self) -> UVec2 { self.window_size }
+    #[inline]
+    pub const fn get_window_size(&self) -> UVec2 { self.window_size }
 
-    pub fn get_fullscreen(&self) -> bool { self.fullscreen }
+    #[inline]
+    pub const fn get_fullscreen(&self) -> bool { self.fullscreen }
 
-    pub fn get_chunk_size(&self) -> UVec2 { self.chunk_size }
+    #[inline]
+    pub const fn get_chunk_size(&self) -> UVec2 { self.chunk_size }
 
-    pub fn get_tile_size(&self) -> TilemapTileSize {
+    #[inline]
+    pub const fn get_tile_size(&self) -> TilemapTileSize {
         TilemapTileSize {
             x: self.tile_size.x as f32,
             y: self.tile_size.y as f32,
@@ -65,16 +71,22 @@ impl AppSettingsResource {
     }
 
     // Setters
+    #[inline]
     pub fn set_grid_size(&mut self, grid_size: UVec2) { self.grid_size = grid_size; }
 
+    #[inline]
     pub fn set_sprite_size(&mut self, sprite_size: UVec2) { self.sprite_size = sprite_size; }
 
+    #[inline]
     pub fn set_window_size(&mut self, window_size: UVec2) { self.window_size = window_size; }
 
+    #[inline]
     pub fn set_fullscreen(&mut self, fullscreen: bool) { self.fullscreen = fullscreen }
 
+    #[inline]
     pub fn set_chunk_size(&mut self, chunk_size: UVec2) { self.chunk_size = chunk_size; }
 
+    #[inline]
     pub fn set_tile_size(&mut self, tile_size: TilemapTileSize) {
         self.tile_size = UVec2::new(tile_size.x as u32, tile_size.y as u32);
     }

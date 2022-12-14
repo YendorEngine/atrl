@@ -7,7 +7,7 @@ pub mod definitions {
     pub use tileset_ids::*;
     mod turn_manager;
     pub use turn_manager::*;
-    mod yendor;
+    pub mod yendor;
     pub use self::yendor::*;
 }
 
@@ -40,14 +40,6 @@ pub mod actor {
     pub use vision_type::*;
 }
 pub use actor::*;
-
-pub mod app {
-    mod app_state;
-    pub use app_state::*;
-    mod app_stage;
-    pub use app_stage::*;
-}
-pub use app::*;
 
 pub mod camera {
     mod camera_id;

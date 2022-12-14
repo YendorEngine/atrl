@@ -47,7 +47,7 @@ impl SystemsPlugin {
             .with_system(spawn_cameras) // TODO: Rewrite camera stuff
             //.with_system(show_splash_screen) // TODO: Splash screen
             .with_system(init_white_pixel) // We can use white_pixel as a solid color
-            .with_system(init_app_settings) // Load the app_settings from file or default. These will help determine how our app is setup.
+            // .with_system(init_app_settings) // Load the app_settings from file or default. These will help determine how our app is setup.
             .with_system(switch_app_state!(AppState::Menu(MenuState::MainMenu)))
             .into(),
         );
@@ -65,7 +65,7 @@ impl SystemsPlugin {
             AppState::Loading(LoadingState::InitGame),
             ConditionSet::new()
             //.with_system(show_loading_screen) // TODO: Loading Screen
-            .with_system(init_game_contexts) // Load a saved game or start tracking a new instance
+            // .with_system(init_game_contexts) // Load a saved game or start tracking a new instance
             .with_system(init_mouse_position) // Start tracking the MousePosition
             .with_system(init_map_manager) // Track maps in the game as we move about
             .with_system(init_turn_manager) // Track mobs in game through their turns

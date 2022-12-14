@@ -259,16 +259,6 @@ git = "https://github.com/YendorEngine/yendor"
 [dependencies.yendor]
 workspace = true
 
-[workspace.dependencies.once_cell]
-version = "1"
-[dependencies.once_cell]
-workspace = true
-
-[workspace.dependencies.lazy_static]
-version = "1"
-[dependencies.lazy_static]
-workspace = true
-
 ######################################
 ######################################
 #########       Package/Optional Dependencies

@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-#[derive(Component, Default, PartialEq, Clone, Debug)]
+#[derive(Component, Default, Eq, PartialEq, Clone, Debug)]
 pub struct UIWidget {
     pub show_ui: bool,
 }
