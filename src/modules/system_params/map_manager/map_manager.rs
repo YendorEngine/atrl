@@ -426,12 +426,12 @@ impl<'w, 's> YendorFovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<
     }
 }
 
-impl<'w, 's> PathProvider<PathPassThroughData, GRID_SIZE> for MapManager<'w, 's> {
-    fn get_neighbors(
+impl<'w, 's> PathProvider<PathPassThroughData> for MapManager<'w, 's> {
+    fn get_neighbors<const DIM: UVec2>(
         &self,
-        position: Position,
+        position: YendorPosition<DIM>,
         pass_through_data: &mut PathPassThroughData,
-    ) -> Vec<Position> {
+    ) -> Vec<YendorPosition<DIM>> {
         let Some(map) = self.get_map(position.get_world_position()) else { return Vec::new() };
         let mut neighbors = Vec::new();
 

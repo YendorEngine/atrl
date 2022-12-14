@@ -18,7 +18,7 @@ impl<T> MapGenData<T> {
             world_position,
             random,
             exit_positions: Vec::new(),
-            output_grid: Grid::new_default(),
+            output_grid: Grid::new_default(GRID_SIZE),
             rooms: Vec::new(),
         }
     }
