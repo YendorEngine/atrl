@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{modules::types::*, prelude::*};
 
 pub struct Random {
     pub seed: u64,

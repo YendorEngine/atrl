@@ -1,4 +1,7 @@
-use crate::prelude::{bundles::*, *};
+use crate::{
+    modules::{bundles::*, types::*},
+    prelude::*,
+};
 
 #[derive(Bundle)]
 pub struct PlayerBundle {

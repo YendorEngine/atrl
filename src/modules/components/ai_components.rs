@@ -1,4 +1,7 @@
-use crate::prelude::*;
+use crate::{
+    modules::{components::*, types::*},
+    prelude::*,
+};
 
 #[derive(Component, Default)]
 pub struct AIComponent {

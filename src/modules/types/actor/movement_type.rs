@@ -45,5 +45,3 @@ impl TryFrom<MovementType> for u8 {
 impl From<u8> for MovementType {
     fn from(value: u8) -> Self { Self::try_from(value).expect("Failed to convert `u8` to `MovementType`") }
 }
-
-impl_as_primative!(MovementType);

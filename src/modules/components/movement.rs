@@ -1,4 +1,5 @@
-use crate::prelude::*;
+use crate::{modules::types::*, prelude::*};
+
 #[derive(Reflect, Component, Debug, Default, Deref, DerefMut)]
 #[reflect(Component)]
 pub struct Movement(pub u8);

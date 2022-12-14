@@ -1,4 +1,7 @@
-use crate::prelude::*;
+use crate::{
+    modules::{components::*, types::*},
+    prelude::*,
+};
 
 // This needs to impl FromWorld not derive reflect
 #[derive(Debug)]

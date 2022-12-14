@@ -4,6 +4,7 @@ pub mod camera {
 }
 
 use crate::prelude::{systems::systems_plugin::*, *};
+
 // TODO: How much of this can we turn into loading systems to hide behind a Splash Screen /
 // Loading Screen?
 pub fn load_plugins(app: &mut App) {

@@ -1,5 +1,6 @@
 use std::marker::PhantomData;
 
+use super::*;
 use crate::prelude::*;
 
 pub struct ScatterBuilder<T> {

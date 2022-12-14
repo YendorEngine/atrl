@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{modules::types::*, prelude::*};
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum TargetVisualizerStyle {

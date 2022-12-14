@@ -1,6 +1,6 @@
 use bevy::ecs::query::QueryEntityError;
 
-use crate::prelude::*;
+use crate::{modules::components::*, prelude::*};
 
 #[derive(SystemParam)]
 pub struct BlockingParams<'w, 's> {

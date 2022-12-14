@@ -1,4 +1,4 @@
-use crate::{prelude::*, resources::*};
+use crate::{modules::types::*, prelude::*, systems::functions::try_attack};
 
 pub const ATTACK_TIME: u32 = SECONDS * 2; // Same as Movement, otherwise, they get another attack after player moves.
 

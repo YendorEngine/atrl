@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{modules::types::*, prelude::*};
 
 pub struct MapPassThroughData {
     pub map_entity: Entity,

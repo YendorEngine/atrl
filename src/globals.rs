@@ -1,6 +1,4 @@
-mod app;
-pub use app::*;
-mod tile_ids;
-pub use tile_ids::*;
-mod tileset_ids;
-pub use tileset_ids::*;
+/// Long name
+pub const APP_NAME: &str = "Away Team Roguelike";
+/// Short name
+pub const APP_NAME_SHORT: &str = "ATRL";

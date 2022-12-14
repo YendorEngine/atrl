@@ -41,6 +41,7 @@ pub mod camera {
     mod settings;
     pub use settings::*;
 }
+pub use camera::*;
 
 pub mod map {
     mod map_gen {

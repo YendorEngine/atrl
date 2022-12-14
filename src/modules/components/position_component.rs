@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{modules::types::*, prelude::*};
 
 #[derive(Component)]
 pub struct PositionComponent {

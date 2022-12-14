@@ -1,4 +1,9 @@
-use crate::{prelude::*, resources::*, systems::*, types::Random};
+use crate::{
+    modules::{components::*, system_params::*, types::*},
+    prelude::*,
+    resources::*,
+    systems::functions::*,
+};
 
 /// MapManager SystemParam used for interacting with the maps.
 #[derive(SystemParam)]

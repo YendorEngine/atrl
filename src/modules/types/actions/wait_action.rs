@@ -1,4 +1,4 @@
-use crate::{prelude::*, resources::*};
+use crate::{modules::types::*, prelude::*};
 
 pub const WAIT_TIME: u32 = SECONDS;
 

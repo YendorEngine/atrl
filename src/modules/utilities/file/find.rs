@@ -1,9 +1,6 @@
-use std::{
-    path::{Path, PathBuf},
-    str::FromStr,
-};
+use std::path::Path;
 
-use crate::{error::*, prelude::*};
+use crate::{modules::utilities::*, prelude::*};
 
 pub fn find_files_with_extension<P: AsRef<Path>>(path: P, extension: &str) -> AtrlResult<Vec<String>> {
     find_files_with_extensions(path, vec![extension])
@@ -13,6 +10,7 @@ pub fn find_files_with_extensions<P: AsRef<Path>>(path: P, extensions: Vec<&str>
     let mut ret = Vec::new();
     let path = path.as_ref();
     let paths = std::fs::read_dir(path)?;
+
     #[cfg(feature = "debug")]
     {
         let mut extension_names = String::new();
@@ -27,6 +25,7 @@ pub fn find_files_with_extensions<P: AsRef<Path>>(path: P, extensions: Vec<&str>
         }
         info!("Looking for {{{}}} files in {:?}", extension_names, path);
     }
+
     for dir_entry in paths.flatten() {
         let path = dir_entry.path();
         if let Some(ext) = path.extension() {
