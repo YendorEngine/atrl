@@ -40,7 +40,7 @@ pub const fn spawn_player(// tilesets: Tilesets,
     // )
 }
 
-const MAX_AI_ACTORS: u32 = 1;
+const _MAX_AI_ACTORS: u32 = 1;
 
 pub const fn spawn_ai(// tilesets: Tilesets,
     // mut commands: Commands,

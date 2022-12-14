@@ -44,10 +44,6 @@ use systems::systems_plugin::*;
 
 fn main() {
     let app_settings = AppSettingsResource::load();
-    println!("GRID_SIZE: {GRID_SIZE:#?}");
-    println!("AppSettings: {:#?}", app_settings.get_grid_size());
-    println!("GRID_SIZE2: {GRID_SIZE:#?}");
-
     let mut app = App::new();
 
     // Init Bevy
