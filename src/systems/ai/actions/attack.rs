@@ -1,9 +1,4 @@
-use crate::{
-    modules::{components::*, types::*},
-    prelude::*,
-    resources::*,
-    systems::functions::*,
-};
+use crate::{components::*, prelude::*, resources::*, systems::functions::*, types::*};
 
 pub fn attack_action(
     mut commands: Commands,

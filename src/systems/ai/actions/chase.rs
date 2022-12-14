@@ -1,9 +1,4 @@
-use crate::{
-    modules::{components::*, system_params::*, types::*},
-    prelude::*,
-    resources::*,
-    systems::functions::*,
-};
+use crate::{components::*, prelude::*, resources::*, systems::functions::*, types::*};
 
 pub fn chase_action(
     mut commands: Commands,

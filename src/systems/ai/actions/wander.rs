@@ -1,8 +1,4 @@
-use crate::{
-    modules::{components::*, system_params::*, types::*},
-    prelude::*,
-    resources::*,
-};
+use crate::{components::*, prelude::*, resources::*, types::*};
 
 static WANDER_RANGE: Lazy<Uniform<u32>> = Lazy::new(|| Uniform::new_inclusive(3, 10));
 

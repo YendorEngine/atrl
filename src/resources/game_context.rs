@@ -1,4 +1,4 @@
-use crate::{modules::types::*, prelude::*};
+use crate::{prelude::*, types::*};
 
 #[derive(Resource)]
 pub struct GameContext {

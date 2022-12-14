@@ -1,8 +1,4 @@
-use crate::{
-    modules::{components::*, system_params::*, types::*},
-    prelude::*,
-    resources::*,
-};
+use crate::{components::*, prelude::*, resources::*, types::*};
 
 pub fn try_move(world: &mut World, entity: Entity, destination: Position) -> Result<(), BoxedAction> {
     let mut system_state: SystemState<(

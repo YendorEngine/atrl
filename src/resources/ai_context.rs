@@ -1,4 +1,4 @@
-use crate::{modules::types::*, prelude::*, resources::*};
+use crate::{prelude::*, resources::*, types::*};
 
 #[derive(Resource)]
 pub struct AiContext {

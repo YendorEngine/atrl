@@ -1,8 +1,4 @@
-use crate::{
-    modules::{components::*, system_params::*},
-    prelude::*,
-    resources::*,
-};
+use crate::{components::*, prelude::*, resources::*};
 
 pub fn set_current_map_to_current_player(
     mut map_manager: MapManager,

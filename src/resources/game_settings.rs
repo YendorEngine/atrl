@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crate::{modules::utilities::*, prelude::*};
+use crate::{prelude::*, utilities::*};
 
 const DEFAULT_UNSAFE_MS: u64 = 500;
 const DEFAULT_PRESSED_MS: u64 = 150;

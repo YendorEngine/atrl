@@ -1,7 +1,4 @@
-use crate::{
-    prelude::*,
-    systems::{init::*, *},
-};
+use crate::systems::{init::*, *};
 
 #[derive(SystemLabel)]
 enum MapLabel {

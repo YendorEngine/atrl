@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use crate::{modules::types::*, prelude::*};
+use crate::{prelude::*, types::*};
 
 #[derive(Debug, Default, Resource)]
 pub struct ActionQueue {

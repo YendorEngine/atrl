@@ -1,7 +1,4 @@
-use crate::{
-    modules::{components::*, system_params::*, types::*},
-    prelude::*,
-};
+use crate::{components::*, prelude::*, types::*};
 
 pub fn try_attack(entity: Entity, position: Position, world: &mut World) -> Result<(), BoxedAction> {
     let mut system_state: SystemState<(

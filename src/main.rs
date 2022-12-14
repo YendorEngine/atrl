@@ -1,3 +1,7 @@
+// Features
+#![feature(trait_alias)]
+#![feature(const_option)]
+// Clippy
 #![allow(clippy::module_inception)]
 
 //##############################
@@ -6,19 +10,19 @@
 
 // To use:
 // `use crate::XXX:*;`
+pub mod components;
 pub mod resources;
 pub mod systems;
+pub mod types;
+pub mod ui;
+pub mod utilities;
 
 // Included in prelude:
-mod definitions;
 mod globals;
 mod imports;
-mod macros;
-mod modules;
-mod ui;
 
 pub mod prelude {
-    pub use super::{definitions::*, globals::*, imports::*};
+    pub use crate::{globals::*, imports::*, systems::system_params::*, types::definitions::*};
     // Macros
     pub use crate::{
         impl_default, impl_new, insert_resource, remove_resource, spawn_component, switch_app_state,
@@ -38,6 +42,8 @@ use systems::systems_plugin::*;
 
 fn main() {
     let app_settings = AppSettingsResource::load();
+    set_grid_size(app_settings.get_grid_size());
+
     let mut app = App::new();
 
     // Init Bevy

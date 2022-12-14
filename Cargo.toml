@@ -113,6 +113,11 @@ version  = "0.6"
 [dependencies.bevy_tweening]
 workspace = true
 
+[workspace.dependencies.big-brain]
+version = "0.15"
+[dependencies.big-brain]
+workspace = true
+
 ######################################
 #########       Input
 ######################################
@@ -234,17 +239,6 @@ version = "1"
 [dependencies.anyhow]
 workspace = true
 
-[workspace.dependencies.big-brain]
-version = "0.15"
-[dependencies.big-brain]
-workspace = true
-
-[workspace.dependencies.bitvec]
-features = ["serde"]
-version  = "1.0.1"
-[dependencies.bitvec]
-workspace = true
-
 [workspace.dependencies.dyn-clone]
 version = "1"
 [dependencies.dyn-clone]
@@ -255,32 +249,6 @@ version = "0.2.7"
 [dependencies.index_list]
 workspace = true
 
-[workspace.dependencies.num-derive]
-version = "0.3"
-[dependencies.num-derive]
-workspace = true
-
-[workspace.dependencies.num-traits]
-version = "0.2"
-[dependencies.num-traits]
-workspace = true
-
-[workspace.dependencies.parking_lot]
-version = "0.12"
-[dependencies.parking_lot]
-workspace = true
-
-[workspace.dependencies.smart-default]
-version = "0.6"
-[dependencies.smart-default]
-workspace = true
-
-[workspace.dependencies.strum]
-features = ["derive"]
-version  = "0.24"
-[dependencies.strum]
-workspace = true
-
 [workspace.dependencies.thiserror]
 version = "1"
 [dependencies.thiserror]
@@ -288,16 +256,18 @@ workspace = true
 
 [workspace.dependencies.yendor]
 git = "https://github.com/YendorEngine/yendor"
-# path = "../../yendor/yendor"
 [dependencies.yendor]
 workspace = true
 
-# this was only for pathfinding??
-#[workspace.dependencies.ordered-float]
-#features = ["serde"]
-#version  = "3"
-#[dependencies.ordered-float]
-#workspace = true
+[workspace.dependencies.once_cell]
+version = "1"
+[dependencies.once_cell]
+workspace = true
+
+[workspace.dependencies.lazy_static]
+version = "1"
+[dependencies.lazy_static]
+workspace = true
 
 ######################################
 ######################################

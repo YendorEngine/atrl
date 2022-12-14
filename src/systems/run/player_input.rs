@@ -1,4 +1,4 @@
-use crate::{modules::types::*, prelude::*, resources::*};
+use crate::{prelude::*, resources::*, types::*};
 
 pub fn player_input(
     time: Res<Time>,

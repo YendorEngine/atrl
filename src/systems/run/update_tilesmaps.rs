@@ -1,7 +1,4 @@
-use crate::{
-    modules::{components::*, system_params::*},
-    prelude::*,
-};
+use crate::{components::*, prelude::*};
 
 pub fn update_tilemaps(
     mut map_manager: MapManager,

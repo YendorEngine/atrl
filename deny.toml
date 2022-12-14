@@ -41,7 +41,6 @@ skip = [
     { name = "rand_chacha", version = "0.3" },
     { name = "wasi", version = "0.11" },
     { name = "png", version = "0.17" },
-    { name = "parking_lot", version = "0.12" },
     { name = "nix", version = "0.24" },
 
 ]

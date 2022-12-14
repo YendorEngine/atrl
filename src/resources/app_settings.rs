@@ -1,4 +1,4 @@
-use crate::{modules::utilities::*, prelude::*};
+use crate::{prelude::*, utilities::*};
 
 // File
 const APP_SETTINGS_FILE: &str = "app_settings.toml";

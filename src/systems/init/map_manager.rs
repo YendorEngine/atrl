@@ -1,4 +1,4 @@
-use crate::{modules::system_params::*, prelude::*, resources::*};
+use crate::{prelude::*, resources::*};
 
 pub fn init_map_manager(mut commands: Commands, tilesets: Tilesets, mut game_context: ResMut<GameContext>) {
     let world_position = WorldPosition::new(0, 0, 0);

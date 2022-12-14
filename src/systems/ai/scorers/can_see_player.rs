@@ -1,9 +1,4 @@
-use crate::{
-    modules::{components::*, system_params::*},
-    prelude::*,
-    resources::*,
-    systems::functions::*,
-};
+use crate::{components::*, prelude::*, resources::*, systems::functions::*};
 
 pub fn can_see_player(
     player_entity: Res<PlayerEntity>,
