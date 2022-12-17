@@ -20,7 +20,7 @@ pub fn chase_action(
     use BigBrainActionState::*;
 
     let player_position = match mobs_q.get(player_entity.current()) {
-        Ok((p, ..)) => p.get(),
+        Ok((p, ..)) => p.get_position(),
         Err(err) => {
             info!("No player found: {}", err);
             return;
@@ -76,7 +76,7 @@ pub fn chase_action(
 
         info!("{} executing chase!", name);
 
-        let ai_position = ai_position.get();
+        let ai_position = ai_position.get_position();
         let position = if entity_in_fov(
             &mut map_manager,
             fov.0 as u32 + 2,

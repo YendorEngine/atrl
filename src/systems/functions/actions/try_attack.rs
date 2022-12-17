@@ -1,6 +1,6 @@
 use crate::{components::*, prelude::*, types::*};
 
-pub fn try_attack(entity: Entity, position: Position, world: &mut World) -> Result<(), BoxedAction> {
+pub fn try_attack(entity: Entity, position: ChunkPosition, world: &mut World) -> Result<(), BoxedAction> {
     let mut system_state: SystemState<(
         MapManager,
         Query<(&mut Health, &Name)>,

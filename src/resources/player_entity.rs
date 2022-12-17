@@ -1,17 +1,11 @@
 use crate::prelude::*;
 
-#[derive(Resource, Deref, DerefMut)]
-pub struct PlayerEntity {
-    current_entity: Entity,
-}
+#[derive(Resource, Deref)]
+pub struct PlayerEntity(pub Entity);
 
 impl PlayerEntity {
     #[inline(always)]
-    pub const fn new(entity: Entity) -> Self {
-        Self {
-            current_entity: entity,
-        }
-    }
+    pub const fn new(entity: Entity) -> Self { Self(entity) }
 
-    pub const fn current(&self) -> Entity { self.current_entity }
+    pub const fn current(&self) -> Entity { self.0 }
 }

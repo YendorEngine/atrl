@@ -56,7 +56,7 @@ pub fn wander_action(
 
         info!("{} executing wander!", name);
 
-        let ai_position = pc.position;
+        let ai_position = pc.get_position();
         let destination = match std::mem::take(&mut wander.destination) {
             Some(destination) => {
                 if ai_position.distance(destination) <= 1 {
@@ -89,10 +89,10 @@ pub fn wander_action(
 fn generate_wander_path(
     rng: &mut impl RngCore,
     map: &mut MapManager,
-    ai_pos: Position,
+    ai_pos: ChunkPosition,
     movement_type: u8,
     q_blocks_movement: &Query<&BlocksMovement>,
-) -> Position {
+) -> ChunkPosition {
     let wander_radius = WANDER_RANGE.sample(rng);
     let wander_circle = Circle::new(ai_pos, wander_radius);
     let positions = wander_circle.get_positions();

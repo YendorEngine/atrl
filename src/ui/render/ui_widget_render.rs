@@ -40,7 +40,7 @@ pub fn ui_widget_render(
                                                 />
                                             }
                                         }
-                                        AppState::Loading(..) => {
+                                        AppState::Loading => {
                                             constructor!{
                                                 <TextWidgetBundle
                                                     text={TextProps {

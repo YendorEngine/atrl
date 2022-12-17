@@ -101,7 +101,7 @@ pub fn update_tilemaps(
         map.update_tiles = check_next;
     }
 
-    let mut position = Position::new(*world_position, LocalPosition::new(0, 0));
+    let mut position = Position::new(*world_position, ChunkLocalPosition::new(0, 0));
 
     // let visible_tiles = map_manager.map_manager.visible_tiles;
     let visible_tiles = map_manager.get_visible_tiles();

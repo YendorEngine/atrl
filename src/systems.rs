@@ -1,20 +1,3 @@
-pub mod system_params {
-    pub mod camera {
-        mod cameras;
-        pub use cameras::*;
-    }
-
-    pub mod map_manager {
-        mod map_manager;
-        pub use map_manager::*;
-    }
-    pub use map_manager::*;
-
-    mod blocking_params;
-    pub use blocking_params::*;
-}
-
-//////////////////////////////////////////////////////////////
 pub mod ai {
     mod scorers {
         mod can_see_player;
@@ -54,27 +37,21 @@ pub mod functions {
     mod create_tilemap;
     pub use create_tilemap::*;
 }
+pub use functions::*;
 
 pub mod init {
+    mod assets;
+    pub use assets::*;
+    mod camera;
+    pub use camera::*;
     mod resources;
     pub use resources::*;
+    mod spawm_actor;
+    pub use spawm_actor::*;
     mod ui;
     pub use ui::*;
-
-    mod map_manager;
-    pub use map_manager::*;
-    mod mouse_position;
-    pub use mouse_position::*;
-    mod spawn_cameras;
-    pub use spawn_cameras::*;
-    mod spawn_mob;
-    pub use spawn_mob::*;
-    mod turn_manager;
-    pub use turn_manager::*;
-    mod white_pixel;
-    pub use white_pixel::*;
 }
-// not pub used as these are only needed by `SystemsPlugin`
+pub(super) use init::*;
 
 pub mod run {
     mod player_input;
@@ -86,18 +63,41 @@ pub mod run {
     mod update_tilesmaps;
     pub use update_tilesmaps::*;
 }
-pub use run::*;
+pub(super) use run::*;
 
 pub mod quit {
     mod save_settings;
     pub use save_settings::*;
 }
-pub use quit::*;
+pub(super) use quit::*;
 
-pub mod systems_plugin;
 // not pub used as this is only needed by "main()"
+
+pub(super) mod system_params {
+    pub mod camera {
+        mod cameras;
+        pub use cameras::*;
+    }
+
+    pub mod map_manager {
+        mod map_manager;
+        pub use map_manager::*;
+    }
+    pub use map_manager::*;
+
+    mod blocking_params;
+    pub use blocking_params::*;
+
+    mod actors;
+    pub use actors::*;
+    mod app_settings;
+    pub use app_settings::*;
+    mod map_context;
+    pub use map_context::*;
+}
 
 mod app_state;
 pub use app_state::*;
 mod app_stage;
 pub use app_stage::*;
+pub mod systems_plugin;

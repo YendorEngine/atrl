@@ -23,8 +23,8 @@ pub fn can_see_player(
                 &mut map_manager,
                 fov.0 as u32,
                 vision.0,
-                ai_position.position,
-                player_position.position,
+                ai_position.get_position(),
+                player_position.get_position(),
             ) {
                 current_score = can_see_player.score_if_true;
             }

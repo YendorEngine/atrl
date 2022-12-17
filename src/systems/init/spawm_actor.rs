@@ -17,8 +17,8 @@ pub const fn spawn_player(// tilesets: Tilesets,
     // };
     //
     // let position = Position::new(
-    // WorldPosition::ZERO,
-    // LocalPosition::new(GRID_WIDTH / 2, GRID_HEIGHT / 2, MapLayer::Player as u32),
+    // ChunkWorldPosition::ZERO,
+    // ChunkLocalPosition::new(GRID_WIDTH / 2, GRID_HEIGHT / 2, MapLayer::Player as u32),
     // );
     //
     // raw_master
@@ -63,8 +63,8 @@ pub const fn spawn_ai(// tilesets: Tilesets,
     // }
     //
     // let position = Position::new(
-    // WorldPosition::ZERO,
-    // LocalPosition::new(
+    // ChunkWorldPosition::ZERO,
+    // ChunkLocalPosition::new(
     // GRID_WIDTH / 3 + x,
     // GRID_HEIGHT / 3 + y,
     // MapLayer::Actors as u32,

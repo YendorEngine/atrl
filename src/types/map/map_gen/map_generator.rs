@@ -7,7 +7,7 @@ pub struct MapGenerator<T> {
 
 impl<T> MapGenerator<T> {
     pub fn new(
-        world_position: WorldPosition,
+        world_position: ChunkWorldPosition,
         random: Random,
         starter: Box<dyn MapArchitect<T>>,
         user_data: T,

@@ -26,6 +26,9 @@ pub use blocks_movement::*;
 mod blocks_vision;
 pub use blocks_vision::*;
 
+mod display;
+pub use display::*;
+
 mod equipable;
 pub use equipable::*;
 

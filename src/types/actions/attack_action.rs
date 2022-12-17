@@ -3,10 +3,10 @@ use crate::{prelude::*, systems::functions::try_attack, types::*};
 pub const ATTACK_TIME: u32 = SECONDS * 2; // Same as Movement, otherwise, they get another attack after player moves.
 
 #[derive(Debug, Clone)]
-pub struct AttackAction(pub Position);
+pub struct AttackAction(pub ChunkPosition);
 
 impl AtrlAction for AttackAction {
-    fn get_target_position(&self) -> Option<Position> { Some(self.0) }
+    fn get_target_position(&self) -> Option<ChunkPosition> { Some(self.0) }
 
     fn get_base_time_to_perform(&self) -> u32 { ATTACK_TIME }
 

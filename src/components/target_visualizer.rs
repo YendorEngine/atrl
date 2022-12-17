@@ -20,10 +20,10 @@ impl From<TargetVisualizerStyle> for usize {
 #[derive(Component, Clone)]
 pub struct TargetVisualizer {
     color: Color,
-    end: Option<Position>,
-    start: Option<Position>,
+    end: Option<ChunkPosition>,
+    start: Option<ChunkPosition>,
     style: TargetVisualizerStyle,
-    entity_list: Vec<(Position, Entity)>,
+    entity_list: Vec<(ChunkPosition, Entity)>,
 }
 
 impl Default for TargetVisualizer {
@@ -49,13 +49,32 @@ impl TargetVisualizer {
         }
     }
 
+    pub const fn get(&self) -> Option<(ChunkPosition, ChunkPosition)> {
+        let Some(start) = self.start else {return None;};
+        let Some(end) = self.end else {return None;};
+        Some((start, end))
+    }
+
+    pub fn set_color(&mut self, color: Color) { self.color = color; }
+
+    pub fn set_style(&mut self, style: TargetVisualizerStyle) { self.style = style; }
+
+    pub fn clear(&mut self, commands: &mut Commands) {
+        self.start = None;
+        self.end = None;
+
+        for (_, entity) in self.entity_list.drain(..) {
+            commands.entity(entity).despawn_recursive();
+        }
+    }
+
     pub fn update(
         &mut self,
         commands: &mut Commands,
         map_manager: &MapManager,
         tilesets: &Tilesets,
-        start: Position,
-        end: Position,
+        start: ChunkPosition,
+        end: ChunkPosition,
     ) {
         self.start = Some(start);
         self.end = Some(end);
@@ -95,23 +114,4 @@ impl TargetVisualizer {
             }
         }
     }
-
-    pub fn clear(&mut self, commands: &mut Commands) {
-        self.start = None;
-        self.end = None;
-
-        for (_, entity) in self.entity_list.drain(..) {
-            commands.entity(entity).despawn_recursive();
-        }
-    }
-
-    pub const fn get(&self) -> Option<(Position, Position)> {
-        let Some(start) = self.start else {return None;};
-        let Some(end) = self.end else {return None;};
-        Some((start, end))
-    }
-
-    pub fn set_color(&mut self, color: Color) { self.color = color; }
-
-    pub fn set_style(&mut self, style: TargetVisualizerStyle) { self.style = style; }
 }

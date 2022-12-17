@@ -1,9 +1,9 @@
 use crate::{components::*, prelude::*, resources::*, types::*};
 
-pub fn try_move(world: &mut World, entity: Entity, destination: Position) -> Result<(), BoxedAction> {
+pub fn try_move(world: &mut World, entity: Entity, destination: ChunkPosition) -> Result<(), BoxedAction> {
     let mut system_state: SystemState<(
         MapManager,
-        Query<(&mut Position, &Movement)>,
+        Query<(&mut PositionComponent, &Movement)>,
         Query<&BlocksMovement>,
         Res<PlayerEntity>,
     )> = SystemState::new(world);
@@ -20,7 +20,7 @@ pub fn try_move(world: &mut World, entity: Entity, destination: Position) -> Res
             } else {
                 PathFinder::Astar
                     .compute(
-                        *from_position,
+                        from_position.get_position(),
                         destination,
                         &mut map_manager,
                         PathPassThroughData {
@@ -44,7 +44,7 @@ pub fn try_move(world: &mut World, entity: Entity, destination: Position) -> Res
                     movement_component.0,
                     &q_blocks_movement,
                 ) {
-                    *from_position = destination;
+                    from_position.set_position(destination);
                     Ok(())
                 } else {
                     info!("{:?} is blocked!", destination);

@@ -5,14 +5,14 @@ pub struct MapGenData<T> {
 
     pub random: Random,
     pub exit_positions: Vec<UVec2>,
-    pub world_position: WorldPosition,
+    pub world_position: ChunkWorldPosition,
 
     pub output_grid: Grid<u32>,
     pub rooms: Vec<Rectangle>,
 }
 
 impl<T> MapGenData<T> {
-    pub(crate) fn new(world_position: WorldPosition, random: Random, user_data: T) -> Self {
+    pub(crate) fn new(world_position: ChunkWorldPosition, random: Random, user_data: T) -> Self {
         Self {
             user_data,
             world_position,

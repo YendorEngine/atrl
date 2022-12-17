@@ -4,8 +4,8 @@ pub fn entity_in_fov<Range: Into<u32>>(
     map_manager: &mut MapManager,
     range: Range,
     vision_type: u8,
-    current_pos: Position,
-    target_pos: Position,
+    current_pos: ChunkPosition,
+    target_pos: ChunkPosition,
 ) -> bool {
     // // If the player is within the FOV range of the AI, check line of sight
     let distance = current_pos.distance(target_pos);

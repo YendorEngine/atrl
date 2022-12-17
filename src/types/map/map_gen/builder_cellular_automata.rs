@@ -54,7 +54,7 @@ impl<T> CellularAutomataBuilder<T> {
                 if x == 0 && y == 0 {
                     continue;
                 }
-                let value = match grid.get((x + index.x, y + index.y)) {
+                let value = match grid.get((x + index.x, y + index.y).as_uvec2()) {
                     Some(v) => *v,
                     None => continue,
                 };
@@ -66,7 +66,12 @@ impl<T> CellularAutomataBuilder<T> {
         neighbors
     }
 
-    fn apply_shape(&self, shape: Box<dyn Shape>, world_position: WorldPosition, output_grid: &mut Grid<u32>) {
+    fn apply_shape(
+        &self,
+        shape: Box<dyn Shape>,
+        world_position: ChunkWorldPosition,
+        output_grid: &mut Grid<u32>,
+    ) {
         for position in shape.boxed_iter() {
             if world_position == position.get_world_position() {
                 let grid_point = position.gridpoint().as_ivec2();

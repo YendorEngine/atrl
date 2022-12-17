@@ -7,22 +7,21 @@ pub struct AttackActor;
 #[derive(Debug, Default, Component, Clone)]
 pub struct ChaseActor {
     pub generated_path: bool,
-    pub last_seen_pt: Option<Position>,
+    pub last_seen_pt: Option<ChunkPosition>,
 }
 
 // could be used for temporary storage for multi turn actions
-#[derive(Debug, Reflect, Component, Clone, Eq, PartialEq)]
-#[reflect(Component)]
+#[derive(Debug, Component, Clone, Eq, PartialEq)]
 pub struct Wander {
-    pub destination: Option<Position>,
-    pub my_previous_location: Position,
+    pub destination: Option<ChunkPosition>,
+    pub my_previous_location: ChunkPosition,
 }
 
 impl Default for Wander {
     fn default() -> Self {
         Self {
             destination: None,
-            my_previous_location: Position::new(WorldPosition::ZERO, LocalPosition::new(0, 0)),
+            my_previous_location: ChunkPosition::ZERO,
         }
     }
 }

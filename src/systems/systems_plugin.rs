@@ -10,45 +10,29 @@ pub struct SystemsPlugin;
 
 impl Plugin for SystemsPlugin {
     fn build(&self, app: &mut App) {
-        // Initialize states an move to next state immediately
-        app.add_loopless_state(AppState::Initializing).add_enter_system(
-            AppState::Initializing,
-            switch_app_state!(AppState::Loading(LoadingState::Assets)),
-        );
-
-        // Register external plugins
-        self.external_plugins(app);
-
         // Register the rest of the systems...
-        self.loading_state(app).menu_state(app).game_state(app).quit_state(app);
+        self.init_states(app).loading_state(app).menu_state(app).game_state(app).quit_state(app);
     }
 }
 
 impl SystemsPlugin {
-    fn external_plugins(self, app: &mut App) -> Self {
-        app
-        // ECS Tilemap
-        .insert_resource(TilemapRenderSettings {
-            render_chunk_size: GRID_SIZE,
-        })
-        .add_plugin(TilemapPlugin)
-        // Big Brain
-        .add_plugin(BigBrainPlugin);
+    fn init_states(self, app: &mut App) -> Self {
+        app.add_loopless_state(AppState::Initializing)
+            .add_enter_system(AppState::Initializing, switch_app_state!(AppState::Loading));
+
         self
     }
 
     // LoadingState
     fn loading_state(self, app: &mut App) -> Self {
-        // These are the first systems to run:
-        // Get a camera spawned first, followed by the splash screen so we don't look broken!
+        // Camera / SplashScreen? / Assets
         app.add_enter_system_set(
-            AppState::Loading(LoadingState::Assets),
+            AppState::Loading,
             ConditionSet::new()
-            .with_system(spawn_cameras) // TODO: Rewrite camera stuff
-            //.with_system(show_splash_screen) // TODO: Splash screen
-            .with_system(init_white_pixel) // We can use white_pixel as a solid color
-            // .with_system(init_app_settings) // Load the app_settings from file or default. These will help determine how our app is setup.
-            .with_system(switch_app_state!(AppState::Menu(MenuState::MainMenu)))
+                .with_system(init_camera)
+                .with_system(init_assets)
+                //.with_system(show_splash_screen) // TODO: Splash screen
+                .with_system(init_white_pixel) // We can use white_pixel as a solid color
             .into(),
         );
 
@@ -62,7 +46,7 @@ impl SystemsPlugin {
 
         // Show Loading Screen
         app.add_enter_system_set(
-            AppState::Loading(LoadingState::InitGame),
+            AppState::Loading,
             ConditionSet::new()
             //.with_system(show_loading_screen) // TODO: Loading Screen
             // .with_system(init_game_contexts) // Load a saved game or start tracking a new instance
@@ -73,70 +57,15 @@ impl SystemsPlugin {
             .into(),
         );
 
-        // Generate the overall condition of the world
-        app.add_enter_system_set(
-            AppState::Loading(LoadingState::WorldGen),
+        // Resources
+        app.add_exit_system_set(
+            AppState::Loading,
             ConditionSet::new()
-                .with_system(switch_app_state!(AppState::Loading(LoadingState::MapGen(
-                    MapGenState::Terrain
-                ))))
+                .with_system(init_resources)
+                //.with_system(init_tilemap)
                 .into(),
         );
 
-        // Entry point for generating new maps?
-        // Load the terrain for the map
-        app.add_enter_system_set(
-            AppState::Loading(LoadingState::MapGen(MapGenState::Terrain)),
-            ConditionSet::new()
-                .with_system(switch_app_state!(AppState::Loading(LoadingState::MapGen(
-                    MapGenState::Features
-                ))))
-                .into(),
-        );
-
-        // Load the features for the map
-        app.add_enter_system_set(
-            AppState::Loading(LoadingState::MapGen(MapGenState::Features)),
-            ConditionSet::new()
-                .with_system(switch_app_state!(AppState::Loading(LoadingState::MapGen(
-                    MapGenState::Items
-                ))))
-                .into(),
-        );
-
-        // Load the items for the map
-        app.add_enter_system_set(
-            AppState::Loading(LoadingState::MapGen(MapGenState::Items)),
-            ConditionSet::new()
-                .with_system(switch_app_state!(AppState::Loading(LoadingState::MapGen(
-                    MapGenState::Actors
-                ))))
-                .into(),
-        );
-
-        // Load the actors for the map
-        app.add_enter_system_set(
-            AppState::Loading(LoadingState::MapGen(MapGenState::Actors)),
-            ConditionSet::new()
-                .with_system(spawn_player)
-                .with_system(spawn_ai)
-                .with_system(switch_app_state!(AppState::Loading(LoadingState::Ready)))
-                .into(),
-        );
-
-        // Add UI (message?) to Loading Screen letting the player know the game is ready and wait for
-        // input
-        app.add_enter_system_set(
-            AppState::Loading(LoadingState::Ready),
-            ConditionSet::new().with_system(switch_app_state!(AppState::InGame)).into(),
-        );
-
-        // app.add_exit_system_set(
-        // AppState::Loading(LoadingState::Ready),
-        // ConditionSet::new()
-        // .with_system(despawn_loading_screen) // TODO: Loading Screen
-        // .into()
-        // );
         self
     }
 

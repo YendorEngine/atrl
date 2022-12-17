@@ -11,8 +11,8 @@ impl From<MapGenData<MapPassThroughData>> for Map {
         let mut terrain_types = Grid::new_default(GRID_SIZE);
         for y in 0..*GRID_HEIGHT {
             for x in 0..*GRID_WIDTH {
-                let v = *data.output_grid.get_unchecked((x, y));
-                terrain_types.set((x, y), v as usize);
+                let v = *data.output_grid.get_unchecked(UVec2::new(x, y));
+                terrain_types.set(UVec2::new(x, y), v as usize);
             }
         }
 

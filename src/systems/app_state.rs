@@ -6,19 +6,10 @@ pub type CurrentAppState = CurrentState<AppState>;
 pub enum AppState {
     #[default]
     Initializing, // Buffer to load plugins
-    Loading(LoadingState), // AssetLoading / World / Map generation
-    Menu(MenuState),       // Main Menu / Settings Menu / World Gen Menus / Character Creation Menus
-    InGame,                // Actually playing the game
-    Quit,                  // Graceful quitting
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub enum LoadingState {
-    Assets,              // SplashScreen / Asset Loading
-    InitGame,            // Initialize resources for the game
-    WorldGen,            // Happens once on new game
-    MapGen(MapGenState), // Generate map terrain
-    Ready,               // On new/load game, alert the player we are ready and await input.
+    Loading,
+    Menu(MenuState), // Main Menu / Settings Menu / World Gen Menus / Character Creation Menus
+    InGame,          // Actually playing the game
+    Quit,            // Graceful quitting
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]

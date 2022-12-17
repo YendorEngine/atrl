@@ -6,7 +6,7 @@ pub struct Map {
     // Map Definitions
     pub entity: Entity,
     pub random: Random,
-    pub world_position: WorldPosition,
+    pub world_position: ChunkWorldPosition,
 
     // Update Flags
     pub update_all: bool,
@@ -33,11 +33,11 @@ impl Map {
     /// Use MapManager::can_place_actor instead!!!
     pub fn can_place_actor(
         &self,
-        position: LocalPosition,
+        position: ChunkLocalPosition,
         movement_type: u8,
         q_blocks_movement: &Query<&BlocksMovement>,
     ) -> bool {
-        let Some(index) = position.grid_index(GRID_SIZE) else { return false; };
+        let Some(index) = position.as_index(GRID_SIZE) else { return false; };
 
         !self.is_blocked(index, movement_type, q_blocks_movement)
     }
@@ -47,11 +47,11 @@ impl Map {
     pub fn add_actor(
         &mut self,
         actor: Entity,
-        position: LocalPosition,
+        position: ChunkLocalPosition,
         movement_type: u8,
         q_blocks_movement: &Query<&BlocksMovement>,
     ) -> bool {
-        let Some(index) = position.grid_index(GRID_SIZE) else { return false; };
+        let Some(index) = position.as_index(GRID_SIZE) else { return false; };
 
         if self.can_place_actor(position, movement_type, q_blocks_movement) {
             if self.actors[index].is_none() {
@@ -71,8 +71,8 @@ impl Map {
 
     /// Do not use this function!!!
     /// Use MapManager::remove_actor instead!!!
-    pub fn remove_actor(&mut self, actor: Entity, position: LocalPosition) {
-        let Some(index) = position.grid_index(GRID_SIZE) else { return; };
+    pub fn remove_actor(&mut self, actor: Entity, position: ChunkLocalPosition) {
+        let Some(index) = position.as_index(GRID_SIZE) else { return; };
 
         if let Some(actors) = self.actors[index].as_mut() {
             actors.retain(|&x| x != actor);
@@ -85,8 +85,8 @@ impl Map {
 
     /// Do not use this function!!!
     /// Use MapManager::get_actors instead!!!
-    pub fn get_actors(&self, position: LocalPosition) -> Option<&Vec<Entity>> {
-        let Some(index) = position.grid_index(GRID_SIZE) else { return None; };
+    pub fn get_actors(&self, position: ChunkLocalPosition) -> Option<&Vec<Entity>> {
+        let Some(index) = position.as_index(GRID_SIZE) else { return None; };
         self.actors[index].as_ref()
     }
 }
@@ -95,8 +95,8 @@ impl Map {
 impl Map {
     /// Do not use this function!!!
     /// Use MapManager::add_feature instead!!!
-    pub fn add_feature(&mut self, feature: Entity, position: LocalPosition) -> bool {
-        let Some(index) = position.grid_index(GRID_SIZE) else { return false; };
+    pub fn add_feature(&mut self, feature: Entity, position: ChunkLocalPosition) -> bool {
+        let Some(index) = position.as_index(GRID_SIZE) else { return false; };
 
         if self.features[index].is_none() {
             self.features[index] = Some(Vec::new());
@@ -112,8 +112,8 @@ impl Map {
 
     /// Do not use this function!!!
     /// Use MapManager::remove_feature instead!!!
-    pub fn remove_feature(&mut self, feature: Entity, position: LocalPosition) {
-        let Some(index) = position.grid_index(GRID_SIZE) else { return; };
+    pub fn remove_feature(&mut self, feature: Entity, position: ChunkLocalPosition) {
+        let Some(index) = position.as_index(GRID_SIZE) else { return; };
 
         if let Some(features) = self.features[index].as_mut() {
             features.retain(|&x| x != feature);
@@ -126,8 +126,8 @@ impl Map {
 
     /// Do not use this function!!!
     /// Use MapManager::get_features instead!!!
-    pub fn get_features(&self, position: LocalPosition) -> Option<&Vec<Entity>> {
-        let Some(index) = position.grid_index(GRID_SIZE) else { return None; };
+    pub fn get_features(&self, position: ChunkLocalPosition) -> Option<&Vec<Entity>> {
+        let Some(index) = position.as_index(GRID_SIZE) else { return None; };
 
         self.features[index].as_ref()
     }

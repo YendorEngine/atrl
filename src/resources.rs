@@ -18,6 +18,12 @@ pub mod ui {
 }
 pub use ui::*;
 
+pub mod white_pixel {
+    mod white_pixel;
+    pub use white_pixel::*;
+}
+pub use white_pixel::*;
+
 mod app_settings;
 pub use app_settings::*;
 mod action_queue;
@@ -28,9 +34,11 @@ mod game_context;
 pub use game_context::*;
 mod game_settings;
 pub use game_settings::*;
-mod map_manager_resource;
-pub use map_manager_resource::*;
+mod map_manager;
+pub use map_manager::*;
 mod player_entity;
 pub use player_entity::*;
+mod tileset_storage;
+pub use tileset_storage::*;
 mod turn_manager;
 pub use turn_manager::*;

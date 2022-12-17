@@ -11,7 +11,7 @@ pub trait AtrlAction: Sync + Send + Debug + 'static + DynClone {
     fn get_base_time_to_perform(&self) -> u32;
 
     /// Returns the position the action is targeting.
-    fn get_target_position(&self) -> Option<Position> { None }
+    fn get_target_position(&self) -> Option<ChunkPosition> { None }
 
     /// Perform the action. Returns the time it took to perform the action.
     fn perform(&mut self, world: &mut World, entity: Entity) -> Result<u32, BoxedAction>;

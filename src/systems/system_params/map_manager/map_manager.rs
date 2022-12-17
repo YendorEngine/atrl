@@ -105,13 +105,15 @@ impl<'w, 's> MapManager<'w, 's> {
     pub fn get_visible_tiles(&self) -> &HashSet<Position> { &self.map_manager.visible_tiles }
 
     /// Grab map_manager's current map
-    pub fn get_current_map(&self) -> &(WorldPosition, Map) { &self.map_manager.current_map }
+    pub fn get_current_map(&self) -> &(ChunkWorldPosition, Map) { &self.map_manager.current_map }
 
     /// Grab map_manager's current map mut
-    pub fn get_current_map_mut(&mut self) -> &mut (WorldPosition, Map) { &mut self.map_manager.current_map }
+    pub fn get_current_map_mut(&mut self) -> &mut (ChunkWorldPosition, Map) {
+        &mut self.map_manager.current_map
+    }
 
     /// attempts to get a map for the current world position
-    pub fn get_map(&self, world_position: WorldPosition) -> Option<&Map> {
+    pub fn get_map(&self, world_position: ChunkWorldPosition) -> Option<&Map> {
         // self.load_map(world_position);
         if self.map_manager.current_map.0 == world_position {
             Some(&self.map_manager.current_map.1)
@@ -121,7 +123,7 @@ impl<'w, 's> MapManager<'w, 's> {
     }
 
     /// attempts to get a map for the current world position
-    pub fn get_map_mut(&mut self, world_position: WorldPosition) -> Option<&mut Map> {
+    pub fn get_map_mut(&mut self, world_position: ChunkWorldPosition) -> Option<&mut Map> {
         self.load_map(world_position);
         if self.map_manager.current_map.0 == world_position {
             Some(&mut self.map_manager.current_map.1)
@@ -205,7 +207,7 @@ impl<'w, 's> MapManager<'w, 's> {
 
 // Map Manipulation / General
 impl<'w, 's> MapManager<'w, 's> {
-    pub fn get_current_world_position(&self) -> WorldPosition { self.map_manager.current_map.0 }
+    pub fn get_current_world_position(&self) -> ChunkWorldPosition { self.map_manager.current_map.0 }
 
     pub fn get_terrain_layer(&self) -> Entity { self.map_manager.terrain_layer }
 
@@ -222,7 +224,7 @@ impl<'w, 's> MapManager<'w, 's> {
 
 // Internal MapManager Functions
 impl<'w, 's> MapManager<'w, 's> {
-    fn load_map(&mut self, world_position: WorldPosition) {
+    fn load_map(&mut self, world_position: ChunkWorldPosition) {
         if self.is_map_loaded(world_position) ||
             self.deserialize_map(world_position) ||
             self.create_map(world_position)
@@ -233,17 +235,17 @@ impl<'w, 's> MapManager<'w, 's> {
         }
     }
 
-    fn is_map_loaded(&mut self, world_position: WorldPosition) -> bool {
+    fn is_map_loaded(&mut self, world_position: ChunkWorldPosition) -> bool {
         self.map_manager.loaded_maps.contains_key(&world_position) ||
             self.map_manager.current_map.0 == world_position
     }
 
-    fn deserialize_map(&mut self, _world_position: WorldPosition) -> bool {
+    fn deserialize_map(&mut self, _world_position: ChunkWorldPosition) -> bool {
         // TODO: Deserialize maps!
         false
     }
 
-    fn create_map(&mut self, world_position: WorldPosition) -> bool {
+    fn create_map(&mut self, world_position: ChunkWorldPosition) -> bool {
         let map = Self::internal_create_map(&mut self.commands, &mut self.game_context, world_position);
         info!("Generated map at {:?}", world_position.xyz());
         self.add_to_loaded_maps(world_position, map);
@@ -251,11 +253,11 @@ impl<'w, 's> MapManager<'w, 's> {
         true
     }
 
-    fn add_to_loaded_maps(&mut self, world_position: WorldPosition, map: Map) {
+    fn add_to_loaded_maps(&mut self, world_position: ChunkWorldPosition, map: Map) {
         self.map_manager.loaded_maps.insert(world_position, map);
     }
 
-    pub fn internal_set_current_map(&mut self, world_position: WorldPosition) {
+    pub fn internal_set_current_map(&mut self, world_position: ChunkWorldPosition) {
         // Check map is not current already.
         if self.map_manager.current_map.0 != world_position {
             // Verify map is loaded.
@@ -306,11 +308,10 @@ impl<'w, 's> MapManager<'w, 's> {
     pub fn internal_create_map(
         commands: &mut Commands,
         game_context: &mut ResMut<GameContext>,
-        world_position: WorldPosition,
+        world_position: ChunkWorldPosition,
     ) -> Map {
         // Create a Random for the map to be generated from and then use as it's own.
-        let map_seed =
-            game_context.random.prht.get(world_position.x(), world_position.y(), world_position.z());
+        let map_seed = game_context.random.prht.get(world_position.x, world_position.y, world_position.z);
         let random = Random::new(map_seed);
 
         // Create the entity to hold the map.
@@ -323,9 +324,7 @@ impl<'w, 's> MapManager<'w, 's> {
         commands.entity(map_entity).insert((
             Name::new(format!(
                 "MAP ({}, {}, {})",
-                world_position.x(),
-                world_position.y(),
-                world_position.z()
+                world_position.x, world_position.y, world_position.z
             )),
             // map,
             SpatialBundle::default(),
@@ -335,7 +334,11 @@ impl<'w, 's> MapManager<'w, 's> {
         map
     }
 
-    fn generate_map(world_position: WorldPosition, random: Random, user_data: MapPassThroughData) -> Map {
+    fn generate_map(
+        world_position: ChunkWorldPosition,
+        random: Random,
+        user_data: MapPassThroughData,
+    ) -> Map {
         let mut map = Map::from(
             MapGenerator::new(
                 world_position,
@@ -360,7 +363,7 @@ impl<'w, 's> MapManager<'w, 's> {
                 .with_shape(Circle::new(
                     Position::new(
                         world_position,
-                        LocalPosition::new(*GRID_WIDTH / 2, *GRID_HEIGHT / 2),
+                        ChunkLocalPosition::new(*GRID_WIDTH / 2, *GRID_HEIGHT / 2),
                     ),
                     5u32,
                 )),
@@ -368,22 +371,22 @@ impl<'w, 's> MapManager<'w, 's> {
         .with(SetBuilder::new().set_value(0).with_shape(Rectangle::new(
             Position::new(
                 world_position,
-                LocalPosition::new(*GRID_WIDTH / 2 - 4, *GRID_HEIGHT / 2 - 4),
+                ChunkLocalPosition::new(*GRID_WIDTH / 2 - 4, *GRID_HEIGHT / 2 - 4),
             ),
             Position::new(
                 world_position,
-                LocalPosition::new(*GRID_WIDTH / 2 + 4, *GRID_HEIGHT / 2 + 4),
+                ChunkLocalPosition::new(*GRID_WIDTH / 2 + 4, *GRID_HEIGHT / 2 + 4),
             ),
         )))
         .generate();
 
-        let mut position = Position::new(world_position, LocalPosition::new(0, 0));
+        let mut position = Position::new(world_position, ChunkLocalPosition::new(0, 0));
         for y in 0..*GRID_HEIGHT {
             position.add_y(1);
             for x in 0..*GRID_WIDTH {
                 position.add_x(1);
 
-                match feature_map.output_grid.get_unchecked((x, y)) {
+                match feature_map.output_grid.get_unchecked((x, y).as_uvec2()) {
                     0 => continue,
                     1 => continue,
                     2 => {
@@ -400,7 +403,7 @@ impl<'w, 's> MapManager<'w, 's> {
 }
 
 // Implement FovProvider
-impl<'w, 's> FovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<'w, 's> {
+impl<'w, 's> FovProvider<VisionPassThroughData> for MapManager<'w, 's> {
     fn is_opaque(&mut self, position: Position, pass_through_data: &mut VisionPassThroughData) -> bool {
         if let Some(actors) = self.get_actors(position) {
             for &entity in actors {
@@ -426,7 +429,7 @@ impl<'w, 's> FovProvider<VisionPassThroughData, GRID_SIZE> for MapManager<'w, 's
     }
 }
 
-impl<'w, 's> PathProvider<PathPassThroughData, GRID_SIZE> for MapManager<'w, 's> {
+impl<'w, 's> PathProvider<PathPassThroughData> for MapManager<'w, 's> {
     fn get_neighbors(
         &self,
         position: Position,

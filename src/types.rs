@@ -93,9 +93,3 @@ pub mod random {
     pub use random::*;
 }
 pub use random::*;
-
-pub mod white_pixel {
-    mod white_pixel;
-    pub use white_pixel::*;
-}
-pub use white_pixel::*;
