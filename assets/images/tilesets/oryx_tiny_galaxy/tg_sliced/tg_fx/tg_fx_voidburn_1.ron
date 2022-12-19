@@ -1,0 +1,4 @@
+(
+    name: "tg_fx_voidburn_1",
+    tile: Standard("images/tilesets/oryx_tiny_galaxy/tg_sliced/tg_fx/tg_fx_voidburn_1.png"),
+)

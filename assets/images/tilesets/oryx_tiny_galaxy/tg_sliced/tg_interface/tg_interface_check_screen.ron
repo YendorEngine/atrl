@@ -1,0 +1,4 @@
+(
+    name: "tg_interface_check_screen",
+    tile: Standard("images/tilesets/oryx_tiny_galaxy/tg_sliced/tg_interface/tg_interface_check_screen.png"),
+)

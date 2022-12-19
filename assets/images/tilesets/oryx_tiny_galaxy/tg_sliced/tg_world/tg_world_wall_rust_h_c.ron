@@ -1,0 +1,4 @@
+(
+    name: "tg_world_wall_rust_h_c",
+    tile: Standard("images/tilesets/oryx_tiny_galaxy/tg_sliced/tg_world/tg_world_wall_rust_h_c.png"),
+)

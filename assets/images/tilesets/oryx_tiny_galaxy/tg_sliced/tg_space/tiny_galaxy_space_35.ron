@@ -1,0 +1,4 @@
+(
+    name: "tiny_galaxy_space_35",
+    tile: Standard("images/tilesets/oryx_tiny_galaxy/tg_sliced/tg_space/tiny_galaxy_space_35.png"),
+)

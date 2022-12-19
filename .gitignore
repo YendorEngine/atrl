@@ -4,9 +4,30 @@
 /benches/target
 docs/.obsidian
 
+thumbs.db
+
 # Cargo
 /target
 Cargo.lock
 .cargo/config
 crates/*/target
 .cargo/config.toml
+
+# Oryx
+Tiled_example1.tmx
+oryx*.png
+oryx*.gif
+oryx*.jpg
+oryx*.psd
+tiny_galaxy*.png
+tiny_galaxy*.gif
+tiny_galaxy*.jpg
+tiny_galaxy*.psd
+tiny_galaxy*.tsx
+tiny_galaxy*.tmx
+tg*.png
+tg*.gif
+tg*.jpg
+tg*.psd
+tg*.tsx
+tg*.tmx

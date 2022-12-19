@@ -1,54 +1,38 @@
-mod bundles {
-    mod actor_bundle;
-    pub use actor_bundle::*;
-    mod player_bundle;
-    pub use player_bundle::*;
+pub mod bundles {
+    // LayerTagged
+    mod terrain;
+    pub use terrain::*;
+    mod feature;
+    pub use feature::*;
+    mod item;
+    pub use item::*;
+    mod actor;
+    pub use actor::*;
+    mod ui;
+    pub use ui::*;
+
+    mod chunk;
+    pub use chunk::*;
+    mod position;
+    pub use position::*;
 }
-pub use bundles::*;
 
-//////////////////////////////////////////////////////////////
-
-mod ai_actions;
-pub use ai_actions::*;
-
-mod ai_components;
-pub use ai_components::*;
-
-mod ai_scorers;
-pub use ai_scorers::*;
-
-mod ai_type;
-pub use ai_type::*;
-
-mod blocks_movement;
-pub use blocks_movement::*;
-
-mod blocks_vision;
-pub use blocks_vision::*;
-
+mod chunk;
+pub use chunk::*;
 mod display;
 pub use display::*;
+mod local_position;
+pub use local_position::*;
+mod world_position;
+pub use world_position::*;
+mod tags;
+pub use tags::*;
 
-mod equipable;
-pub use equipable::*;
-
-mod health;
-pub use health::*;
-
-mod mob;
-pub use mob::*;
-
-mod movement;
-pub use movement::*;
-
-mod position_component;
-pub use position_component::*;
-
-mod target_visualizer;
-pub use target_visualizer::*;
-
-mod field_of_view;
-pub use field_of_view::*;
-
-mod vision;
-pub use vision::*;
+use crate::prelude::*;
+pub(super) fn register_components(app: &mut App) {
+    app.register_type::<DisplayComponent>();
+    app.register_type::<WorldPositionComponent>();
+    app.register_type::<LocalPositionComponent>();
+    app.register_type::<ChunkComponent>();
+    register_tags(app);
+}

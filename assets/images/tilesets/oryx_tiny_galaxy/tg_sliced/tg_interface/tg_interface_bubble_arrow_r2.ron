@@ -1,0 +1,4 @@
+(
+    name: "tg_interface_bubble_arrow_r2",
+    tile: Standard("images/tilesets/oryx_tiny_galaxy/tg_sliced/tg_interface/tg_interface_bubble_arrow_r2.png"),
+)

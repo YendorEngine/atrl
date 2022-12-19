@@ -1,0 +1,4 @@
+(
+    name: "tg_interface_panel_metal_a_8",
+    tile: Standard("images/tilesets/oryx_tiny_galaxy/tg_sliced/tg_interface/tg_interface_panel_metal_a_8.png"),
+)

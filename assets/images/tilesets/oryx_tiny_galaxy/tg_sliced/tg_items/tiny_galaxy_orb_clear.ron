@@ -1,0 +1,4 @@
+(
+    name: "tiny_galaxy_orb_clear",
+    tile: Standard("images/tilesets/oryx_tiny_galaxy/tg_sliced/tg_items/tiny_galaxy_orb_clear.png"),
+)

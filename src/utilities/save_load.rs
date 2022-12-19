@@ -20,9 +20,11 @@ pub trait SaveLoad: AsRef<Path> {
         let value = ron::from_str::<T>(&contents)?;
         Ok(value)
     }
-
+    
     fn save_file(&self, contents: &str) -> Result<()> {
-        create_dir_all(self)?;
+        if let Some(dir) = self.as_ref().parent() {
+            create_dir_all(dir)?;
+        }
         let file = File::create(self)?;
         let mut file = BufWriter::new(file);
         file.write_all(contents.as_bytes())?;
@@ -39,6 +41,18 @@ pub trait SaveLoad: AsRef<Path> {
         let contents = ron::ser::to_string_pretty(value, ron::ser::PrettyConfig::default())?;
         self.save_file(&contents)?;
         Ok(())
+    }
+
+    fn path_string(&self) -> String {
+        if let Ok(s) = AsRef::<Path>::as_ref(self).canonicalize() {
+            if let Some(s) = s.to_str() {
+                s.to_string()
+            } else {
+                "UNABLE/TO/CONVERT/PATH/TO/STRING".to_string()
+            }
+        } else {
+            "INVALID/PATH".to_string()
+        }
     }
 }
 

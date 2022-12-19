@@ -1,0 +1,4 @@
+(
+    name: "tg_items_gun_alien_rifle",
+    tile: Standard("images/tilesets/oryx_tiny_galaxy/tg_sliced/tg_items/tg_items_gun_alien_rifle.png"),
+)

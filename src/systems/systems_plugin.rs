@@ -1,204 +1,124 @@
-use crate::systems::{init::*, *};
+use crate::prelude::*;
+use crate::systems::*;
 
-#[derive(SystemLabel)]
-enum MapLabel {
-    SwitchMaps,
+// TODO: Remove this when we want to finalize going to MainMenu.
+pub const SPLASH_SCREEN_TO_THIS_STATE: AppState = AppState::InGame;
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum AppState {
+    Initializing,
+    SplashScreen,
+    Menu(MenuState),
+    InGame,
 }
 
-#[derive(Clone, Copy)]
-pub struct SystemsPlugin;
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum MenuState {
+    Main,
+    Settings,
+}
 
+pub struct SystemsPlugin;
 impl Plugin for SystemsPlugin {
     fn build(&self, app: &mut App) {
-        // Register the rest of the systems...
-        self.init_states(app).loading_state(app).menu_state(app).game_state(app).quit_state(app);
+        self.init_states(app);
+        self.loading_state(app);
+        self.menu_state(app);
+        self.game_state(app);
+        self.quit_state(app);
     }
 }
 
-impl SystemsPlugin {
-    fn init_states(self, app: &mut App) -> Self {
-        app.add_loopless_state(AppState::Initializing)
-            .add_enter_system(AppState::Initializing, switch_app_state!(AppState::Loading));
+// TODO: remove - allows .with_system() to hold system creation
+fn phantom_system() {}
 
-        self
+impl SystemsPlugin {
+    fn init_states(&self, app: &mut App) {
+        app
+        .add_loopless_state(AppState::Initializing)
+        .add_enter_system(
+            AppState::Initializing,
+            switch_app_state!(AppState::Loading(LoadingState::Splash)),
+        );
     }
 
-    // LoadingState
-    fn loading_state(self, app: &mut App) -> Self {
+    fn loading_state(&self, app: &mut App) {
         // Camera / SplashScreen? / Assets
         app.add_enter_system_set(
-            AppState::Loading,
+            AppState::SplashScreen,
             ConditionSet::new()
-                .with_system(init_camera)
-                .with_system(init_assets)
-                //.with_system(show_splash_screen) // TODO: Splash screen
-                .with_system(init_white_pixel) // We can use white_pixel as a solid color
-            .into(),
+            .with_system(init_ui_camera)
+            .with_system(init_assets)
+            .into()
         );
 
-        // Cleanup Splash Screen
-        // app.add_exit_system_set(
-        // AppState::Loading(LoadingState::Assets),
-        // ConditionSet::new()
-        // .with_system(despawn_splash_screen) // TODO: Splash screen
-        // .into()
-        // );
-
-        // Show Loading Screen
-        app.add_enter_system_set(
-            AppState::Loading,
+        // Wait for Assets
+        app.add_system_set_to_stage(
+            CoreStage::Update,
             ConditionSet::new()
-            //.with_system(show_loading_screen) // TODO: Loading Screen
-            // .with_system(init_game_contexts) // Load a saved game or start tracking a new instance
-            .with_system(init_mouse_position) // Start tracking the MousePosition
-            .with_system(init_map_manager) // Track maps in the game as we move about
-            .with_system(init_turn_manager) // Track mobs in game through their turns
-            .with_system(switch_app_state!(AppState::Loading(LoadingState::WorldGen)))
-            .into(),
+            .run_in_state(AppState::SplashScreen)
+            .with_system(wait_for_assets_to_load)
+            .into()
         );
 
         // Resources
         app.add_exit_system_set(
-            AppState::Loading,
+            AppState::SplashScreen,
             ConditionSet::new()
-                .with_system(init_resources)
-                //.with_system(init_tilemap)
-                .into(),
+            .with_system(phantom_system)
+            .into()
         );
-
-        self
     }
 
-    // MenuState
-    fn menu_state(self, app: &mut App) -> Self {
+    fn menu_state(&self, app: &mut App) {
         app.add_enter_system_set(
-            AppState::Menu(MenuState::MainMenu),
+            AppState::Menu(MenuState::Main),
             ConditionSet::new()
-            // TODO: LoadSavedGame or MenuState WorldCreation ->
-            .with_system(switch_app_state!(AppState::Loading(LoadingState::InitGame)))
-            .into(),
+            .with_system(cleanup_on_enter_main_menu)
+            .into()
         );
-
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new().run_in_state(AppState::Menu(MenuState::Settings)).with_system(system).
-        // into(), );
-        //
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new()
-        // .run_in_state(AppState::Menu(MenuState::WorldCreation(
-        // WorldCreationState::Screen1,
-        // )))
-        // .with_system(system)
-        // .into(),
-        // );
-        //
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new()
-        // .run_in_state(AppState::Menu(MenuState::WorldCreation(
-        // WorldCreationState::Screen2,
-        // )))
-        // .with_system(system)
-        // .into(),
-        // );
-        //
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new()
-        // .run_in_state(AppState::Menu(MenuState::CharacterCreation(
-        // CharacterCreationState::RaceClass,
-        // )))
-        // .with_system(system)
-        // .into(),
-        // );
-        //
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new()
-        // .run_in_state(AppState::Menu(MenuState::CharacterCreation(
-        // CharacterCreationState::Attributes,
-        // )))
-        // .with_system(system)
-        // .into(),
-        // );
-        //
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new()
-        // .run_in_state(AppState::Menu(MenuState::CharacterCreation(
-        // CharacterCreationState::Skills,
-        // )))
-        // .with_system(system)
-        // .into(),
-        // );
-        //
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new()
-        // .run_in_state(AppState::Menu(MenuState::CharacterCreation(
-        // CharacterCreationState::Feats,
-        // )))
-        // .with_system(system)
-        // .into(),
-        // );
-        self
     }
 
-    // GameState
-    fn game_state(self, app: &mut App) -> Self {
-        self.ai_states(app);
-
-        // Switch then update tilemaps
-        app.add_system_set_to_stage(
-            CoreStage::Last,
+    fn game_state(&self, app: &mut App) {
+        app.add_enter_system_set(
+            AppState::InGame,
             ConditionSet::new()
-                .run_in_state(AppState::InGame)
-                .label(MapLabel::SwitchMaps)
-                .with_system(set_current_map_to_current_player)
-                .into(),
+            .with_system(cleanup_on_enter_game)
+            .with_system(init_input)
+            .into()
+        );
+        
+        app.add_system_set_to_stage(
+            CoreStage::First,
+            ConditionSet::new()
+            .run_in_state(AppState::InGame)
+            .with_system(phantom_system)
+            .into()
         );
         app.add_system_set_to_stage(
             CoreStage::Update,
             ConditionSet::new()
-                .run_in_state(AppState::InGame)
-                .after(MapLabel::SwitchMaps)
-                .with_system(update_tilemaps)
-                .into(),
+            .run_in_state(AppState::InGame)
+            .with_system(phantom_system)
+            .into()
         );
-        self
+        app.add_system_set_to_stage(
+            CoreStage::Last,
+            ConditionSet::new()
+            .run_in_state(AppState::InGame)
+            .with_system(update_app_settings)
+            .with_system(update_camera_dimensions)
+            .into()
+        );
     }
 
-    // Quit
-    fn quit_state(self, _app: &mut App) -> Self {
-        // app.add_system_set_to_stage(
-        // CoreStage::Update,
-        // ConditionSet::new().run_in_state(AppState::Quit).with_system(system).into(),
-        // );
-        self
-    }
-
-    fn ai_states(self, app: &mut App) -> Self {
-        app
-            // Scoring Systems
-            .add_system_set_to_stage(
-                BigBrainStage::Scorers,
-                ConditionSet::new()
-                .run_in_state(AppState::InGame)
-                    .with_system(can_see_player)
-                    .into(),
-            )
-            // Action Systems
-            .add_system_set_to_stage(
-                AppStage::AIThinking,
-                ConditionSet::new()
-                    .run_in_state(AppState::InGame)
-                    .with_system(wander_action)
-                    .with_system(chase_action)
-                    .with_system(attack_action)
-                    .into(),
-            );
-        self
+    fn quit_state(&self, app: &mut App) {
+        app.add_system_set_to_stage(
+            CoreStage::Last,
+            ConditionSet::new()
+            .run_on_event::<AppExit>()
+            .with_system(save_app_settings)
+            .into()
+        );
     }
 }
