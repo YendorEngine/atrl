@@ -1,7 +1,6 @@
 pub const TINY_GALAXY_PORTRAITS_PATH: &str = "images/tilesets/definitions/tiny_galaxy_tg_portraits.ron";
 pub const TINY_GALAXY_PORTRAITS_ID: u8 = 4;
 
-
 pub const TG_PORTRAIT_ALIEN_1F: &str = "tg_portrait_alien_1f";
 pub const TG_PORTRAIT_ALIEN_1F_ID: u32 = 0;
 pub const TG_PORTRAIT_ALIEN_1M: &str = "tg_portrait_alien_1m";

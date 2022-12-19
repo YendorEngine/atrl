@@ -3,7 +3,10 @@ use crate::prelude::*;
 const APP_SETTINGS_PATH: &str = "./app_settings.toml";
 
 const DEFAULT_GRID_SIZE: UVec2 = UVec2 { x: 80, y: 45 };
-const DEFAULT_WINDOW_SIZE: Vec2 = Vec2 { x: 1280.0, y: 720.0 };
+const DEFAULT_WINDOW_SIZE: Vec2 = Vec2 {
+    x: 1280.0,
+    y: 720.0,
+};
 
 const DEFAULT_RENDER_CHUNK_SIZE: UVec2 = UVec2 { x: 16, y: 16 };
 
@@ -42,12 +45,14 @@ impl AppSettingsResource {
     pub fn save(&self) {
         let serialized = AppSettingsSerialized::from(self.clone());
         if let Err(e) = APP_SETTINGS_PATH.to_toml(&serialized) {
-            error!("Error creating {:?}:\n{}", APP_SETTINGS_PATH.path_string(), e);
+            error!(
+                "Error creating {:?}:\n{}",
+                APP_SETTINGS_PATH.path_string(),
+                e
+            );
         }
     }
 }
-
-
 
 impl From<AppSettingsResource> for AppSettingsSerialized {
     fn from(value: AppSettingsResource) -> Self {

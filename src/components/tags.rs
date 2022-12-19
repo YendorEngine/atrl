@@ -31,10 +31,13 @@ pub struct ViewPointTag;
 pub struct InputTag;
 
 #[derive(Component, Reflect, Default, Serialize, Deserialize)]
-pub struct CleanupOnEnterMainMenu;
+pub struct CleanupOnExitSplash;
 
 #[derive(Component, Reflect, Default, Serialize, Deserialize)]
-pub struct CleanupOnEnterGame;
+pub struct CleanupOnExitMainMenu;
+
+#[derive(Component, Reflect, Default, Serialize, Deserialize)]
+pub struct CleanupOnExitGame;
 
 pub(super) fn register_tags(app: &mut App) {
     app.register_type::<TerrainTag>();
@@ -47,6 +50,7 @@ pub(super) fn register_tags(app: &mut App) {
     app.register_type::<GameCameraTag>();
     app.register_type::<ViewPointTag>();
     app.register_type::<InputTag>();
-    app.register_type::<CleanupOnEnterMainMenu>();
-    app.register_type::<CleanupOnEnterGame>();
+    app.register_type::<CleanupOnExitSplash>();
+    app.register_type::<CleanupOnExitMainMenu>();
+    app.register_type::<CleanupOnExitGame>();
 }

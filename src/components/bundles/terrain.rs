@@ -1,8 +1,8 @@
-use crate::{prelude::*, components::*};
+use crate::{components::*, prelude::*};
 
 #[derive(Bundle)]
 pub struct TerrainBundle {
     pub tag: TerrainTag,
     pub display: DisplayComponent,
-    pub cleanup: CleanupOnEnterMainMenu,
+    pub cleanup: CleanupOnExitGame,
 }

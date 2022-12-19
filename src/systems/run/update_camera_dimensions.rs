@@ -1,4 +1,4 @@
-use crate::{prelude::*, components::*};
+use crate::{components::*, prelude::*};
 
 pub fn update_camera_dimensions(
     app_settings: AppSettings,
@@ -10,4 +10,3 @@ pub fn update_camera_dimensions(
         projection.top = grid_size.y as f32;
     }
 }
-

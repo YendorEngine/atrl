@@ -1,9 +1,6 @@
-use crate::{prelude::*, components::*};
+use crate::{components::*, prelude::*};
 
-pub fn init_ui_camera(
-    mut commands: Commands,
-    app_settings: AppSettings,
-) {
+pub fn init_ui_camera(mut commands: Commands, app_settings: AppSettings) {
     let grid_size = app_settings.get_grid_size();
 
     commands.spawn((
@@ -31,22 +28,15 @@ pub fn init_ui_camera(
         },
         UiCameraTag,
     ));
-
 }
 
-pub fn cleanup_ui_camera(
-    mut commands: Commands,
-    q_camera: Query<Entity, With<UiCameraTag>>,
-) {
+pub fn cleanup_ui_camera(mut commands: Commands, q_camera: Query<Entity, With<UiCameraTag>>) {
     for camera in q_camera.iter() {
         commands.entity(camera).despawn_recursive();
     }
 }
 
-pub fn init_game_camera(
-    mut commands: Commands,
-    app_settings: AppSettings,
-) {
+pub fn init_game_camera(mut commands: Commands, app_settings: AppSettings) {
     let grid_size = app_settings.get_grid_size();
 
     commands.spawn((
@@ -76,10 +66,7 @@ pub fn init_game_camera(
     ));
 }
 
-pub fn cleanup_game_camera(
-    mut commands: Commands,
-    q_camera: Query<Entity, With<GameCameraTag>>,
-) {
+pub fn cleanup_game_camera(mut commands: Commands, q_camera: Query<Entity, With<GameCameraTag>>) {
     for camera in q_camera.iter() {
         commands.entity(camera).despawn_recursive();
     }

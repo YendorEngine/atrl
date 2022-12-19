@@ -1,4 +1,4 @@
-use crate::{prelude::*, components::*};
+use crate::{components::*, prelude::*};
 
 #[derive(Bundle)]
 pub struct PositionBundle {

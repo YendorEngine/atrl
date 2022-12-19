@@ -1,7 +1,7 @@
-use crate::{prelude::*, components::*};
+use crate::{components::*, prelude::*};
 
 #[derive(Bundle)]
 pub struct ItemBundle {
     pub tag: ItemTag,
-    pub cleanup: CleanupOnEnterMainMenu,
+    pub cleanup: CleanupOnExitGame,
 }

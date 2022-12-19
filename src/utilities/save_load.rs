@@ -20,7 +20,7 @@ pub trait SaveLoad: AsRef<Path> {
         let value = ron::from_str::<T>(&contents)?;
         Ok(value)
     }
-    
+
     fn save_file(&self, contents: &str) -> Result<()> {
         if let Some(dir) = self.as_ref().parent() {
             create_dir_all(dir)?;
