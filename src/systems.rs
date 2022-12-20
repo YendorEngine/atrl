@@ -28,6 +28,8 @@ pub mod run {
     pub use update_app_settings::*;
     mod update_camera_dimensions;
     pub use update_camera_dimensions::*;
+    mod update_window;
+    pub use update_window::*;
 }
 pub(super) use run::*;
 

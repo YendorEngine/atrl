@@ -24,3 +24,6 @@ pub mod input {
     mod movement;
     pub use movement::*;
 }
+
+mod resolution;
+pub use resolution::*;

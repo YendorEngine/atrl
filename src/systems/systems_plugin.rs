@@ -22,6 +22,7 @@ pub struct SystemsPlugin;
 impl Plugin for SystemsPlugin {
     fn build(&self, app: &mut App) {
         self.init_states(app);
+        self.continuous_state(app);
         self.loading_state(app);
         self.menu_state(app);
         self.game_state(app);
@@ -37,6 +38,18 @@ impl SystemsPlugin {
         app.add_loopless_state(AppState::Initializing).add_enter_system(
             AppState::Initializing,
             switch_app_state!(AppState::SplashScreen),
+        );
+    }
+
+    fn continuous_state(&self, app: &mut App) {
+        // Update App Settings
+        app.add_system_set_to_stage(
+            CoreStage::Last,
+            ConditionSet::new()
+                .run_not_in_state(AppState::SplashScreen)
+                .with_system(update_app_settings)
+                .with_system(update_window)
+                .into(),
         );
     }
 
@@ -111,11 +124,7 @@ impl SystemsPlugin {
         );
         app.add_system_set_to_stage(
             CoreStage::Last,
-            ConditionSet::new()
-                .run_in_state(AppState::InGame)
-                .with_system(update_app_settings)
-                .with_system(update_camera_dimensions)
-                .into(),
+            ConditionSet::new().run_in_state(AppState::InGame).with_system(update_camera_dimensions).into(),
         );
     }
 

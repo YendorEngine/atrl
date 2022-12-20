@@ -21,6 +21,7 @@ pub use bevy::{
     prelude::*,
     render::{
         camera::{ScalingMode, WindowOrigin},
+        once_cell::sync::Lazy,
         render_resource::Texture,
     },
     utils::{HashMap, HashSet},
