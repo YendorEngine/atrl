@@ -19,11 +19,15 @@ pub use bevy::{
     },
     math::Vec3Swizzles,
     prelude::*,
-    render::camera::{ScalingMode, WindowOrigin},
+    render::{
+        camera::{ScalingMode, WindowOrigin},
+        render_resource::Texture,
+    },
     utils::{HashMap, HashSet},
     window::WindowResizeConstraints,
 };
 pub use bevy_ecs_tilemap::prelude::*;
+pub use bevy_egui::{egui, EguiContext, EguiPlugin};
 pub use bevy_tileset::prelude::*;
 pub use iyes_loopless::prelude::*;
 pub use leafwing_input_manager::prelude::*;

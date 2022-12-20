@@ -35,7 +35,7 @@ struct AppSettingsSerialized {
 // Save/Load
 impl AppSettingsResource {
     pub fn load() -> Self {
-        if let Ok(s) = APP_SETTINGS_PATH.from_toml::<AppSettingsSerialized>() {
+        if let Ok(s) = APP_SETTINGS_PATH.load_toml::<AppSettingsSerialized>() {
             s.into()
         } else {
             Self::default()

@@ -1,9 +1,9 @@
 use crate::{prelude::*, systems::*};
 
 // TODO: Remove this when we want to finalize going to MainMenu.
-pub const SPLASH_SCREEN_TO_THIS_STATE: AppState = AppState::InGame;
+pub const SPLASH_SCREEN_TO_THIS_STATE: AppState = AppState::Menu(Main);
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum AppState {
     Initializing,
     SplashScreen,
@@ -16,6 +16,7 @@ pub enum MenuState {
     Main,
     Settings,
 }
+pub use MenuState::*;
 
 pub struct SystemsPlugin;
 impl Plugin for SystemsPlugin {
@@ -43,7 +44,11 @@ impl SystemsPlugin {
         // Camera / SplashScreen? / Assets
         app.add_enter_system_set(
             AppState::SplashScreen,
-            ConditionSet::new().with_system(init_ui_camera).with_system(init_assets).into(),
+            ConditionSet::new()
+                .with_system(init_assets)
+                .with_system(init_ui_camera)
+                .with_system(init_splash_screen)
+                .into(),
         );
 
         // Wait for Assets
@@ -63,8 +68,29 @@ impl SystemsPlugin {
     }
 
     fn menu_state(&self, app: &mut App) {
-        app.add_exit_system_set(
+        // Main Menu
+        app.add_enter_system_set(
             AppState::Menu(MenuState::Main),
+            ConditionSet::new().with_system(setup_main_menu).into(),
+        )
+        .add_system_set(
+            ConditionSet::new().run_in_state(AppState::Menu(MenuState::Main)).with_system(main_menu).into(),
+        )
+        .add_exit_system_set(
+            AppState::Menu(MenuState::Main),
+            ConditionSet::new().with_system(cleanup_on_exit_main_menu).into(),
+        );
+
+        // Main Menu Settings
+        app.add_enter_system_set(
+            AppState::Menu(Settings),
+            ConditionSet::new().with_system(setup_main_menu).into(),
+        )
+        .add_system_set(
+            ConditionSet::new().run_in_state(AppState::Menu(Settings)).with_system(settings_menu).into(),
+        )
+        .add_exit_system_set(
+            AppState::Menu(Settings),
             ConditionSet::new().with_system(cleanup_on_exit_main_menu).into(),
         );
     }

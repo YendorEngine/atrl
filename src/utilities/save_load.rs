@@ -9,13 +9,13 @@ pub trait SaveLoad: AsRef<Path> {
         Ok(contents)
     }
 
-    fn from_toml<T: for<'de> Deserialize<'de>>(&self) -> Result<T> {
+    fn load_toml<T: for<'de> Deserialize<'de>>(&self) -> Result<T> {
         let contents = self.load_file()?;
         let value = toml::from_str::<T>(&contents)?;
         Ok(value)
     }
 
-    fn from_ron<T: for<'de> Deserialize<'de>>(&self) -> Result<T> {
+    fn load_ron<T: for<'de> Deserialize<'de>>(&self) -> Result<T> {
         let contents = self.load_file()?;
         let value = ron::from_str::<T>(&contents)?;
         Ok(value)

@@ -36,7 +36,7 @@ fn main() {
     app.run();
 }
 
-fn add_default_plugins<'a>(app: &'a mut App, app_settings: &AppSettingsResource) {
+fn add_default_plugins(app: &mut App, app_settings: &AppSettingsResource) {
     let Vec2 {
         x: window_width,
         y: window_height,
@@ -49,7 +49,7 @@ fn add_default_plugins<'a>(app: &'a mut App, app_settings: &AppSettingsResource)
         DefaultPlugins
             .set(WindowPlugin {
                 window: WindowDescriptor {
-                    title: format!("{APP_NAME}"),
+                    title: APP_NAME.to_string(),
                     width: window_width,
                     height: window_height,
                     resize_constraints: WindowResizeConstraints {
@@ -68,10 +68,11 @@ fn add_default_plugins<'a>(app: &'a mut App, app_settings: &AppSettingsResource)
                                                                 // background
 }
 
-fn add_external_plugins<'a>(app: &'a mut App, app_settings: &AppSettingsResource) {
+fn add_external_plugins(app: &mut App, app_settings: &AppSettingsResource) {
     let render_chunk_size = app_settings.render_chunk_size;
     app.insert_resource(TilemapRenderSettings { render_chunk_size })
         .add_plugin(TilemapPlugin)
         .add_plugin(TilesetPlugin::default())
-        .add_plugin(InputManagerPlugin::<MovementInput>::default());
+        .add_plugin(InputManagerPlugin::<MovementInput>::default())
+        .add_plugin(EguiPlugin);
 }

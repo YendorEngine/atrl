@@ -23,6 +23,10 @@ macro_rules! impl_get_settings {
             pub fn set_fullscreen(&mut self, value: bool) { self.settings.fullscreen = value; }
 
             pub fn save(&self) { self.settings.save(); }
+
+            pub fn is_changed(&self) -> bool { self.settings.is_changed() }
+
+            pub fn is_added(&self) -> bool { self.settings.is_added() }
         }
     };
 }

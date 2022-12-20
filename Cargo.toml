@@ -78,7 +78,7 @@ panic         = 'abort'
 ######################################
 #########       Bevy
 ######################################
-[workspace.dependencies.bevy]
+[dependencies.bevy]
 default-features = false
 features = [
   "bevy_asset",
@@ -104,160 +104,115 @@ features = [
   "serialize",
 ]
 version = "0.9"
-[dependencies.bevy]
-workspace = true
 
-[workspace.dependencies.bevy_tweening]
+[dependencies.bevy_tweening]
 features = ["bevy_asset"]
 version  = "0.6"
-[dependencies.bevy_tweening]
-workspace = true
 
-[workspace.dependencies.big-brain]
-version = "0.15"
 [dependencies.big-brain]
-workspace = true
+version = "0.15"
 
 ######################################
 #########       Input
 ######################################
-[workspace.dependencies.leafwing-input-manager]
-version = "0.7.0"
 [dependencies.leafwing-input-manager]
-workspace = true
+version = "0.7.0"
 
 ######################################
 #########       Map Rendering
 ######################################
-[workspace.dependencies.bevy_ecs_tilemap]
+[dependencies.bevy_ecs_tilemap]
 features = []
 # version  = "0.9"
 git = "https://github.com/StarArawn/bevy_ecs_tilemap"
-[dependencies.bevy_ecs_tilemap]
-workspace = true
 
-[workspace.dependencies.bevy_tileset]
+[dependencies.bevy_tileset]
 features = ["auto-tile"]
 version  = "0.6"
-[dependencies.bevy_tileset]
-workspace = true
 
-[workspace.dependencies.bevy_tile_atlas]
+[dependencies.bevy_tile_atlas]
 default-features = false
 version          = "0.5"
-[dependencies.bevy_tile_atlas]
-workspace = true
 
 ###############################
 #########       Serialization   
 ###############################
-[workspace.dependencies.ron]
-version = "0.8"
 [dependencies.ron]
-workspace = true
+version = "0.8"
 
-[workspace.dependencies.serde]
+[dependencies.serde]
 features = ["derive"]
 version  = "1"
-[dependencies.serde]
-workspace = true
 
-[workspace.dependencies.toml]
-version = "0.5"
 [dependencies.toml]
-workspace = true
+version = "0.5"
 
 ######################################
 #########       States
 ######################################
-[workspace.dependencies.iyes_loopless]
+[dependencies.iyes_loopless]
 features = ["states"]
 version  = "0.9"
-[dependencies.iyes_loopless]
-workspace = true
 
-[workspace.dependencies.iyes_progress]
+[dependencies.iyes_progress]
 features = ["assets", "iyes_loopless"]
 version  = "0.7"
-[dependencies.iyes_progress]
-workspace = true
 
 ######################################
 #########       Random
 ######################################
-[workspace.dependencies.noise]
-version = "0.8"
 [dependencies.noise]
-workspace = true
-
-[workspace.dependencies.rand]
 version = "0.8"
-[dependencies.rand]
-workspace = true
 
-[workspace.dependencies.rand_pcg]
+[dependencies.rand]
+version = "0.8"
+
+[dependencies.rand_pcg]
 features = ["serde1"]
 version  = "0.3"
-[dependencies.rand_pcg]
-workspace = true
 
-[workspace.dependencies.rand_seeder]
-version = "0.2"
 [dependencies.rand_seeder]
-workspace = true
+version = "0.2"
 
-[workspace.dependencies.xxhash-rust]
+[dependencies.xxhash-rust]
 features = ["xxh3", "const_xxh3"]
 version  = "0.8"
-[dependencies.xxhash-rust]
-workspace = true
 
 ######################################
 #########       UI
 ######################################
-[workspace.dependencies.kayak_ui]
-git = "https://github.com/StarArawn/kayak_ui"
 [dependencies.kayak_ui]
-workspace = true
+branch = "bugfixes"
+git    = "https://github.com/StarArawn/kayak_ui"
 
-[workspace.dependencies.kayak_font]
-git = "https://github.com/StarArawn/kayak_ui"
 [dependencies.kayak_font]
-workspace = true
+branch = "bugfixes"
+git    = "https://github.com/StarArawn/kayak_ui"
+
+[dependencies.bevy_egui]
+version = "0.18"
 
 ######################################
 #########       Utility
 ######################################
 
-[workspace.dependencies.arrayvec]
-version = "0.7"
 [dependencies.arrayvec]
-workspace = true
+version = "0.7"
 
-[workspace.dependencies.anyhow]
-version = "1"
 [dependencies.anyhow]
-workspace = true
-
-[workspace.dependencies.dyn-clone]
 version = "1"
+
 [dependencies.dyn-clone]
-workspace = true
-
-[workspace.dependencies.index_list]
-version = "0.2.7"
-[dependencies.index_list]
-workspace = true
-
-[workspace.dependencies.thiserror]
 version = "1"
-[dependencies.thiserror]
-workspace = true
 
-[workspace.dependencies.yendor]
-git = "https://github.com/YendorEngine/yendor"
+[dependencies.index_list]
+version = "0.2.7"
+
+[dependencies.thiserror]
+version = "1"
+
 [dependencies.yendor]
-workspace = true
+git = "https://github.com/YendorEngine/yendor"
 
 ######################################
 ######################################

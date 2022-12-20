@@ -10,6 +10,10 @@ pub mod init {
     pub use cleanup::*;
     mod input;
     pub use input::*;
+    mod main_menu;
+    pub use main_menu::*;
+    mod splash;
+    pub use splash::*;
 }
 pub(super) use init::*;
 
@@ -32,6 +36,14 @@ pub(super) mod system_params {
     mod app_settings;
     pub use app_settings::*;
 }
+
+mod ui {
+    mod main_menu;
+    pub use main_menu::*;
+    mod settings;
+    pub use settings::*;
+}
+pub use ui::*;
 
 mod systems_plugin;
 pub(super) use systems_plugin::*;
