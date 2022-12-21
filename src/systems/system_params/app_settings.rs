@@ -14,13 +14,13 @@ macro_rules! impl_get_settings {
 
             pub fn get_window_resolution(&self) -> Vec2 { self.settings.window_resolution }
 
-            pub fn get_fullscreen(&self) -> bool { self.settings.fullscreen }
+            pub fn get_window_mode(&self) -> WindowMode { self.settings.window_mode }
 
             pub fn set_grid_size(&mut self, value: UVec2) { self.settings.grid_size = value; }
 
             pub fn set_window_resolution(&mut self, value: Vec2) { self.settings.window_resolution = value; }
 
-            pub fn set_fullscreen(&mut self, value: bool) { self.settings.fullscreen = value; }
+            pub fn set_window_mode(&mut self, value: WindowMode) { self.settings.window_mode = value; }
 
             pub fn save(&self) { self.settings.save(); }
 

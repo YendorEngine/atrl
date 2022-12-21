@@ -2,12 +2,12 @@ grid_size = [
     80,
     45,
 ]
-window_size = [
-    1080.0,
+window_mode = 'Windowed'
+window_resolution = [
+    1280.0,
     720.0,
 ]
 render_chunk_size = [
     16,
     16,
 ]
-fullscreen = false

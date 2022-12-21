@@ -55,6 +55,8 @@ mod ui {
     pub use main_menu::*;
     mod settings;
     pub use settings::*;
+    mod world_gen;
+    pub use world_gen::*;
 }
 pub use ui::*;
 

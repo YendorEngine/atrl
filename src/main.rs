@@ -42,8 +42,7 @@ fn add_default_plugins(app: &mut App, app_settings: &AppSettingsResource) {
         y: window_height,
     } = app_settings.window_resolution;
 
-    let window_mode =
-        if app_settings.fullscreen { WindowMode::BorderlessFullscreen } else { WindowMode::Windowed };
+    let window_mode = app_settings.window_mode;
 
     app.add_plugins(
         DefaultPlugins

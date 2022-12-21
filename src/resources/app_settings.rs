@@ -10,26 +10,22 @@ const DEFAULT_WINDOW_SIZE: Vec2 = Vec2 {
 
 const DEFAULT_RENDER_CHUNK_SIZE: UVec2 = UVec2 { x: 16, y: 16 };
 
-const DEFAULT_FULLSCREEN: bool = false;
+const DEFAULT_WINDOW_MODE: WindowMode = WindowMode::Windowed;
 
 #[derive(Resource, Clone)]
 pub struct AppSettingsResource {
     pub grid_size: UVec2,
     pub window_resolution: Vec2,
-
+    pub window_mode: WindowMode,
     pub render_chunk_size: UVec2,
-
-    pub fullscreen: bool,
 }
 
 #[derive(Serialize, Deserialize)]
 struct AppSettingsSerialized {
     grid_size: Option<UVec2>,
+    window_mode: Option<WindowMode>,
     window_resolution: Option<Vec2>,
-
     render_chunk_size: Option<UVec2>,
-
-    fullscreen: Option<bool>,
 }
 
 // Save/Load
@@ -60,7 +56,7 @@ impl From<AppSettingsResource> for AppSettingsSerialized {
             grid_size: Some(value.grid_size),
             window_resolution: Some(value.window_resolution),
             render_chunk_size: Some(value.render_chunk_size),
-            fullscreen: Some(value.fullscreen),
+            window_mode: Some(value.window_mode),
         }
     }
 }
@@ -68,15 +64,15 @@ impl From<AppSettingsResource> for AppSettingsSerialized {
 impl From<AppSettingsSerialized> for AppSettingsResource {
     fn from(value: AppSettingsSerialized) -> Self {
         let grid_size = value.grid_size.unwrap_or(DEFAULT_GRID_SIZE);
+        let window_mode = value.window_mode.unwrap_or(DEFAULT_WINDOW_MODE);
         let window_resolution = value.window_resolution.unwrap_or(DEFAULT_WINDOW_SIZE);
         let render_chunk_size = value.render_chunk_size.unwrap_or(DEFAULT_RENDER_CHUNK_SIZE);
-        let fullscreen = value.fullscreen.unwrap_or(DEFAULT_FULLSCREEN);
 
         Self {
             grid_size,
+            window_mode,
             window_resolution,
             render_chunk_size,
-            fullscreen,
         }
     }
 }
@@ -85,9 +81,9 @@ impl Default for AppSettingsResource {
     fn default() -> Self {
         Self {
             grid_size: DEFAULT_GRID_SIZE,
+            window_mode: DEFAULT_WINDOW_MODE,
             window_resolution: DEFAULT_WINDOW_SIZE,
             render_chunk_size: DEFAULT_RENDER_CHUNK_SIZE,
-            fullscreen: DEFAULT_FULLSCREEN,
         }
     }
 }

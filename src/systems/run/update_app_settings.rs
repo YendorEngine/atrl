@@ -2,10 +2,15 @@ use bevy::window::WindowResized;
 
 use crate::prelude::*;
 
+pub struct Mode(pub WindowMode);
+
+impl Default for Mode {
+    fn default() -> Self { Self(WindowMode::Windowed) }
+}
+
 pub fn update_app_settings(
     windows: Res<Windows>,
     mut app_settings: AppSettings,
-    mut cached_full_screen: Local<bool>,
     mut resize_reader: ResMut<Events<WindowResized>>,
 ) {
     for WindowResized { width, height, .. } in resize_reader.drain() {
@@ -14,9 +19,10 @@ pub fn update_app_settings(
         }
 
         if let Some(window) = windows.get_primary() {
-            let full_screen = app_settings.get_fullscreen();
+            let window_mode = app_settings.get_window_mode();
             let current_window_size = app_settings.get_window_resolution();
 
+            let current_window_mode = window.mode();
             let resized_window_size = Vec2 {
                 x: width,
                 y: height,
@@ -24,15 +30,13 @@ pub fn update_app_settings(
 
             info!("Current window size: {current_window_size} vs: Resize Event: {resized_window_size}");
 
-            if window.mode() == WindowMode::Windowed && current_window_size != resized_window_size {
-                info!("Setting window size to {resized_window_size}\n");
-                *cached_full_screen = false;
-                app_settings.set_fullscreen(false);
+            if current_window_mode == WindowMode::Windowed && current_window_size != resized_window_size {
+                info!("Setting app_settings window size to {resized_window_size}");
+                app_settings.set_window_mode(WindowMode::Windowed);
                 app_settings.set_window_resolution(resized_window_size);
-            } else if full_screen != *cached_full_screen {
-                info!("Setting window to full screen");
-                *cached_full_screen = true;
-                app_settings.set_fullscreen(true);
+            } else if current_window_mode != WindowMode::Windowed && current_window_mode != window_mode {
+                info!("Setting app_settings window_mode to {current_window_mode:?}");
+                app_settings.set_window_mode(current_window_mode);
             }
         }
     }

@@ -14,3 +14,11 @@ pub static RESOLUTIONS: Lazy<[Resolution; 4]> = Lazy::new(|| {
         Resolution::new("2160p", 3840., 2160.),
     ]
 });
+
+pub static WINDOW_MODES: Lazy<[(&str, WindowMode); 3]> = Lazy::new(|| {
+    [
+        ("Windowed", WindowMode::Windowed),
+        ("Fullscreen", WindowMode::Fullscreen),
+        ("Borderless Fullscreen", WindowMode::BorderlessFullscreen),
+    ]
+});

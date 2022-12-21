@@ -1,5 +1,3 @@
-use bevy_egui_kbgp::egui::RichText;
-
 use crate::{prelude::*, systems::*};
 
 pub fn settings_menu(
@@ -14,37 +12,52 @@ pub fn settings_menu(
         .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
         .show(egui_context.ctx_mut(), |ui| {
             ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
-                ui.horizontal(|ui| {
-                    ui.label(RichText::new("Resolution: ").strong());
-                    egui::ComboBox::from_label("")
+                if app_settings.get_window_mode() == WindowMode::Windowed {
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
+                        egui::ComboBox::from_label("Resolution: ")
+                            .width(300.0)
+                            .wrap(false)
+                            .selected_text(format!("{}p", app_settings.get_window_resolution().y))
+                            .show_ui(ui, |ui| {
+                                let mut current_selected: (f32, f32) =
+                                    app_settings.get_window_resolution().into();
+                                for resolution in RESOLUTIONS.iter() {
+                                    let value = ui.selectable_value(
+                                        &mut current_selected,
+                                        resolution.size,
+                                        resolution.name.to_string(),
+                                    );
+
+                                    if value.clicked() {
+                                        app_settings.set_window_resolution((resolution.size).into());
+                                    }
+                                }
+                            });
+                    });
+                }
+
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
+                    egui::ComboBox::from_label("Window Mode: ")
                         .width(300.0)
                         .wrap(false)
-                        .selected_text(format!("{}p", app_settings.get_window_resolution().y))
+                        .selected_text(format!("{:?}", match app_settings.get_window_mode() {
+                            WindowMode::Windowed => "Windowed",
+                            WindowMode::BorderlessFullscreen => "Borderless Fullscreen",
+                            WindowMode::Fullscreen => "Fullscreen",
+                            _ => panic!("Unsupported Window Mode"),
+                        }))
                         .show_ui(ui, |ui| {
-                            let mut current_selected: (f32, f32) =
-                                app_settings.get_window_resolution().into();
-                            for resolution in RESOLUTIONS.iter() {
-                                let value = ui.selectable_value(
-                                    &mut current_selected,
-                                    resolution.size,
-                                    resolution.name.to_string(),
-                                );
+                            let mut current_selected = app_settings.get_window_mode();
+                            for mode in WINDOW_MODES.iter() {
+                                let value =
+                                    ui.selectable_value(&mut current_selected, mode.1, mode.0.to_string());
 
                                 if value.clicked() {
-                                    app_settings.set_window_resolution((resolution.size).into());
+                                    app_settings.set_window_mode(mode.1);
                                 }
                             }
                         });
                 });
-
-                ////////////////////////////
-                // Full Screen
-                ////////////////////////////
-
-                let mut full_screen = app_settings.get_fullscreen();
-                if ui.checkbox(&mut full_screen, "Full Screen").kbgp_navigation().clicked() {
-                    app_settings.set_fullscreen(!app_settings.get_fullscreen());
-                }
 
                 ui.separator();
 

@@ -15,6 +15,7 @@ pub enum AppState {
 pub enum MenuState {
     Main,
     Settings,
+    WorldGen,
 }
 pub use MenuState::*;
 
@@ -94,13 +95,26 @@ impl SystemsPlugin {
             ConditionSet::new().with_system(cleanup_on_exit_main_menu).into(),
         );
 
-        // Main Menu Settings
+        // Settings Menu
         app.add_enter_system_set(
             AppState::Menu(Settings),
             ConditionSet::new().with_system(init_main_menu).into(),
         )
         .add_system_set(
             ConditionSet::new().run_in_state(AppState::Menu(Settings)).with_system(settings_menu).into(),
+        )
+        .add_exit_system_set(
+            AppState::Menu(Settings),
+            ConditionSet::new().with_system(cleanup_on_exit_main_menu).into(),
+        );
+
+        // World Gen Menu
+        app.add_enter_system_set(
+            AppState::Menu(Settings),
+            ConditionSet::new().with_system(init_main_menu).into(),
+        )
+        .add_system_set(
+            ConditionSet::new().run_in_state(AppState::Menu(WorldGen)).with_system(world_gen_menu).into(),
         )
         .add_exit_system_set(
             AppState::Menu(Settings),
