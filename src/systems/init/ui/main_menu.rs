@@ -1,8 +1,8 @@
 use crate::{
-    components::CleanupOnExitMainMenu, prelude::*, resources::texture_storage::TextureStorageResource,
+    components::CleanupOnExitMainMenu, prelude::*, resources::ui_image_storage::UiImageStorageResource,
 };
 
-pub fn init_main_menu(mut commands: Commands, textures: Res<TextureStorageResource>) {
+pub fn init_main_menu(mut commands: Commands, textures: Res<UiImageStorageResource>) {
     commands
         .spawn((
             NodeBundle {

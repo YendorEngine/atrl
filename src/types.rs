@@ -17,6 +17,12 @@ pub mod asset_ids {
             pub use world::*;
         }
         pub use tiny_galaxy::*;
+
+        pub mod white_pixel {
+            mod white_pixel;
+            pub use white_pixel::*;
+        }
+        pub use white_pixel::*;
     }
 }
 
@@ -25,5 +31,16 @@ pub mod input {
     pub use movement::*;
 }
 
-mod resolution;
-pub use resolution::*;
+pub mod shapes {
+    mod shape;
+    pub use shape::*;
+
+    mod circle;
+    pub use circle::*;
+    mod line;
+    pub use line::*;
+    mod line_iter;
+    pub use line_iter::*;
+    mod octant;
+    pub use octant::*;
+}

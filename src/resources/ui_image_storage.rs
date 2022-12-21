@@ -1,11 +1,11 @@
 use crate::prelude::*;
 
 #[derive(Default, Resource)]
-pub struct TextureStorageResource {
+pub struct UiImageStorageResource {
     pub textures: HashMap<String, Handle<Image>>,
 }
 
-impl TextureStorageResource {
+impl UiImageStorageResource {
     pub fn insert(mut self, key: String, value: Handle<Image>) -> Self {
         self.textures.insert(key, value);
         self

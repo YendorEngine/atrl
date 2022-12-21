@@ -1,12 +1,12 @@
 use crate::{
     prelude::*,
-    resources::{font_storage::FontStorageResource, texture_storage::TextureStorageResource},
+    resources::{font_storage::FontStorageResource, ui_image_storage::UiImageStorageResource},
 };
 
 #[derive(SystemParam)]
 pub struct AppAssets<'w, 's> {
     fonts: ResMut<'w, FontStorageResource>,
-    textures: ResMut<'w, TextureStorageResource>,
+    textures: ResMut<'w, UiImageStorageResource>,
 
     _phantom: Query<'w, 's, ()>,
 }

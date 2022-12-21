@@ -21,6 +21,8 @@ pub mod init {
 pub(super) use init::*;
 
 pub mod functions {
+    mod create_tilemap;
+    pub use create_tilemap::*;
     mod styles;
     pub use styles::*;
 }
