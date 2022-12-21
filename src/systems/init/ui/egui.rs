@@ -1,14 +1,12 @@
 use crate::{prelude::*, systems::*};
 
-pub fn init_egui(mut commands: Commands, mut ctx: ResMut<EguiContext>) {
+pub fn init_egui(mut commands: Commands, mut ctx: ResMut<EguiContext>, assets: AppAssets) {
     // Load in default font
-    match format!("assets/{DEFAULT_FONT}").load_raw() {
-        Ok(font_bytes) => {
+
+    match assets.get_font(DEFAULT_FONT) {
+        Some((_, bytes)) => {
             let mut fonts = egui::FontDefinitions::default();
-            fonts.font_data.insert(
-                "julia_mono".to_owned(),
-                egui::FontData::from_owned(font_bytes),
-            );
+            fonts.font_data.insert("julia_mono".to_owned(), egui::FontData::from_owned(bytes));
             fonts
                 .families
                 .entry(egui::FontFamily::Proportional)
@@ -16,7 +14,7 @@ pub fn init_egui(mut commands: Commands, mut ctx: ResMut<EguiContext>) {
                 .insert(0, "julia_mono".to_owned());
             ctx.ctx_mut().set_fonts(fonts);
         },
-        Err(e) => warn!("Failed to load path {DEFAULT_FONT}: {}", e),
+        None => warn!("Failed to load font {DEFAULT_FONT}"),
     }
 
     // Set default app style

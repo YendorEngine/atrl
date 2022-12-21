@@ -6,7 +6,7 @@ pub const MIN_SCREEN_SIZE: Vec2 = Vec2 {
     y: 720.0,
 };
 
-pub const DEFAULT_FONT: &str = "fonts/julia_mono/JuliaMono-Regular.ttf";
+pub const DEFAULT_FONT: &str = "julia_mono_regular";
 
 pub static RESOLUTIONS: Lazy<[(&str, (f32, f32)); 4]> = Lazy::new(|| {
     [

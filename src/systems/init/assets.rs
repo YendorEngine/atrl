@@ -75,58 +75,56 @@ pub fn init_assets(
     // Fonts
     commands.insert_resource(
         FontStorageResource::default()
-            .insert(asset_server.load("fonts/julia_mono/JuliaMono-Regular.ttf"))
-            .insert(asset_server.load("fonts/julia_mono/JuliaMono-Bold.ttf"))
-            .insert(asset_server.load("fonts/julia_mono/JuliaMono-Light.ttf")),
+            .load(
+                &asset_server,
+                "julia_mono_regular",
+                "fonts/julia_mono/JuliaMono-Regular.ttf",
+            )
+            .load(
+                &asset_server,
+                "julia_mono_bold",
+                "fonts/julia_mono/JuliaMono-Bold.ttf",
+            )
+            .load(
+                &asset_server,
+                "julia_mono_light",
+                "fonts/julia_mono/JuliaMono-Light.ttf",
+            ),
     );
 }
 
 pub fn wait_for_assets_to_load(mut commands: Commands, tilesets: Tilesets) {
-    if !check_tileset(
-        TILESET_TINY_GALAXY_FX_ID,
-        TILESET_TINY_GALAXY_FX_PATH,
-        &tilesets,
-    ) {
-        return;
-    }
-    if !check_tileset(
-        TILESET_TINY_GALAXY_INTERFACE_ID,
-        TILESET_TINY_GALAXY_INTERFACE_PATH,
-        &tilesets,
-    ) {
-        return;
-    }
-    if !check_tileset(
-        TILESET_TINY_GALAXY_ITEMS_ID,
-        TILESET_TINY_GALAXY_ITEMS_PATH,
-        &tilesets,
-    ) {
-        return;
-    }
-    if !check_tileset(
-        TILESET_TINY_GALAXY_MONSTERS_ID,
-        TILESET_TINY_GALAXY_MONSTERS_PATH,
-        &tilesets,
-    ) {
-        return;
-    }
-    if !check_tileset(
-        TILESET_TINY_GALAXY_PORTRAITS_ID,
-        TILESET_TINY_GALAXY_PORTRAITS_PATH,
-        &tilesets,
-    ) {
-        return;
-    }
-    // TODO: See init_assets
-    // if !check_tileset(TILESET_TINY_GALAXY_SPACE_ID, TILESET_TINY_GALAXY_SPACE_PATH) { return; }
-    if !check_tileset(
-        TILESET_TINY_GALAXY_WORLD_ID,
-        TILESET_TINY_GALAXY_WORLD_PATH,
-        &tilesets,
-    ) {
-        return;
-    }
-    if !check_tileset(TILESET_WHITE_PIXEL_ID, TILESET_WHITE_PIXEL, &tilesets) {
+    if ![
+        // Fx
+        (TILESET_TINY_GALAXY_FX_ID, TILESET_TINY_GALAXY_FX_PATH),
+        // Interface
+        (
+            TILESET_TINY_GALAXY_INTERFACE_ID,
+            TILESET_TINY_GALAXY_INTERFACE_PATH,
+        ),
+        // Items
+        (TILESET_TINY_GALAXY_ITEMS_ID, TILESET_TINY_GALAXY_ITEMS_PATH),
+        // Monsters
+        (
+            TILESET_TINY_GALAXY_MONSTERS_ID,
+            TILESET_TINY_GALAXY_MONSTERS_PATH,
+        ),
+        // Portraits
+        (
+            TILESET_TINY_GALAXY_PORTRAITS_ID,
+            TILESET_TINY_GALAXY_PORTRAITS_PATH,
+        ),
+        // Space
+        // TODO: See init_assets
+        // if !check_tileset(TILESET_TINY_GALAXY_SPACE_ID, TILESET_TINY_GALAXY_SPACE_PATH) { return; }
+
+        // World
+        (TILESET_TINY_GALAXY_WORLD_ID, TILESET_TINY_GALAXY_WORLD_PATH),
+        (TILESET_WHITE_PIXEL_ID, TILESET_WHITE_PIXEL),
+    ]
+    .iter()
+    .all(|(id, path)| check_tileset(*id, path, &tilesets))
+    {
         return;
     }
 

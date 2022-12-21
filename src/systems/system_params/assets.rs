@@ -12,13 +12,9 @@ pub struct AppAssets<'w, 's> {
 }
 
 impl<'w, 's> AppAssets<'w, 's> {
-    pub fn get_font(&self, key: &str) -> Option<Handle<Font>> { self.fonts.get(key) }
+    pub fn get_font(&self, key: &str) -> Option<(Handle<Font>, Vec<u8>)> { self.fonts.get(key) }
 
-    pub fn get_image(&self, key: &str) -> Option<Handle<Image>> { self.images.get(key) }
-
-    pub fn get_font_unchecked(&self, key: &str) -> Handle<Font> { self.fonts.get_unchecked(key) }
-
-    pub fn get_image_unchecked(&self, key: &str) -> Handle<Image> { self.images.get_unchecked(key) }
+    pub fn get_font_unchecked(&self, key: &str) -> (Handle<Font>, Vec<u8>) { self.get_font(key).unwrap() }
 
     pub fn is_fonts_changed(&self) -> bool { self.fonts.is_changed() }
 
