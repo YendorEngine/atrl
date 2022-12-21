@@ -1,5 +1,6 @@
 pub use std::{
     collections::VecDeque,
+    default,
     fmt::{Debug, Display},
     fs::{create_dir_all, File},
     io::{self, BufReader, BufWriter, Read, Write},
@@ -22,7 +23,7 @@ pub use bevy::{
     render::{
         camera::{ScalingMode, WindowOrigin},
         once_cell::sync::Lazy,
-        render_resource::Texture,
+        render_resource::{Extent3d, Texture, TextureDimension, TextureFormat},
     },
     utils::{HashMap, HashSet},
     window::WindowResizeConstraints,
@@ -33,7 +34,7 @@ pub use bevy_egui_kbgp::prelude::*;
 pub use bevy_tileset::prelude::*;
 pub use iyes_loopless::prelude::*;
 pub use leafwing_input_manager::prelude::*;
-pub use noise::{Fbm, NoiseFn, Perlin};
+pub use noise::{Fbm, MultiFractal, NoiseFn, Perlin};
 pub use rand::{
     distributions::{Standard, Uniform},
     prelude::*,

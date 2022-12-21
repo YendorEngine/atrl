@@ -41,28 +41,28 @@ impl Octant {
     }
 
     pub fn new(position: IVec2, other: IVec2) -> Self {
-         // adapted from <http://codereview.stackexchange.com/a/95551>
-         let start = position;
-         let end = other;
- 
-         let mut dx = end.x - start.x;
-         let mut dy = end.y - start.y;
-         let mut octant = 0;
-         if dy < 0 {
-             dx = -dx;
-             dy = -dy;
-             octant += 4;
-         }
-         if dx < 0 {
-             let tmp = dx;
-             dx = dy;
-             dy = -tmp;
-             octant += 2;
-         }
-         if dx < dy {
-             octant += 1;
-         }
- 
-         Self(octant)
+        // adapted from <http://codereview.stackexchange.com/a/95551>
+        let start = position;
+        let end = other;
+
+        let mut dx = end.x - start.x;
+        let mut dy = end.y - start.y;
+        let mut octant = 0;
+        if dy < 0 {
+            dx = -dx;
+            dy = -dy;
+            octant += 4;
+        }
+        if dx < 0 {
+            let tmp = dx;
+            dx = dy;
+            dy = -tmp;
+            octant += 2;
+        }
+        if dx < dy {
+            octant += 1;
+        }
+
+        Self(octant)
     }
 }

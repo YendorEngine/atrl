@@ -1,4 +1,5 @@
-pub const TILESET_TINY_GALAXY_INTERFACE_PATH: &str = "images/tilesets/definitions/tiny_galaxy_tg_interface.ron";
+pub const TILESET_TINY_GALAXY_INTERFACE_PATH: &str =
+    "images/tilesets/definitions/tiny_galaxy_tg_interface.ron";
 pub const TILESET_TINY_GALAXY_INTERFACE_ID: u8 = 1;
 
 pub const TILE_TG_INTERFACE_BAR_H_METAL_1: &str = "tg_interface_bar_h_metal_1";

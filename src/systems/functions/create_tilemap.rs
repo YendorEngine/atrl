@@ -2,35 +2,37 @@ use crate::prelude::*;
 
 pub fn spawn_tilemap<B: Bundle>(
     commands: &mut Commands,
+    size: UVec2,
     tileset: &Tileset,
     tile_id: u32,
     z_level: f32,
     map_bundle: B,
 ) -> Entity {
     let entity = commands.spawn(map_bundle).id();
-    spawn_tilemap_on_entity(commands, tileset, tile_id, z_level, entity);
+    spawn_tilemap_on_entity(commands, size, tileset, tile_id, z_level, entity);
     entity
 }
 
 pub fn spawn_tilemap_on_entity(
     commands: &mut Commands,
+    size: UVec2,
     tileset: &Tileset,
     tile_id: u32,
     z_level: f32,
     entity: Entity,
 ) {
-    let mut tile_storage = TileStorage::empty(GRID_SIZE.into());
-    for y in 0..GRID_SIZE.y {
-        for x in 0..GRID_SIZE.x {
+    let mut tile_storage = TileStorage::empty(size.into());
+    for y in 0..size.y {
+        for x in 0..size.x {
             let tile_pos = TilePos { x, y };
-            let tile_entity = commands.spawn(
-                TileBundle {
+            let tile_entity = commands
+                .spawn(TileBundle {
                     position: tile_pos,
                     tilemap_id: TilemapId(entity),
                     texture_index: TileTextureIndex(tile_id),
                     ..Default::default()
-                }
-            ).id();
+                })
+                .id();
             commands.entity(entity).add_child(tile_entity);
             tile_storage.set(&tile_pos, tile_entity);
         }
@@ -45,21 +47,19 @@ pub fn spawn_tilemap_on_entity(
             z: z_level,
         },
         scale: Vec3 {
-            x: 1.0/tile_size.x,
-            y: 1.0/tile_size.y,
+            x: 1.0 / tile_size.x,
+            y: 1.0 / tile_size.y,
             z: 1.0,
         },
         ..Default::default()
     };
-    commands.entity(entity).insert(
-        TilemapBundle {
-            tile_size: tile_size.into(),
-            grid_size: tile_size.into(),
-            size: GRID_SIZE.into(),
-            storage: tile_storage,
-            texture: TilemapTexture::Single(tileset.texture().clone()),
-            transform,
-            ..Default::default()
-        }
-    );
+    commands.entity(entity).insert(TilemapBundle {
+        tile_size: tile_size.into(),
+        grid_size: tile_size.into(),
+        size: size.into(),
+        storage: tile_storage,
+        texture: TilemapTexture::Single(tileset.texture().clone()),
+        transform,
+        ..Default::default()
+    });
 }

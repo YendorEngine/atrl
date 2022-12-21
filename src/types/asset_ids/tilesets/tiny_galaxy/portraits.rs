@@ -1,4 +1,5 @@
-pub const TILESET_TINY_GALAXY_PORTRAITS_PATH: &str = "images/tilesets/definitions/tiny_galaxy_tg_portraits.ron";
+pub const TILESET_TINY_GALAXY_PORTRAITS_PATH: &str =
+    "images/tilesets/definitions/tiny_galaxy_tg_portraits.ron";
 pub const TILESET_TINY_GALAXY_PORTRAITS_ID: u8 = 4;
 
 pub const TILE_TG_PORTRAIT_ALIEN_1F: &str = "tg_portrait_alien_1f";

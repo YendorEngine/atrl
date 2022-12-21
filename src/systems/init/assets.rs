@@ -1,8 +1,8 @@
 use crate::{
     prelude::*,
     resources::{
-        font_storage::FontStorageResource, ui_image_storage::UiImageStorageResource,
-        tileset_storage::TilesetStorageResource,
+        font_storage::FontStorageResource, image_storage::ImageStorageResource,
+        tileset_storage::TilesetStorageResource, ui_image_storage::UiImageStorageResource,
     },
     systems::*,
     types::asset_ids::tilesets::*,
@@ -30,7 +30,7 @@ pub fn init_assets(
     tilesets.push(asset_server.load(TILESET_TINY_GALAXY_MONSTERS_PATH));
     tilesets.push(asset_server.load(TILESET_TINY_GALAXY_PORTRAITS_PATH));
     // TODO: Split SPACE up into multiple tilesets of the same size. `8x8` vs `24x24` etc
-    //tilesets.push(asset_server.load(TILESET_TINY_GALAXY_SPACE_PATH));
+    // tilesets.push(asset_server.load(TILESET_TINY_GALAXY_SPACE_PATH));
     tilesets.push(asset_server.load(TILESET_TINY_GALAXY_WORLD_PATH));
 
     // Load white_pixel:
@@ -50,18 +50,21 @@ pub fn init_assets(
 
     let mut builder = TilesetBuilder::default();
     if builder.add_tile(tile_handle, TILE_WHITE_PIXEL_ID, &asset_image).is_ok() {
-        if let Ok(raw_tileset) = builder.build(TILESET_WHITE_PIXEL, TILESET_WHITE_PIXEL_ID, &mut asset_image) {
+        if let Ok(raw_tileset) = builder.build(
+            TILESET_WHITE_PIXEL,
+            TILESET_WHITE_PIXEL_ID,
+            &mut asset_image,
+        ) {
             let tileset_handle = asset_tilesets.add(raw_tileset.into_asset(&mut asset_texture));
             tilesets.push(tileset_handle);
         }
     }
-    
 
     // insert whitepixel as tileset:
     // https://github.com/MrGVSV/bevy_tileset/blob/main/examples/dynamic.rs
 
     commands.insert_resource(TilesetStorageResource(tilesets));
-    commands.insert_resource(UiImageStorageResource(images));
+    commands.insert_resource(ImageStorageResource(images));
 
     // Textures
     commands.insert_resource(
@@ -92,17 +95,55 @@ pub fn init_assets(
 }
 
 pub fn wait_for_assets_to_load(mut commands: Commands, tilesets: Tilesets, time: Res<Time>) {
-    if !check_tileset(TILESET_TINY_GALAXY_FX_ID, TILESET_TINY_GALAXY_FX_PATH, &tilesets) { return; }
-    if !check_tileset(TILESET_TINY_GALAXY_INTERFACE_ID, TILESET_TINY_GALAXY_INTERFACE_PATH, &tilesets) { return; }
-    if !check_tileset(TILESET_TINY_GALAXY_ITEMS_ID, TILESET_TINY_GALAXY_ITEMS_PATH, &tilesets) { return; }
-    if !check_tileset(TILESET_TINY_GALAXY_MONSTERS_ID, TILESET_TINY_GALAXY_MONSTERS_PATH, &tilesets) { return; }
-    if !check_tileset(TILESET_TINY_GALAXY_PORTRAITS_ID, TILESET_TINY_GALAXY_PORTRAITS_PATH, &tilesets) { return; }
+    if !check_tileset(
+        TILESET_TINY_GALAXY_FX_ID,
+        TILESET_TINY_GALAXY_FX_PATH,
+        &tilesets,
+    ) {
+        return;
+    }
+    if !check_tileset(
+        TILESET_TINY_GALAXY_INTERFACE_ID,
+        TILESET_TINY_GALAXY_INTERFACE_PATH,
+        &tilesets,
+    ) {
+        return;
+    }
+    if !check_tileset(
+        TILESET_TINY_GALAXY_ITEMS_ID,
+        TILESET_TINY_GALAXY_ITEMS_PATH,
+        &tilesets,
+    ) {
+        return;
+    }
+    if !check_tileset(
+        TILESET_TINY_GALAXY_MONSTERS_ID,
+        TILESET_TINY_GALAXY_MONSTERS_PATH,
+        &tilesets,
+    ) {
+        return;
+    }
+    if !check_tileset(
+        TILESET_TINY_GALAXY_PORTRAITS_ID,
+        TILESET_TINY_GALAXY_PORTRAITS_PATH,
+        &tilesets,
+    ) {
+        return;
+    }
     // TODO: See init_assets
-    //if !check_tileset(TILESET_TINY_GALAXY_SPACE_ID, TILESET_TINY_GALAXY_SPACE_PATH) { return; }
-    if !check_tileset(TILESET_TINY_GALAXY_WORLD_ID, TILESET_TINY_GALAXY_WORLD_PATH, &tilesets) { return; }
-    if !check_tileset(TILESET_WHITE_PIXEL_ID, TILESET_WHITE_PIXEL, &tilesets) { return; }
-    
-    switch_app_state!(commands, AppState::InGame)
+    // if !check_tileset(TILESET_TINY_GALAXY_SPACE_ID, TILESET_TINY_GALAXY_SPACE_PATH) { return; }
+    if !check_tileset(
+        TILESET_TINY_GALAXY_WORLD_ID,
+        TILESET_TINY_GALAXY_WORLD_PATH,
+        &tilesets,
+    ) {
+        return;
+    }
+    if !check_tileset(TILESET_WHITE_PIXEL_ID, TILESET_WHITE_PIXEL, &tilesets) {
+        return;
+    }
+
+    switch_app_state!(commands, SPLASH_SCREEN_TO_THIS_STATE)
 }
 
 fn check_tileset(id: u8, name: &str, tilesets: &Tilesets) -> bool {
@@ -113,4 +154,3 @@ fn check_tileset(id: u8, name: &str, tilesets: &Tilesets) -> bool {
         false
     }
 }
-
