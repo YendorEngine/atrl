@@ -24,12 +24,12 @@ pub fn settings_menu(
                                 for resolution in RESOLUTIONS.iter() {
                                     let value = ui.selectable_value(
                                         &mut current_selected,
-                                        resolution.size,
-                                        resolution.name.to_string(),
+                                        resolution.1,
+                                        resolution.0.to_string(),
                                     );
 
                                     if value.clicked() {
-                                        app_settings.set_window_resolution((resolution.size).into());
+                                        app_settings.set_window_resolution((resolution.1).into());
                                     }
                                 }
                             });

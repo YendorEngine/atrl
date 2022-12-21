@@ -1,17 +1,25 @@
 use crate::{prelude::*, systems::*};
 
 pub fn init_egui(mut commands: Commands, mut ctx: ResMut<EguiContext>) {
-    let mut fonts = egui::FontDefinitions::default();
+    // Load in default font
+    match format!("assets/{DEFAULT_FONT}").load_raw() {
+        Ok(font_bytes) => {
+            let mut fonts = egui::FontDefinitions::default();
+            fonts.font_data.insert(
+                "julia_mono".to_owned(),
+                egui::FontData::from_owned(font_bytes),
+            );
+            fonts
+                .families
+                .entry(egui::FontFamily::Proportional)
+                .or_default()
+                .insert(0, "julia_mono".to_owned());
+            ctx.ctx_mut().set_fonts(fonts);
+        },
+        Err(e) => warn!("Failed to load path {DEFAULT_FONT}: {}", e),
+    }
 
-    fonts.font_data.insert(
-        "julia_mono".to_owned(),
-        egui::FontData::from_static(include_bytes!(
-            "../../../../assets/fonts/julia_mono/JuliaMono-Regular.ttf"
-        )),
-    );
-    fonts.families.entry(egui::FontFamily::Proportional).or_default().insert(0, "julia_mono".to_owned());
-
-    ctx.ctx_mut().set_fonts(fonts);
+    // Set default app style
     ctx.ctx_mut().set_style(get_style());
 
     // Keyboard Gamepad Navigation

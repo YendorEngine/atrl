@@ -1,4 +1,7 @@
+// Features
 #![feature(const_for)]
+// Clippy
+#![allow(clippy::module_inception)]
 
 pub mod components;
 pub mod resources;

@@ -1,17 +1,17 @@
 use crate::prelude::*;
 
 #[derive(Default, Resource)]
-pub struct FontStorageResource {
-    pub fonts: HashMap<String, Handle<Font>>,
-}
+pub struct FontStorageResource(pub Vec<Handle<Font>>);
 
 impl FontStorageResource {
-    pub fn insert(mut self, key: String, value: Handle<Font>) -> Self {
-        self.fonts.insert(key, value);
+    pub fn insert(mut self, value: Handle<Font>) -> Self {
+        self.0.push(value);
         self
     }
 
-    pub fn get(&self, key: &str) -> Option<Handle<Font>> { self.fonts.get(key).cloned() }
+    pub fn get(&self, key: &str) -> Option<Handle<Font>> {
+        self.0.iter().find(|x| x.id() == key.into()).cloned()
+    }
 
-    pub fn get_unchecked(&self, key: &str) -> Handle<Font> { self.fonts.get(key).unwrap().clone() }
+    pub fn get_unchecked(&self, key: &str) -> Handle<Font> { self.get(key).unwrap() }
 }

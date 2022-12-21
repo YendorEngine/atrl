@@ -2,7 +2,7 @@ use crate::{
     prelude::*,
     resources::{
         font_storage::FontStorageResource, image_storage::ImageStorageResource,
-        tileset_storage::TilesetStorageResource, ui_image_storage::UiImageStorageResource,
+        tileset_storage::TilesetStorageResource,
     },
     systems::*,
     types::asset_ids::tilesets::*,
@@ -20,18 +20,17 @@ pub fn init_assets(
     mut asset_texture: ResMut<Assets<TextureAtlas>>,
     mut asset_tilesets: ResMut<Assets<Tileset>>,
 ) {
-    let mut tilesets = Vec::new();
-    let mut images = Vec::new();
-
     // Load tilesets:
-    tilesets.push(asset_server.load(TILESET_TINY_GALAXY_FX_PATH));
-    tilesets.push(asset_server.load(TILESET_TINY_GALAXY_INTERFACE_PATH));
-    tilesets.push(asset_server.load(TILESET_TINY_GALAXY_ITEMS_PATH));
-    tilesets.push(asset_server.load(TILESET_TINY_GALAXY_MONSTERS_PATH));
-    tilesets.push(asset_server.load(TILESET_TINY_GALAXY_PORTRAITS_PATH));
-    // TODO: Split SPACE up into multiple tilesets of the same size. `8x8` vs `24x24` etc
-    // tilesets.push(asset_server.load(TILESET_TINY_GALAXY_SPACE_PATH));
-    tilesets.push(asset_server.load(TILESET_TINY_GALAXY_WORLD_PATH));
+    let mut tilesets = vec![
+        asset_server.load(TILESET_TINY_GALAXY_FX_PATH),
+        asset_server.load(TILESET_TINY_GALAXY_INTERFACE_PATH),
+        asset_server.load(TILESET_TINY_GALAXY_ITEMS_PATH),
+        asset_server.load(TILESET_TINY_GALAXY_MONSTERS_PATH),
+        asset_server.load(TILESET_TINY_GALAXY_PORTRAITS_PATH),
+        // TODO: Split SPACE up into multiple tilesets of the same size. `8x8` vs `24x24` etc
+        // asset_server.load(TILESET_TINY_GALAXY_SPACE_PATH,
+        asset_server.load(TILESET_TINY_GALAXY_WORLD_PATH),
+    ];
 
     // Load white_pixel:
     let image = Image::new(
@@ -45,8 +44,7 @@ pub fn init_assets(
         TextureFormat::Rgba8UnormSrgb,
     );
     let image_handle = asset_image.add(image);
-    images.push(image_handle.clone());
-    let tile_handle = TileHandle::new_standard(TILE_WHITE_PIXEL, image_handle);
+    let tile_handle = TileHandle::new_standard(TILE_WHITE_PIXEL, image_handle.clone());
 
     let mut builder = TilesetBuilder::default();
     if builder.add_tile(tile_handle, TILE_WHITE_PIXEL_ID, &asset_image).is_ok() {
@@ -63,38 +61,27 @@ pub fn init_assets(
     // insert whitepixel as tileset:
     // https://github.com/MrGVSV/bevy_tileset/blob/main/examples/dynamic.rs
 
+    // Tilesets
     commands.insert_resource(TilesetStorageResource(tilesets));
-    commands.insert_resource(ImageStorageResource(images));
 
-    // Textures
+    // Images
     commands.insert_resource(
-        UiImageStorageResource::default()
-            .insert("splash".to_string(), asset_server.load("images/splash.png"))
-            .insert(
-                "main_menu_logo".to_string(),
-                asset_server.load("images/ui/atrl_logo.png"),
-            ),
+        ImageStorageResource::default()
+            .insert(image_handle)
+            .insert(asset_server.load("images/splash.png"))
+            .insert(asset_server.load("images/ui/atrl_logo.png")),
     );
 
     // Fonts
     commands.insert_resource(
         FontStorageResource::default()
-            .insert(
-                "julia_mono".to_string(),
-                asset_server.load("fonts/julia_mono/JuliaMono-Regular.ttf"),
-            )
-            .insert(
-                "julia_mono_bold".to_string(),
-                asset_server.load("fonts/julia_mono/JuliaMono-Bold.ttf"),
-            )
-            .insert(
-                "julia_mono_light".to_string(),
-                asset_server.load("fonts/julia_mono/JuliaMono-Light.ttf"),
-            ),
+            .insert(asset_server.load("fonts/julia_mono/JuliaMono-Regular.ttf"))
+            .insert(asset_server.load("fonts/julia_mono/JuliaMono-Bold.ttf"))
+            .insert(asset_server.load("fonts/julia_mono/JuliaMono-Light.ttf")),
     );
 }
 
-pub fn wait_for_assets_to_load(mut commands: Commands, tilesets: Tilesets, time: Res<Time>) {
+pub fn wait_for_assets_to_load(mut commands: Commands, tilesets: Tilesets) {
     if !check_tileset(
         TILESET_TINY_GALAXY_FX_ID,
         TILESET_TINY_GALAXY_FX_PATH,

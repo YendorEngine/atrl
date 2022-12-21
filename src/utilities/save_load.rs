@@ -1,13 +1,9 @@
 use crate::prelude::*;
 
 pub trait SaveLoad: AsRef<Path> {
-    fn load_file(&self) -> Result<String> {
-        let file = File::open(self)?;
-        let mut file = BufReader::new(file);
-        let mut contents = String::new();
-        let _bytes_read = file.read_to_string(&mut contents)?;
-        Ok(contents)
-    }
+    fn load_raw(&self) -> Result<Vec<u8>> { Ok(std::fs::read(self)?) }
+
+    fn load_file(&self) -> Result<String> { Ok(std::fs::read_to_string(self)?) }
 
     fn load_toml<T: for<'de> Deserialize<'de>>(&self) -> Result<T> {
         let contents = self.load_file()?;

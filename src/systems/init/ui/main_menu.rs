@@ -1,8 +1,6 @@
-use crate::{
-    components::CleanupOnExitMainMenu, prelude::*, resources::ui_image_storage::UiImageStorageResource,
-};
+use crate::{components::CleanupOnExitMainMenu, prelude::*};
 
-pub fn init_main_menu(mut commands: Commands, textures: Res<UiImageStorageResource>) {
+pub fn init_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn((
             NodeBundle {
@@ -22,7 +20,7 @@ pub fn init_main_menu(mut commands: Commands, textures: Res<UiImageStorageResour
                     size: Size::new(Val::Auto, Val::Auto),
                     ..default()
                 },
-                image: UiImage(textures.get_unchecked("main_menu_logo")),
+                image: UiImage(asset_server.load("images/splash.png")),
                 ..default()
             });
         });

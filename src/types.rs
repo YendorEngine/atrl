@@ -44,6 +44,3 @@ pub mod shapes {
     mod octant;
     pub use octant::*;
 }
-
-mod resolution;
-pub use resolution::*;

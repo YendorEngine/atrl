@@ -89,43 +89,23 @@ impl SystemsPlugin {
         )
         .add_system_set(
             ConditionSet::new().run_in_state(AppState::Menu(MenuState::Main)).with_system(main_menu).into(),
-        )
-        .add_exit_system_set(
-            AppState::Menu(MenuState::Main),
-            ConditionSet::new().with_system(cleanup_on_exit_main_menu).into(),
         );
 
         // Settings Menu
-        app.add_enter_system_set(
-            AppState::Menu(Settings),
-            ConditionSet::new().with_system(init_main_menu).into(),
-        )
-        .add_system_set(
+        app.add_system_set(
             ConditionSet::new().run_in_state(AppState::Menu(Settings)).with_system(settings_menu).into(),
-        )
-        .add_exit_system_set(
-            AppState::Menu(Settings),
-            ConditionSet::new().with_system(cleanup_on_exit_main_menu).into(),
         );
 
         // World Gen Menu
-        app.add_enter_system_set(
-            AppState::Menu(Settings),
-            ConditionSet::new().with_system(init_main_menu).into(),
-        )
-        .add_system_set(
+        app.add_system_set(
             ConditionSet::new().run_in_state(AppState::Menu(WorldGen)).with_system(world_gen_menu).into(),
-        )
-        .add_exit_system_set(
-            AppState::Menu(Settings),
-            ConditionSet::new().with_system(cleanup_on_exit_main_menu).into(),
         );
     }
 
     fn game_state(&self, app: &mut App) {
         app.add_enter_system_set(
             AppState::InGame,
-            ConditionSet::new().with_system(init_input).into(),
+            ConditionSet::new().with_system(cleanup_on_exit_main_menu).with_system(init_input).into(),
         );
 
         app.add_system_set_to_stage(
