@@ -192,6 +192,9 @@ git    = "https://github.com/StarArawn/kayak_ui"
 [dependencies.bevy_egui]
 version = "0.18"
 
+[dependencies.bevy-egui-kbgp]
+version = "0.10"
+
 ######################################
 #########       Utility
 ######################################

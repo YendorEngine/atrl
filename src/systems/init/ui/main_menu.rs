@@ -2,7 +2,7 @@ use crate::{
     components::CleanupOnExitMainMenu, prelude::*, resources::texture_storage::TextureStorageResource,
 };
 
-pub fn setup_main_menu(mut commands: Commands, textures: Res<TextureStorageResource>) {
+pub fn init_main_menu(mut commands: Commands, textures: Res<TextureStorageResource>) {
     commands
         .spawn((
             NodeBundle {

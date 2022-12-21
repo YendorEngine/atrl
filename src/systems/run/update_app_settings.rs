@@ -15,7 +15,7 @@ pub fn update_app_settings(
 
         if let Some(window) = windows.get_primary() {
             let full_screen = app_settings.get_fullscreen();
-            let current_window_size = app_settings.get_window_size();
+            let current_window_size = app_settings.get_window_resolution();
 
             let resized_window_size = Vec2 {
                 x: width,
@@ -28,7 +28,7 @@ pub fn update_app_settings(
                 info!("Setting window size to {resized_window_size}\n");
                 *cached_full_screen = false;
                 app_settings.set_fullscreen(false);
-                app_settings.set_window_size(resized_window_size);
+                app_settings.set_window_resolution(resized_window_size);
             } else if full_screen != *cached_full_screen {
                 info!("Setting window to full screen");
                 *cached_full_screen = true;

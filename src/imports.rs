@@ -28,7 +28,8 @@ pub use bevy::{
     window::WindowResizeConstraints,
 };
 pub use bevy_ecs_tilemap::prelude::*;
-pub use bevy_egui::{egui, EguiContext, EguiPlugin};
+pub use bevy_egui::{egui, egui::Align2, EguiContext, EguiPlugin};
+pub use bevy_egui_kbgp::prelude::*;
 pub use bevy_tileset::prelude::*;
 pub use iyes_loopless::prelude::*;
 pub use leafwing_input_manager::prelude::*;

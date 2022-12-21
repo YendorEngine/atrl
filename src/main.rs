@@ -40,7 +40,7 @@ fn add_default_plugins(app: &mut App, app_settings: &AppSettingsResource) {
     let Vec2 {
         x: window_width,
         y: window_height,
-    } = app_settings.window_size;
+    } = app_settings.window_resolution;
 
     let window_mode =
         if app_settings.fullscreen { WindowMode::BorderlessFullscreen } else { WindowMode::Windowed };
@@ -74,5 +74,6 @@ fn add_external_plugins(app: &mut App, app_settings: &AppSettingsResource) {
         .add_plugin(TilemapPlugin)
         .add_plugin(TilesetPlugin::default())
         .add_plugin(InputManagerPlugin::<MovementInput>::default())
-        .add_plugin(EguiPlugin);
+        .add_plugin(EguiPlugin)
+        .add_plugin(KbgpPlugin);
 }

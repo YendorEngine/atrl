@@ -76,7 +76,7 @@ impl SystemsPlugin {
         // Resources
         app.add_exit_system_set(
             AppState::SplashScreen,
-            ConditionSet::new().with_system(cleanup_on_exit_splash).into(),
+            ConditionSet::new().with_system(init_egui).with_system(cleanup_on_exit_splash).into(),
         );
     }
 
@@ -84,7 +84,7 @@ impl SystemsPlugin {
         // Main Menu
         app.add_enter_system_set(
             AppState::Menu(MenuState::Main),
-            ConditionSet::new().with_system(setup_main_menu).into(),
+            ConditionSet::new().with_system(init_main_menu).into(),
         )
         .add_system_set(
             ConditionSet::new().run_in_state(AppState::Menu(MenuState::Main)).with_system(main_menu).into(),
@@ -97,7 +97,7 @@ impl SystemsPlugin {
         // Main Menu Settings
         app.add_enter_system_set(
             AppState::Menu(Settings),
-            ConditionSet::new().with_system(setup_main_menu).into(),
+            ConditionSet::new().with_system(init_main_menu).into(),
         )
         .add_system_set(
             ConditionSet::new().run_in_state(AppState::Menu(Settings)).with_system(settings_menu).into(),

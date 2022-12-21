@@ -1,7 +1,14 @@
-pub mod functions {}
-pub use functions::*;
-
 pub mod init {
+    mod ui {
+        mod egui;
+        pub use egui::*;
+        mod main_menu;
+        pub use main_menu::*;
+        mod splash;
+        pub use splash::*;
+    }
+    pub use ui::*;
+
     mod assets;
     pub use assets::*;
     mod camera;
@@ -10,12 +17,14 @@ pub mod init {
     pub use cleanup::*;
     mod input;
     pub use input::*;
-    mod main_menu;
-    pub use main_menu::*;
-    mod splash;
-    pub use splash::*;
 }
 pub(super) use init::*;
+
+pub mod functions {
+    mod styles;
+    pub use styles::*;
+}
+pub(super) use functions::*;
 
 pub mod quit {
     mod save_app_settings;
@@ -35,6 +44,8 @@ pub(super) use run::*;
 
 // In prelude
 pub(super) mod system_params {
+    mod assets;
+    pub use assets::*;
     mod app_settings;
     pub use app_settings::*;
 }

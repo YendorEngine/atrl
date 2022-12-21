@@ -1,6 +1,9 @@
 use crate::{
     prelude::*,
-    resources::{texture_storage::TextureStorageResource, tileset_storage::TilesetStorageResource},
+    resources::{
+        font_storage::FontStorageResource, texture_storage::TextureStorageResource,
+        tileset_storage::TilesetStorageResource,
+    },
     systems::*,
     types::asset_ids::tilesets::*,
 };
@@ -16,13 +19,32 @@ pub fn init_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
 
     commands.insert_resource(TilesetStorageResource(handles));
 
-    let mut textures = TextureStorageResource::default();
-    textures.insert("splash".to_string(), asset_server.load("images/splash.png"));
-    textures.insert(
-        "main_menu_logo".to_string(),
-        asset_server.load("images/ui/atrl_logo.png"),
+    // Textures
+    commands.insert_resource(
+        TextureStorageResource::default()
+            .insert("splash".to_string(), asset_server.load("images/splash.png"))
+            .insert(
+                "main_menu_logo".to_string(),
+                asset_server.load("images/ui/atrl_logo.png"),
+            ),
     );
-    commands.insert_resource(textures);
+
+    // Fonts
+    commands.insert_resource(
+        FontStorageResource::default()
+            .insert(
+                "julia_mono".to_string(),
+                asset_server.load("fonts/julia_mono/JuliaMono-Regular.ttf"),
+            )
+            .insert(
+                "julia_mono_bold".to_string(),
+                asset_server.load("fonts/julia_mono/JuliaMono-Bold.ttf"),
+            )
+            .insert(
+                "julia_mono_light".to_string(),
+                asset_server.load("fonts/julia_mono/JuliaMono-Light.ttf"),
+            ),
+    );
 }
 
 pub fn wait_for_assets_to_load(mut commands: Commands, tilesets: Tilesets, time: Res<Time>) {

@@ -6,7 +6,10 @@ pub struct TextureStorageResource {
 }
 
 impl TextureStorageResource {
-    pub fn insert(&mut self, key: String, value: Handle<Image>) { self.textures.insert(key, value); }
+    pub fn insert(mut self, key: String, value: Handle<Image>) -> Self {
+        self.textures.insert(key, value);
+        self
+    }
 
     pub fn get(&self, key: &str) -> Option<Handle<Image>> { self.textures.get(key).cloned() }
 

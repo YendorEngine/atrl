@@ -10,7 +10,7 @@ pub fn update_window(
 
         if let Some(window) = windows.get_primary_mut() {
             let full_screen = app_settings.get_fullscreen();
-            let window_size = app_settings.get_window_size();
+            let window_size = app_settings.get_window_resolution();
 
             let current_window_size = Vec2 {
                 x: window.width(),
