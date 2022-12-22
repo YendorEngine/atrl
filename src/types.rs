@@ -31,6 +31,15 @@ pub mod input {
     pub use movement::*;
 }
 
+pub mod map_definitions {
+    mod galactic_feature;
+    pub use galactic_feature::*;
+    mod sector;
+    pub use sector::*;
+    mod system;
+    pub use system::*;
+}
+
 pub mod shapes {
     mod shape;
     pub use shape::*;

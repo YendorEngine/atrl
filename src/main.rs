@@ -29,7 +29,7 @@ fn main() {
     let mut app = App::new();
 
     add_default_plugins(&mut app, &app_settings);
-    add_external_plugins(&mut app, &app_settings);
+    add_external_plugins(&mut app);
 
     register_components(&mut app);
 
@@ -70,9 +70,8 @@ fn add_default_plugins(app: &mut App, app_settings: &AppSettingsResource) {
                                                                 // background
 }
 
-fn add_external_plugins(app: &mut App, app_settings: &AppSettingsResource) {
-    let render_chunk_size = app_settings.render_chunk_size;
-    app.insert_resource(TilemapRenderSettings { render_chunk_size })
+fn add_external_plugins(app: &mut App) {
+    app.insert_resource(TilemapRenderSettings { render_chunk_size: RENDER_CHUNK_SIZE })
         .add_plugin(TilemapPlugin)
         .add_plugin(TilesetPlugin::default())
         .add_plugin(InputManagerPlugin::<MovementInput>::default())
