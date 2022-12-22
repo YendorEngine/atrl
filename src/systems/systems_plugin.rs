@@ -32,7 +32,7 @@ impl Plugin for SystemsPlugin {
 }
 
 // TODO: remove - allows .with_system() to hold system creation
-fn phantom_system() {}
+// fn phantom_system() {}
 
 impl SystemsPlugin {
     fn init_states(&self, app: &mut App) {
@@ -105,16 +105,21 @@ impl SystemsPlugin {
     fn game_state(&self, app: &mut App) {
         app.add_enter_system_set(
             AppState::InGame,
-            ConditionSet::new().with_system(cleanup_on_exit_main_menu).with_system(init_input).into(),
+            ConditionSet::new()
+                .with_system(init_input)
+                .with_system(spawn_grid)
+                .with_system(init_generator_config)
+                .with_system(cleanup_on_exit_main_menu)
+                .into(),
         );
 
         app.add_system_set_to_stage(
             CoreStage::First,
-            ConditionSet::new().run_in_state(AppState::InGame).with_system(phantom_system).into(),
+            ConditionSet::new().run_in_state(AppState::InGame).with_system(update_tilemap).into(),
         );
         app.add_system_set_to_stage(
             CoreStage::Update,
-            ConditionSet::new().run_in_state(AppState::InGame).with_system(phantom_system).into(),
+            ConditionSet::new().run_in_state(AppState::InGame).with_system(test_menu).into(),
         );
         app.add_system_set_to_stage(
             CoreStage::Last,

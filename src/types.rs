@@ -44,3 +44,5 @@ pub mod shapes {
     mod octant;
     pub use octant::*;
 }
+
+pub mod generator;

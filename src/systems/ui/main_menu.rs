@@ -12,7 +12,11 @@ pub fn main_menu(
         .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
         .show(egui_context.ctx_mut(), |ui| {
             ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
-                if ui.button("World Gen").kbgp_navigation().kbgp_initial_focus().clicked() {
+                if ui.button("Quick Gen").kbgp_navigation().kbgp_initial_focus().clicked() {
+                    switch_app_state!(commands, AppState::InGame)
+                }
+
+                if ui.button("World Gen").kbgp_navigation().clicked() {
                     switch_app_state!(commands, AppState::Menu(WorldGen))
                 }
 

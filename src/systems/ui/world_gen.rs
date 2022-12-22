@@ -1,13 +1,12 @@
 use crate::{prelude::*, systems::*};
 
-fn generate_seed(seed: &mut String, previous_seed: &mut String) {
+pub fn generate_seed() -> u64 {
     // Generate a random seed
-    let mut rng = rand::thread_rng();
-    *seed = rng.next_u64().to_string();
-    *previous_seed = seed.clone();
+    let mut rng = Pcg64::from_entropy();
+    rng.next_u64()
 }
 
-fn input_with_validation(ui: &mut egui::Ui, seed: &mut String, previous_seed: &mut String) {
+pub fn input_with_validation(ui: &mut egui::Ui, seed: &mut String, previous_seed: &mut String) {
     let response = ui.text_edit_singleline(&mut *seed);
     if response.gained_focus() && *previous_seed != *seed {
         *previous_seed = seed.clone();
@@ -24,7 +23,8 @@ pub fn world_gen_menu(
     mut previous_seed: Local<String>,
 ) {
     if seed.is_empty() {
-        generate_seed(&mut seed, &mut previous_seed)
+        *seed = generate_seed().to_string();
+        *previous_seed = seed.clone();
     }
 
     egui::Window::new("World Gen")
@@ -39,7 +39,8 @@ pub fn world_gen_menu(
 
                 if ui.button("Randomize Seed").clicked() {
                     // Generate a random seed
-                    generate_seed(&mut seed, &mut previous_seed);
+                    *seed = generate_seed().to_string();
+                    *previous_seed = seed.clone();
                 }
 
                 ui.add_space(10.0);
@@ -47,6 +48,7 @@ pub fn world_gen_menu(
                 if ui.button("Generate").clicked() {
                     // Move to Generate State
                     println!("Seed: {}", *seed);
+                    switch_app_state!(commands, AppState::InGame);
                 }
 
                 ui.separator();

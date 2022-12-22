@@ -17,12 +17,18 @@ pub mod init {
     pub use cleanup::*;
     mod input;
     pub use input::*;
+    mod generator_config;
+    pub use generator_config::*;
+    mod spawn_grid;
+    pub use spawn_grid::*;
 }
 pub(super) use init::*;
 
 pub mod functions {
     mod create_tilemap;
     pub use create_tilemap::*;
+    mod generate;
+    pub use generate::*;
     mod styles;
     pub use styles::*;
 }
@@ -39,6 +45,8 @@ pub mod run {
     pub use update_app_settings::*;
     mod update_camera_dimensions;
     pub use update_camera_dimensions::*;
+    mod update_tilemap;
+    pub use update_tilemap::*;
     mod update_window;
     pub use update_window::*;
 }
@@ -59,6 +67,8 @@ mod ui {
     pub use settings::*;
     mod world_gen;
     pub use world_gen::*;
+    mod test_menu;
+    pub use test_menu::*;
 }
 pub use ui::*;
 
