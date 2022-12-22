@@ -37,7 +37,8 @@ pub fn test_menu(
                 ui.label(format!("Random Seed: {}", config.seed));
                 if ui.button("Reseed").clicked() {
                     // Generate a random seed
-                    config.seed = generate_seed()
+                    config.seed = generate_seed();
+                    changed = true;
                 }
 
                 ui.separator();
