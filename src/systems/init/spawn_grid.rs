@@ -18,7 +18,6 @@ pub fn spawn_grid(mut commands: Commands, tilesets: Tilesets, app_settings: AppS
                 1.0,
                 TerrainBundle {
                     tag: TerrainTag,
-                    display: DisplayComponent::new(TILE_TG_WORLD_FLOOR_TILE_A_ID),
                     ..Default::default()
                 },
             );

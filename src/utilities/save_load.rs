@@ -39,6 +39,12 @@ pub trait SaveLoad: AsRef<Path> {
         Ok(())
     }
 
+    fn to_json<T: Serialize>(&self, value: &T) -> Result<()> {
+        let contents = serde_json::to_string_pretty(value)?;
+        self.save_file(&contents)?;
+        Ok(())
+    }
+
     fn path_string(&self) -> String {
         if let Ok(s) = AsRef::<Path>::as_ref(self).canonicalize() {
             if let Some(s) = s.to_str() {

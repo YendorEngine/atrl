@@ -6,7 +6,7 @@ pub fn update_window(app_settings: AppSettings, mut windows: ResMut<Windows>) {
 
         if let Some(window) = windows.get_primary_mut() {
             let window_mode = app_settings.get_window_mode();
-            let window_size = app_settings.get_window_resolution();
+            let window_resolution = app_settings.get_window_resolution().get_dimensions();
 
             let current_window_mode = window.mode();
             let current_window_size = Vec2 {
@@ -14,12 +14,12 @@ pub fn update_window(app_settings: AppSettings, mut windows: ResMut<Windows>) {
                 y: window.height(),
             };
 
-            info!("Current window size: {current_window_size} vs: App Window Settings: {window_size}");
+            info!("Current window size: {current_window_size} vs: App Window Settings: {window_resolution}");
 
             // Window Size
-            if window_size != current_window_size {
-                info!("Setting window size to {window_size}");
-                window.set_resolution(window_size.x, window_size.y);
+            if window_resolution != current_window_size {
+                info!("Setting window size to {window_resolution}");
+                window.set_resolution(window_resolution.x, window_resolution.y);
             }
 
             // Full Screen

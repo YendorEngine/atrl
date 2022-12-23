@@ -1,12 +1,8 @@
-use crate::prelude::*;
+use crate::{prelude::*, types::resolution::*};
 
 const APP_SETTINGS_PATH: &str = "./app_settings.toml";
 
 const DEFAULT_GRID_SIZE: UVec2 = UVec2 { x: 80, y: 45 };
-const DEFAULT_WINDOW_SIZE: Vec2 = Vec2 {
-    x: 1280.0,
-    y: 720.0,
-};
 
 const DEFAULT_RENDER_CHUNK_SIZE: UVec2 = UVec2 { x: 16, y: 16 };
 
@@ -15,17 +11,17 @@ const DEFAULT_WINDOW_MODE: WindowMode = WindowMode::Windowed;
 #[derive(Resource, Clone)]
 pub struct AppSettingsResource {
     pub grid_size: UVec2,
-    pub window_resolution: Vec2,
     pub window_mode: WindowMode,
     pub render_chunk_size: UVec2,
+    pub window_resolution: Resolution,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct AppSettingsSerialized {
     grid_size: Option<UVec2>,
     window_mode: Option<WindowMode>,
-    window_resolution: Option<Vec2>,
     render_chunk_size: Option<UVec2>,
+    window_resolution: Option<Resolution>,
 }
 
 // Save/Load
@@ -54,9 +50,9 @@ impl From<AppSettingsResource> for AppSettingsSerialized {
     fn from(value: AppSettingsResource) -> Self {
         Self {
             grid_size: Some(value.grid_size),
+            window_mode: Some(value.window_mode),
             window_resolution: Some(value.window_resolution),
             render_chunk_size: Some(value.render_chunk_size),
-            window_mode: Some(value.window_mode),
         }
     }
 }
@@ -65,7 +61,7 @@ impl From<AppSettingsSerialized> for AppSettingsResource {
     fn from(value: AppSettingsSerialized) -> Self {
         let grid_size = value.grid_size.unwrap_or(DEFAULT_GRID_SIZE);
         let window_mode = value.window_mode.unwrap_or(DEFAULT_WINDOW_MODE);
-        let window_resolution = value.window_resolution.unwrap_or(DEFAULT_WINDOW_SIZE);
+        let window_resolution = value.window_resolution.unwrap_or(Resolution::default());
         let render_chunk_size = value.render_chunk_size.unwrap_or(DEFAULT_RENDER_CHUNK_SIZE);
 
         Self {
@@ -82,7 +78,7 @@ impl Default for AppSettingsResource {
         Self {
             grid_size: DEFAULT_GRID_SIZE,
             window_mode: DEFAULT_WINDOW_MODE,
-            window_resolution: DEFAULT_WINDOW_SIZE,
+            window_resolution: Resolution::default(),
             render_chunk_size: DEFAULT_RENDER_CHUNK_SIZE,
         }
     }

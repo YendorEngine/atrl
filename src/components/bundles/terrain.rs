@@ -1,6 +1,6 @@
 use crate::{components::*, prelude::*};
 
-#[derive(Default, Bundle)]
+#[derive(Bundle)]
 pub struct TerrainBundle {
     pub tag: TerrainTag,
     pub cleanup: CleanupOnExitGame,

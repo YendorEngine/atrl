@@ -147,6 +147,9 @@ version  = "1"
 [dependencies.toml]
 version = "0.5"
 
+[dependencies.serde_json]
+version = "1"
+
 ######################################
 #########       States
 ######################################
@@ -213,6 +216,12 @@ version = "0.2.7"
 
 [dependencies.thiserror]
 version = "1"
+
+[dependencies.strum]
+version = "0.24"
+
+[dependencies.strum_macros]
+version = "0.24"
 
 [dependencies.yendor]
 git = "https://github.com/YendorEngine/yendor"

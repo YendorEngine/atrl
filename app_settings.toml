@@ -3,11 +3,10 @@ grid_size = [
     45,
 ]
 window_mode = 'Windowed'
-window_resolution = [
-    1280.0,
-    720.0,
-]
 render_chunk_size = [
     16,
     16,
 ]
+
+[window_resolution]
+resolution = 'R720'

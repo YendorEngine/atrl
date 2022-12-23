@@ -9,9 +9,7 @@ pub enum GalacticFeatureType {
     Star,
 }
 
-impl GalacticFeatureType {
-    
-}
+impl GalacticFeatureType {}
 
 pub struct GalacticFeature {
     pub feature_type: GalacticFeatureType,
@@ -21,15 +19,15 @@ pub struct GalacticFeature {
 }
 
 impl GalacticFeature {
-    pub fn new(feature_type: GalacticFeatureType, tileset: &Tileset, seed: u64) -> Self {
+    pub fn new(feature_type: GalacticFeatureType, tileset: &Tileset, seed: [u8; 32]) -> Self {
         let rng = Pcg64::from_seed(seed);
 
         // TODO: implement multiple sized maps based on GalacticFeatureType
         let size = PLANET_SIZE[0].0;
 
-        let tile_ids = Vec::with_capacity(size.x);
+        let mut tile_ids = Vec::with_capacity(size.x as usize);
         for x in 0..size.x {
-            let tiles = Vec::with_capacity(size.y);
+            let mut tiles = Vec::with_capacity(size.y as usize);
             for y in 0..size.y {
                 tiles.push(0);
             }

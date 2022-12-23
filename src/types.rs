@@ -55,3 +55,4 @@ pub mod shapes {
 }
 
 pub mod generator;
+pub mod resolution;

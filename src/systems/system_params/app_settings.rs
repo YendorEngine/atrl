@@ -1,4 +1,4 @@
-use crate::{prelude::*, resources::app_settings::AppSettingsResource};
+use crate::{prelude::*, resources::app_settings::AppSettingsResource, types::resolution::*};
 
 #[derive(SystemParam)]
 pub struct AppSettings<'w, 's> {
@@ -12,13 +12,15 @@ macro_rules! impl_get_settings {
         impl<'w, 's> $id<'w, 's> {
             pub fn get_grid_size(&self) -> UVec2 { self.settings.grid_size }
 
-            pub fn get_window_resolution(&self) -> Vec2 { self.settings.window_resolution }
+            pub fn get_window_resolution(&self) -> Resolution { self.settings.window_resolution }
 
             pub fn get_window_mode(&self) -> WindowMode { self.settings.window_mode }
 
             pub fn set_grid_size(&mut self, value: UVec2) { self.settings.grid_size = value; }
 
-            pub fn set_window_resolution(&mut self, value: Vec2) { self.settings.window_resolution = value; }
+            pub fn set_window_resolution(&mut self, value: Resolution) {
+                self.settings.window_resolution = value;
+            }
 
             pub fn set_window_mode(&mut self, value: WindowMode) { self.settings.window_mode = value; }
 

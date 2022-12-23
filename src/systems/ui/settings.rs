@@ -1,4 +1,4 @@
-use crate::{prelude::*, systems::*};
+use crate::{prelude::*, systems::*, types::resolution::*};
 
 pub fn settings_menu(
     mut commands: Commands,
@@ -17,24 +17,44 @@ pub fn settings_menu(
                         egui::ComboBox::from_label("Resolution: ")
                             .width(300.0)
                             .wrap(false)
-                            .selected_text(format!("{}p", app_settings.get_window_resolution().y))
+                            .selected_text(format!("{}", app_settings.get_window_resolution()))
                             .show_ui(ui, |ui| {
-                                let mut current_selected: (f32, f32) =
-                                    app_settings.get_window_resolution().into();
-                                for resolution in RESOLUTIONS.iter() {
+                                let mut current_resolution = app_settings.get_window_resolution();
+                                for resolution in Resolution::iter() {
                                     let value = ui.selectable_value(
-                                        &mut current_selected,
-                                        resolution.1,
-                                        resolution.0.to_string(),
+                                        &mut current_resolution,
+                                        *resolution,
+                                        resolution.get_name(),
                                     );
 
                                     if value.clicked() {
-                                        app_settings.set_window_resolution((resolution.1).into());
+                                        app_settings.set_window_resolution(*resolution);
                                     }
                                 }
                             });
                     });
                 }
+
+                // if let Resolution::Custom(_, _) = app_settings.get_window_resolution() {
+                //     let mut changed = false;
+
+                //     ui.horizontal(|ui| {
+                //         ui.label("Width: ");
+                //         changed |= ui.text_edit_singleline(&mut *custom_x).changed()
+                //     });
+
+                //     ui.horizontal(|ui| {
+                //         ui.label("Height: ");
+                //         changed |= ui.text_edit_singleline(&mut *custom_y).changed()
+                //     });
+
+                //     if changed {
+                //         app_settings.set_window_resolution(Resolution::Custom(
+                //             custom_x.parse::<f32>().unwrap(),
+                //             custom_y.parse::<f32>().unwrap(),
+                //         ));
+                //     }
+                // }
 
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
                     egui::ComboBox::from_label("Window Mode: ")
