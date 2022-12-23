@@ -62,3 +62,9 @@ pub fn generate_spiral(config: &SpiralConfig) -> Vec<IVec2> {
     }
     stars
 }
+
+pub fn generate_seed() -> u64 {
+    // Generate a random seed
+    let mut rng = Pcg64::from_entropy();
+    rng.next_u64()
+}

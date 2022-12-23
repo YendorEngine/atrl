@@ -3,8 +3,8 @@ use crate::prelude::*;
 #[derive(Debug, Default, Clone, Copy, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "resolution")]
 pub enum Resolution {
-    R720,
     #[default]
+    R720,
     R1080,
     R1440,
     R2160,
@@ -16,8 +16,6 @@ pub enum Resolution {
 }
 
 impl Resolution {
-    pub fn new_custom(width: f32, height: f32) -> Self { Self::Custom { width, height } }
-
     pub fn get_name(&self) -> String {
         match self {
             Resolution::R720 => "720p".to_string(),

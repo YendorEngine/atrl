@@ -1,12 +1,12 @@
 use crate::prelude::*;
 
 pub enum GalacticFeatureType {
+    Star,
     Planet,
     Asteroid,
     Starbase,
-    MilitaryOutpost,
     TradeOutpost,
-    Star,
+    MilitaryOutpost,
 }
 
 impl GalacticFeatureType {}
@@ -23,7 +23,7 @@ impl GalacticFeature {
         let rng = Pcg64::from_seed(seed);
 
         // TODO: implement multiple sized maps based on GalacticFeatureType
-        let size = PLANET_SIZE[0].0;
+        let size = PLANET_SIZES[0].0;
 
         let mut tile_ids = Vec::with_capacity(size.x as usize);
         for x in 0..size.x {

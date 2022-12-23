@@ -1,5 +1,4 @@
-use super::generate_seed;
-use crate::{prelude::*, types::generator::*};
+use crate::{prelude::*, systems::functions::generate_seed, types::generator::*};
 
 pub fn test_menu(
     keys: Res<Input<KeyCode>>,

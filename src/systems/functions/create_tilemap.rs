@@ -110,6 +110,7 @@ fn spawn_defined_tilemap<B: Bundle>(
 
     let map_entity = commands.spawn(map_bundle).id();
     for y in 0..height {
+        tile_ids.iter().take(width).for_each(|id| {});
         for x in 0..width {
             let tile_pos = TilePos {
                 x: x as u32,

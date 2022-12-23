@@ -65,8 +65,8 @@ mod ui {
     pub use main_menu::*;
     mod settings;
     pub use settings::*;
-    mod world_gen;
-    pub use world_gen::*;
+    mod universe_gen;
+    pub use universe_gen::*;
     mod test_menu;
     pub use test_menu::*;
 }

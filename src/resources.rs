@@ -4,3 +4,4 @@ pub mod font_storage;
 pub mod game_settings;
 pub mod image_storage;
 pub mod tileset_storage;
+pub mod universe_generation_settings;

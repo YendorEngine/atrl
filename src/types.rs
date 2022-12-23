@@ -40,19 +40,5 @@ pub mod map_definitions {
     pub use system::*;
 }
 
-pub mod shapes {
-    mod shape;
-    pub use shape::*;
-
-    mod circle;
-    pub use circle::*;
-    mod line;
-    pub use line::*;
-    mod line_iter;
-    pub use line_iter::*;
-    mod octant;
-    pub use octant::*;
-}
-
 pub mod generator;
 pub mod resolution;

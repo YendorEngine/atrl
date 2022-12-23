@@ -1,4 +1,7 @@
-use crate::{prelude::*, systems::*};
+use crate::{
+    init_resource, prelude::*, resources::universe_generation_settings::UniverseGenerationSettings,
+    systems::*,
+};
 
 // TODO: Remove this when we want to finalize going to MainMenu.
 pub const SPLASH_SCREEN_TO_THIS_STATE: AppState = AppState::Menu(Main);
@@ -15,7 +18,7 @@ pub enum AppState {
 pub enum MenuState {
     Main,
     Settings,
-    WorldGen,
+    UniverseGeneration,
 }
 pub use MenuState::*;
 
@@ -96,9 +99,16 @@ impl SystemsPlugin {
             ConditionSet::new().run_in_state(AppState::Menu(Settings)).with_system(settings_menu).into(),
         );
 
-        // World Gen Menu
-        app.add_system_set(
-            ConditionSet::new().run_in_state(AppState::Menu(WorldGen)).with_system(world_gen_menu).into(),
+        // Universe Gen Menu
+        app.add_enter_system_set(
+            AppState::Menu(UniverseGeneration),
+            ConditionSet::new().with_system(init_resource!(UniverseGenerationSettings)).into(),
+        )
+        .add_system_set(
+            ConditionSet::new()
+                .run_in_state(AppState::Menu(UniverseGeneration))
+                .with_system(universe_gen_menu)
+                .into(),
         );
     }
 

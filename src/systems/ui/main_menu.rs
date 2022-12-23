@@ -17,7 +17,7 @@ pub fn main_menu(
                 }
 
                 if ui.button("World Gen").kbgp_navigation().clicked() {
-                    switch_app_state!(commands, AppState::Menu(WorldGen))
+                    switch_app_state!(commands, AppState::Menu(UniverseGeneration))
                 }
 
                 if ui.button("Settings").kbgp_navigation().clicked() {
