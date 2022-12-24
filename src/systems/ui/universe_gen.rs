@@ -1,4 +1,4 @@
-use bevy_egui_kbgp::egui::{util::hash, vec2};
+use bevy_egui_kbgp::egui::vec2;
 
 use crate::{
     prelude::*, resources::universe_generation_settings::UniverseGenerationSettings, systems::*,
@@ -18,8 +18,6 @@ pub fn universe_gen_menu(
     mut egui_context: ResMut<EguiContext>,
 
     mut local_seed: Local<String>,
-    // mut previous_seed: Local<String>,
-    // mut current_planet_size: Local<(UVec2, &str)>,
     mut universe_settings: ResMut<UniverseGenerationSettings>,
 ) {
     if local_seed.is_empty() || universe_settings.seed.is_none() {
@@ -30,6 +28,7 @@ pub fn universe_gen_menu(
         .title_bar(true)
         .resizable(false)
         .collapsible(false)
+        .min_width(500.0)
         .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
         .show(egui_context.ctx_mut(), |ui| {
             ui.allocate_ui_with_layout(
@@ -53,7 +52,7 @@ pub fn universe_gen_menu(
             // UNIVERSE SIZE
             ui.horizontal(|ui| {
                 ui.label("Universe Size:");
-                egui::ComboBox::from_label("")
+                egui::ComboBox::from_id_source(0)
                     .width(200.0)
                     .wrap(false)
                     .selected_text(universe_settings.get_universe_display())
@@ -126,24 +125,21 @@ pub fn universe_gen_menu(
             );
 
             // PLANET SIZE
-            // TODO: Fix this wird id shit
-            ui.push_id(hash(1), |ui| {
-                ui.horizontal(|ui| {
-                    ui.label("Planet Size:");
-                    egui::ComboBox::from_label("")
-                        .selected_text(universe_settings.get_planet_display())
-                        .show_ui(ui, |ui| {
-                            for planet_size in PLANET_SIZES.iter() {
-                                let value = ui.selectable_value(
-                                    &mut universe_settings.universe_size,
-                                    *planet_size,
-                                    format!("{}: {}x{}", planet_size.1, planet_size.0.x, planet_size.0.y),
-                                );
+            ui.horizontal(|ui| {
+                ui.label("Planet Size:");
+                egui::ComboBox::from_id_source(1)
+                    .selected_text(universe_settings.get_planet_display())
+                    .show_ui(ui, |ui| {
+                        for planet_size in PLANET_SIZES.iter() {
+                            let value = ui.selectable_value(
+                                &mut universe_settings.universe_size,
+                                *planet_size,
+                                format!("{}: {}x{}", planet_size.1, planet_size.0.x, planet_size.0.y),
+                            );
 
-                                if value.clicked() {}
-                            }
-                        });
-                });
+                            if value.clicked() {}
+                        }
+                    });
             });
 
             ui.separator();
