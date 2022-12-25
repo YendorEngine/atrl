@@ -34,6 +34,8 @@ pub mod input {
 pub mod map_definitions {
     mod galactic_feature;
     pub use galactic_feature::*;
+    mod map_layer;
+    pub use map_layer::*;
     mod sector;
     pub use sector::*;
     mod system;

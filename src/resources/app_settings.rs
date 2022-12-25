@@ -4,7 +4,7 @@ const APP_SETTINGS_PATH: &str = "./app_settings.toml";
 
 const DEFAULT_GRID_SIZE: UVec2 = UVec2 { x: 80, y: 45 };
 
-const DEFAULT_RENDER_CHUNK_SIZE: UVec2 = UVec2 { x: 16, y: 16 };
+const DEFAULT_RENDER_CHUNK_SIZE: UVec2 = UVec2 { x: 16, y: 9 };
 
 const DEFAULT_WINDOW_MODE: WindowMode = WindowMode::Windowed;
 

@@ -1,15 +1,15 @@
 use crate::{components::*, prelude::*};
 
 #[derive(Bundle)]
-pub struct TerrainBundle {
-    pub tag: TerrainTag,
+pub struct ActorMapBundle {
+    pub tag: ActorTag,
     pub cleanup: CleanupOnExitGame,
 }
 
-impl Default for TerrainBundle {
+impl Default for ActorMapBundle {
     fn default() -> Self {
         Self {
-            tag: TerrainTag,
+            tag: ActorTag,
             cleanup: CleanupOnExitGame,
         }
     }

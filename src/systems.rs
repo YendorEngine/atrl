@@ -19,14 +19,14 @@ pub mod init {
     pub use input::*;
     mod generator_config;
     pub use generator_config::*;
-    mod spawn_grid;
-    pub use spawn_grid::*;
+    mod spawn_grids;
+    pub use spawn_grids::*;
 }
 pub(super) use init::*;
 
 pub mod functions {
-    mod create_tilemap;
-    pub use create_tilemap::*;
+    mod tilemap_builder;
+    pub use tilemap_builder::*;
     mod generate;
     pub use generate::*;
     mod styles;

@@ -117,7 +117,7 @@ impl SystemsPlugin {
             AppState::InGame,
             ConditionSet::new()
                 .with_system(init_input)
-                .with_system(spawn_grid)
+                .with_system(spawn_grids)
                 .with_system(init_generator_config)
                 .with_system(cleanup_on_exit_main_menu)
                 .into(),
