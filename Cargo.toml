@@ -21,7 +21,7 @@ resolver   = "2"
 #########       Workspaces
 #################################
 [workspace]
-members = ["tools/ci", "tools/spancmp"]
+members = ["tools/ci", "tools/spancmp", "test"]
 
 #################################
 #########       Features

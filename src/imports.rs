@@ -8,6 +8,8 @@ pub use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, RangeBounds, Sub, SubAssign},
     path::{Path, PathBuf},
     slice::{Iter, IterMut},
+    str::FromStr,
+    thread,
     time::*,
 };
 
@@ -29,7 +31,11 @@ pub use bevy::{
     window::WindowResizeConstraints,
 };
 pub use bevy_ecs_tilemap::prelude::*;
-pub use bevy_egui::{egui, egui::Align2, EguiContext, EguiPlugin};
+pub use bevy_egui::{
+    egui,
+    egui::{epaint::Color32, vec2, Align2, Checkbox, Response, TextBuffer, TextEdit, Ui, Widget, WidgetText},
+    EguiContext, EguiPlugin,
+};
 pub use bevy_egui_kbgp::prelude::*;
 pub use bevy_tileset::prelude::*;
 pub use iyes_loopless::prelude::*;

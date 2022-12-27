@@ -21,17 +21,23 @@ pub fn settings_menu(
                             .show_ui(ui, |ui| {
                                 let mut current_resolution = app_settings.get_window_resolution();
                                 for resolution in Resolution::iter() {
-                                    let value = ui.selectable_value(
-                                        &mut current_resolution,
-                                        *resolution,
-                                        resolution.get_name(),
-                                    );
-
-                                    if value.clicked() {
+                                    if ui
+                                        .selectable_value(
+                                            &mut current_resolution,
+                                            *resolution,
+                                            resolution.get_name(),
+                                        )
+                                        .kbgp_navigation()
+                                        .clicked()
+                                    {
                                         app_settings.set_window_resolution(*resolution);
                                     }
                                 }
-                            });
+                            })
+                            .response
+                            .kbgp_navigation()
+                            .kbgp_initial_focus()
+                            .kbgp_focus_label(FocusLabel::Initial);
                     });
                 }
 
@@ -69,20 +75,29 @@ pub fn settings_menu(
                         .show_ui(ui, |ui| {
                             let mut current_selected = app_settings.get_window_mode();
                             for mode in WINDOW_MODES.iter() {
-                                let value =
-                                    ui.selectable_value(&mut current_selected, mode.1, mode.0.to_string());
+                                let value = ui
+                                    .selectable_value(&mut current_selected, mode.1, mode.0.to_string())
+                                    .kbgp_navigation();
 
                                 if value.clicked() {
                                     app_settings.set_window_mode(mode.1);
                                 }
                             }
-                        });
+                        })
+                        .response
+                        .kbgp_navigation()
+                        .kbgp_initial_focus()
+                        .kbgp_focus_label(FocusLabel::Initial);
                 });
 
                 ui.separator();
 
                 // Back
-                if ui.button("Back").kbgp_navigation().kbgp_initial_focus().clicked() {
+                if ui.button("Back").kbgp_navigation().clicked() ||
+                    ui.kbgp_user_action() == Some(KbgpUserAction::Back)
+                {
+                    ui.kbgp_clear_input();
+                    ui.kbgp_set_focus_label(FocusLabel::Initial);
                     switch_app_state!(commands, AppState::Menu(Main))
                 }
             });

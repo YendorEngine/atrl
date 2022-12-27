@@ -1,7 +1,9 @@
 // Features
 #![feature(const_for)]
+#![feature(type_alias_impl_trait)]
 // Clippy
 #![allow(clippy::module_inception)]
+#![allow(clippy::type_complexity)]
 
 pub mod components;
 pub mod resources;

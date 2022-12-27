@@ -42,3 +42,4 @@ pub mod map_definitions {
 
 pub mod generator;
 pub mod resolution;
+pub mod test;

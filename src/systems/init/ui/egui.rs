@@ -1,5 +1,15 @@
 use crate::{prelude::*, systems::*};
 
+#[derive(PartialEq)]
+pub enum FocusLabel {
+    Initial,
+}
+
+#[derive(Clone, PartialEq, Eq)]
+pub enum KbgpUserAction {
+    Back,
+}
+
 pub fn init_egui(mut commands: Commands, mut ctx: ResMut<EguiContext>, assets: AppAssets) {
     // Load in default font
 
@@ -22,19 +32,21 @@ pub fn init_egui(mut commands: Commands, mut ctx: ResMut<EguiContext>, assets: A
 
     // Keyboard Gamepad Navigation
     commands.insert_resource(KbgpSettings {
-        allow_keyboard: true,
-        allow_gamepads: true,
-        allow_mouse_wheel: true,
-        allow_mouse_buttons: true,
-        prevent_loss_of_focus: true,
-        focus_on_mouse_movement: true,
-        disable_default_navigation: true,
-        disable_default_activation: true,
-        allow_mouse_wheel_sideways: true,
+        // allow_keyboard: true,
+        // allow_gamepads: true,
+        // allow_mouse_wheel: true,
+        // allow_mouse_buttons: true,
+        // prevent_loss_of_focus: false,
+        // focus_on_mouse_movement: true,
+        // disable_default_navigation: false,
+        // disable_default_activation: false,
+        // allow_mouse_wheel_sideways: true,
         bindings: {
             bevy_egui_kbgp::KbgpNavBindings::default()
                 .with_wasd_navigation()
                 .with_key(KeyCode::Return, KbgpNavCommand::Click)
+                .with_key(KeyCode::Escape, KbgpNavCommand::user(KbgpUserAction::Back))
         },
+        ..Default::default()
     });
 }
