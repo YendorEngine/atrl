@@ -1,0 +1,18 @@
+[package]
+description = "Bevy cross platform template"
+edition     = "2021"
+name        = "ios-launcher"
+version     = "0.1.0"
+
+[package.metadata.bundle]
+icon       = ["assets/bevy.png"]
+identifier = "com.example.ios-launcher"
+name       = "ios-launcher"
+resources  = ["assets"]
+
+[dependencies]
+atrl = { package = "atrl", path = "../.." }
+
+bevy  = { workspace = true }
+image = { workspace = true }
+winit = { workspace = true }

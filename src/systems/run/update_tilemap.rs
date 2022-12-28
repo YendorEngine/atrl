@@ -19,7 +19,7 @@ pub fn update_tilemap(
     // mut q_tile_visibility: Query<&mut TileVisible>,
     q_terrain_map: Query<Entity, With<TerrainTag>>,
 
-    mut use_color_map: Local<bool>,
+    _use_color_map: Local<bool>,
 ) {
     let grid_size = app_settings.get_grid_size();
     let offset_x = -(grid_size.x as i32 / 2);
