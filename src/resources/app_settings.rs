@@ -26,11 +26,14 @@ struct AppSettingsSerialized {
 
 // Save/Load
 impl AppSettingsResource {
-    pub fn load() -> Self {
+    pub fn load(default_fullscreen: bool) -> Self {
         if let Ok(s) = APP_SETTINGS_PATH.load_toml::<AppSettingsSerialized>() {
             s.into()
         } else {
-            Self::default()
+            Self {
+                window_mode: if default_fullscreen { WindowMode::Fullscreen } else { DEFAULT_WINDOW_MODE },
+                ..Default::default()
+            }
         }
     }
 

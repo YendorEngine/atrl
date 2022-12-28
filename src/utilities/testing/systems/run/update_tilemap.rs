@@ -1,10 +1,4 @@
-use crate::{
-    components::*, prelude::*, types::asset_ids::tilesets::*, utilities::testing::types::TestGenConfig,
-};
-
-pub const STAR_ID: u32 = TILE_TG_WORLD_STARS_A_ID;
-pub const EMPTY_ID: u32 = TILE_TG_WORLD_FLOOR_TILE_A_ID;
-pub const CENTER_ID: u32 = TILE_TG_WORLD_ACID_ID;
+use crate::{components::TerrainTag, prelude::*, systems::*, utilities::testing::types::*};
 
 #[allow(clippy::too_many_arguments)]
 pub fn update_tilemap(

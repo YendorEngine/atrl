@@ -13,9 +13,13 @@ repository  = "https://github.com/YendorEngine/atrl"
 version     = "0.1.0"
 #license-file = "LICENSE"
 categories = ["games"]
-exclude    = ["assets/", "tools/", ".github/"]
+exclude    = ["assets/", "tools/", ".github/", "launchers/ios"]
 keywords   = ["game", "ascii", "roguelike"]
 resolver   = "2"
+
+[[bin]]
+name = "native-launcher"
+path = "launchers/native/src/main.rs"
 
 #################################
 #########       Workspaces
@@ -62,8 +66,9 @@ wgpu_trace   = ["bevy/wgpu_trace"]
 #########       Optimizations
 ################################
 
-[profile.dev]
-opt-level = 1
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package.atrl]
+opt-level = 0
 
 [profile.dev.package."*"]
 opt-level = 3
@@ -75,12 +80,20 @@ lto           = true
 opt-level     = 'z'
 panic         = 'abort'
 
-######################################
-#########       Bevy
-######################################
-[dependencies.bevy]
-default-features = false
-features = [
+################################
+######### Workspace Dependencies
+################################
+[workspace.dependencies]
+# Keep these in sync with bevy
+image = "0.24"
+winit = "0.27"
+
+################################
+#########       Dependencies
+################################
+
+[dependencies]
+bevy = { version = "0.9", default-features = false, features = [
   "bevy_asset",
   "bevy_winit",
   "png",
@@ -102,130 +115,67 @@ features = [
 
   # Serialization
   "serialize",
-]
-version = "0.9"
+] }
+image = { workspace = true }
+winit = { workspace = true }
 
-[dependencies.bevy_tweening]
-features = ["bevy_asset"]
-version  = "0.6"
-
-[dependencies.big-brain]
-version = "0.15"
+bevy_tweening = { version = "0.6", features = ["bevy_asset"] }
+big-brain     = { version = "0.15" }
 
 ######################################
 #########       Input
 ######################################
-[dependencies.leafwing-input-manager]
-version = "0.7.0"
+leafwing-input-manager = { version = "0.7.0" }
 
 ######################################
 #########       Map Rendering
 ######################################
-[dependencies.bevy_ecs_tilemap]
-features = []
-# version  = "0.9"
-git = "https://github.com/StarArawn/bevy_ecs_tilemap"
 
-[dependencies.bevy_tileset]
-features = ["auto-tile"]
-version  = "0.6"
+bevy_ecs_tilemap = { git = "https://github.com/StarArawn/bevy_ecs_tilemap" }
+bevy_tile_atlas  = { default-features = false, version = "0.5" }
+bevy_tileset     = { version = "0.6", features = ["auto-tile"] }
 
-[dependencies.bevy_tile_atlas]
-default-features = false
-version          = "0.5"
-
-###############################
-#########       Serialization   
-###############################
-[dependencies.ron]
-version = "0.8"
-
-[dependencies.serde]
-features = ["derive"]
-version  = "1"
-
-[dependencies.toml]
-version = "0.5"
-
-[dependencies.serde_json]
-version = "1"
+######################################
+#########       Serialization
+######################################
+ron        = "0.8"
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml       = "0.5"
 
 ######################################
 #########       States
 ######################################
-[dependencies.iyes_loopless]
-features = ["states"]
-version  = "0.9"
-
-[dependencies.iyes_progress]
-features = ["assets", "iyes_loopless"]
-version  = "0.7"
+iyes_loopless = { version = "0.9", features = ["states"] }
+iyes_progress = { version = "0.7", features = ["assets"] }
 
 ######################################
 #########       Random
 ######################################
-[dependencies.noise]
-version = "0.8"
-
-[dependencies.rand]
-version = "0.8"
-
-[dependencies.rand_pcg]
-features = ["serde1"]
-version  = "0.3"
-
-[dependencies.rand_seeder]
-version = "0.2"
-
-[dependencies.xxhash-rust]
-features = ["xxh3", "const_xxh3"]
-version  = "0.8"
+noise       = "0.8"
+rand        = "0.8"
+rand_pcg    = { version = "0.3", features = ["serde1"] }
+rand_seeder = "0.2"
+xxhash-rust = { version = "0.8", features = ["xxh3", "const_xxh3"] }
 
 ######################################
 #########       UI
 ######################################
-[dependencies.kayak_ui]
-branch = "bugfixes"
-git    = "https://github.com/StarArawn/kayak_ui"
-
-[dependencies.kayak_font]
-branch = "bugfixes"
-git    = "https://github.com/StarArawn/kayak_ui"
-
-[dependencies.bevy_egui]
-version = "0.18"
-
-[dependencies.bevy-egui-kbgp]
-version = "0.10"
+bevy-egui-kbgp = "0.10"
+bevy_egui      = "0.18"
 
 ######################################
 #########       Utility
 ######################################
 
-[dependencies.arrayvec]
-version = "0.7"
-
-[dependencies.anyhow]
-version = "1"
-
-[dependencies.dyn-clone]
-version = "1"
-
-[dependencies.index_list]
-version = "0.2.7"
-
-[dependencies.thiserror]
-version = "1"
-
-[dependencies.strum]
-version = "0.24"
-
-[dependencies.strum_macros]
-version = "0.24"
-
-[dependencies.yendor]
-git = "https://github.com/YendorEngine/yendor"
-
+anyhow       = "1"
+arrayvec     = "0.7"
+dyn-clone    = "1"
+index_list   = "0.2"
+strum        = "0.24"
+strum_macros = "0.24"
+thiserror    = "1"
+yendor       = { git = "https://github.com/YendorEngine/yendor" }
 ######################################
 ######################################
 #########       Package/Optional Dependencies
@@ -263,3 +213,7 @@ version  = "1"
 ######################################
 [build-dependencies]
 embed-resource = "1.4"
+
+[[test]]
+harness = false
+name    = "universe_generation"

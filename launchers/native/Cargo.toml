@@ -1,0 +1,12 @@
+[package]
+edition   = "2021"
+name      = "atrl_native_launcher"
+version   = "0.1.0"
+workspace = "../.."
+
+[dependencies]
+atrl_game = { package = "atrl", path = "../.." }
+
+bevy  = { workspace = true }
+image = { workspace = true }
+winit = { workspace = true }
