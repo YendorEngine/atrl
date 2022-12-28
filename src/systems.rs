@@ -67,8 +67,6 @@ mod ui {
     pub use settings::*;
     mod universe_gen;
     pub use universe_gen::*;
-    mod test_menu;
-    pub use test_menu::*;
 }
 pub use ui::*;
 

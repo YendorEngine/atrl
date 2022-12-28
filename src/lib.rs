@@ -8,7 +8,6 @@
 pub mod components;
 pub mod resources;
 pub mod systems;
-pub mod test;
 pub mod types;
 pub mod ui;
 
@@ -41,6 +40,7 @@ pub fn app(default_fullscreen: bool) -> App {
     app.add_plugin(SystemsPlugin);
 
     app.insert_resource(app_settings);
+
     app
 }
 
@@ -75,7 +75,7 @@ fn add_default_plugins(app: &mut App, app_settings: &AppSettingsResource) {
                                                                 // background
 }
 
-fn add_external_plugins(app: &mut App) {
+pub(crate) fn add_external_plugins(app: &mut App) {
     app.insert_resource(TilemapRenderSettings {
         render_chunk_size: RENDER_CHUNK_SIZE,
     })

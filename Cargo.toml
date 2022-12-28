@@ -214,3 +214,7 @@ version  = "1"
 ######################################
 [build-dependencies]
 embed-resource = "1.4"
+
+[[test]]
+harness = false
+name    = "universe_generation"

@@ -22,15 +22,16 @@ pub enum MenuState {
 }
 pub use MenuState::*;
 
+#[derive(Clone, Copy)]
 pub struct SystemsPlugin;
 impl Plugin for SystemsPlugin {
     fn build(&self, app: &mut App) {
-        self.init_states(app);
-        self.continuous_state(app);
-        self.loading_state(app);
-        self.menu_state(app);
-        self.game_state(app);
-        self.quit_state(app);
+        self.init_states(app)
+            .continuous_state(app)
+            .loading_state(app)
+            .menu_state(app)
+            .game_state(app)
+            .quit_state(app);
     }
 }
 
@@ -38,14 +39,15 @@ impl Plugin for SystemsPlugin {
 // fn phantom_system() {}
 
 impl SystemsPlugin {
-    fn init_states(&self, app: &mut App) {
+    fn init_states(self, app: &mut App) -> Self {
         app.add_loopless_state(AppState::Initializing).add_enter_system(
             AppState::Initializing,
             switch_app_state!(AppState::SplashScreen),
         );
+        self
     }
 
-    fn continuous_state(&self, app: &mut App) {
+    fn continuous_state(self, app: &mut App) -> Self {
         // Update App Settings
         app.add_system_set_to_stage(
             CoreStage::Last,
@@ -55,9 +57,10 @@ impl SystemsPlugin {
                 .with_system(update_window)
                 .into(),
         );
+        self
     }
 
-    fn loading_state(&self, app: &mut App) {
+    fn loading_state(self, app: &mut App) -> Self {
         // Camera / SplashScreen? / Assets
         app.add_enter_system_set(
             AppState::SplashScreen,
@@ -82,9 +85,10 @@ impl SystemsPlugin {
             AppState::SplashScreen,
             ConditionSet::new().with_system(init_egui).with_system(cleanup_on_exit_splash).into(),
         );
+        self
     }
 
-    fn menu_state(&self, app: &mut App) {
+    fn menu_state(self, app: &mut App) -> Self {
         // Main Menu
         app.add_enter_system_set(
             AppState::Menu(MenuState::Main),
@@ -110,9 +114,10 @@ impl SystemsPlugin {
                 .with_system(universe_gen_menu)
                 .into(),
         );
+        self
     }
 
-    fn game_state(&self, app: &mut App) {
+    fn game_state(self, app: &mut App) -> Self {
         app.add_enter_system_set(
             AppState::InGame,
             ConditionSet::new()
@@ -128,19 +133,17 @@ impl SystemsPlugin {
             ConditionSet::new().run_in_state(AppState::InGame).with_system(update_tilemap).into(),
         );
         app.add_system_set_to_stage(
-            CoreStage::Update,
-            ConditionSet::new().run_in_state(AppState::InGame).with_system(test_menu).into(),
-        );
-        app.add_system_set_to_stage(
             CoreStage::Last,
             ConditionSet::new().run_in_state(AppState::InGame).with_system(update_camera_dimensions).into(),
         );
+        self
     }
 
-    fn quit_state(&self, app: &mut App) {
+    fn quit_state(self, app: &mut App) -> Self {
         app.add_system_set_to_stage(
             CoreStage::Last,
             ConditionSet::new().run_on_event::<AppExit>().with_system(save_app_settings).into(),
         );
+        self
     }
 }

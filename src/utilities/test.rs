@@ -1,4 +1,4 @@
-use crate::{prelude::*, systems::init::init_ui_camera};
+use crate::{add_external_plugins, prelude::*, resources::app_settings::AppSettingsResource, systems::*};
 
 const MAIN_THREAD: &str = "main";
 const TEST_FPS: f32 = 144.0;
@@ -22,36 +22,32 @@ impl PluginGroup for TestPlugins {
             .add(bevy::render::texture::ImagePlugin::default())
     }
 }
+pub trait Test<A> {
+    /// number of frames to run the test for (if not on main thread)
+    fn frames(&self) -> u64 { 1 }
 
-pub struct Test<A> {
-    pub frames: u64,              // number of frames to run the test for (if not on main thread)
-    pub check: fn(&App, A),       // check the results of the test
-    pub setup: fn(&mut App) -> A, // setup the test
-    pub setup_graphics: fn(&mut App), // setup the graphics for the test
-}
+    #[allow(unused_variables)]
+    /// check the results of the test
+    fn check(&self, app: &App, val: A) {}
 
-impl Default for Test<()> {
-    fn default() -> Self {
-        Self {
-            frames: 1,
-            check: |_, _| {},
-            setup: |_| {},
-            setup_graphics: Self::default_setup_graphics,
-        }
-    }
-}
+    /// setup the test
+    fn setup(&self, app: &mut App) -> A;
 
-impl<A> Test<A> {
-    pub fn on_main_thread() -> bool { matches!(thread::current().name(), Some(MAIN_THREAD)) }
-
-    pub fn default_setup_graphics(app: &mut App) {
+    /// setup the graphics for the test
+    fn setup_graphics(&self, app: &mut App) {
+        // Default graphical setup
+        app.insert_resource(AppSettingsResource::load(false));
         app.add_startup_system(init_ui_camera);
         app.world.insert_resource(ClearColor(Color::rgb(0.1, 0.1, 0.1)));
     }
 
-    pub fn app() -> (App, bool) {
+    /// is the test running on the main thread
+    fn on_main_thread(&self) -> bool { matches!(thread::current().name(), Some(MAIN_THREAD)) }
+
+    /// get the app and whether it is running on the main thread
+    fn app(&self) -> (App, bool) {
         let mut app = App::new();
-        let on_main_thread = if Self::on_main_thread() {
+        let on_main_thread = if self.on_main_thread() {
             println!("Test running on main thread, will display window");
             true
         } else {
@@ -61,6 +57,7 @@ impl<A> Test<A> {
 
         if on_main_thread {
             app.add_plugins(DefaultPlugins);
+            add_external_plugins(&mut app);
         } else {
             let time = Time::default();
             app.insert_resource(time)
@@ -77,18 +74,20 @@ impl<A> Test<A> {
         (app, on_main_thread)
     }
 
-    pub fn run(self) {
-        let (mut app, on_main_thread) = Self::app();
+    /// run the test
+    fn run(&self)
+    where Self: Sized {
+        let (mut app, on_main_thread) = self.app();
         if on_main_thread {
-            (self.setup_graphics)(&mut app);
+            self.setup_graphics(&mut app);
         }
 
-        let res = (self.setup)(&mut app);
+        let res = self.setup(&mut app);
 
         if on_main_thread {
             app.run();
         } else {
-            for _ in 0..self.frames {
+            for _ in 0..self.frames() {
                 // Update time manually for consistent time.delta()
                 let mut time = app.world.resource_mut::<Time>();
                 if let Some(last_update) = time.last_update() {
@@ -99,7 +98,7 @@ impl<A> Test<A> {
                 // Run systems
                 app.update();
             }
-            (self.check)(&app, res)
+            self.check(&app, res)
         }
     }
 }
