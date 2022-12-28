@@ -1,6 +1,9 @@
-use crate::{prelude::*, systems::functions::generate_seed, types::generator::*};
+use crate::{
+    prelude::*,
+    utilities::testing::{systems::functions::*, types::*},
+};
 
-pub fn test_menu(
+pub fn universe_generation_menu_test(
     keys: Res<Input<KeyCode>>,
     mut config: ResMut<TestGenConfig>,
     mut egui_context: ResMut<EguiContext>,

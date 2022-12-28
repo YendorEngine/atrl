@@ -128,7 +128,7 @@ pub fn wait_for_assets_to_load(mut commands: Commands, tilesets: Tilesets) {
         return;
     }
 
-    switch_app_state!(commands, SPLASH_SCREEN_TO_THIS_STATE)
+    switch_app_state!(commands, AppState::SPLASH_SCREEN_TO_THIS_STATE())
 }
 
 fn check_tileset(id: u8, name: &str, tilesets: &Tilesets) -> bool {

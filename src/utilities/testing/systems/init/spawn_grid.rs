@@ -25,20 +25,20 @@ pub fn spawn_grid(mut commands: Commands, tilesets: Tilesets, app_settings: AppS
         None => error!("Couldn't find tileset."),
     }
 
-    match tilesets.get_by_id(&TILESET_WHITE_PIXEL_ID) {
-        Some(tileset) => {
-            spawn_tilemap(
-                &mut commands,
-                grid_size,
-                tileset,
-                TILE_WHITE_PIXEL_ID,
-                2.0,
-                TerrainBundle {
-                    tag: TerrainTag,
-                    ..Default::default()
-                },
-            );
-        },
-        None => error!("Couldn't find tileset."),
-    }
+    // match tilesets.get_by_id(&TILESET_WHITE_PIXEL_ID) {
+    //     Some(tileset) => {
+    //         spawn_tilemap(
+    //             &mut commands,
+    //             grid_size,
+    //             tileset,
+    //             TILE_WHITE_PIXEL_ID,
+    //             2.0,
+    //             TerrainBundle {
+    //                 tag: TerrainTag,
+    //                 ..Default::default()
+    //             },
+    //         );
+    //     },
+    //     None => error!("Couldn't find tileset."),
+    // }
 }

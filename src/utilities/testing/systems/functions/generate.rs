@@ -1,9 +1,6 @@
 use yendor::prelude::Line;
 
-use crate::{
-    prelude::*,
-    types::generator::{NoiseConfig, SpiralConfig},
-};
+use crate::{prelude::*, utilities::testing::types::*};
 
 pub fn generate_noise(config: &NoiseConfig) -> Vec<IVec2> {
     let mut rng = Pcg64::from_entropy();

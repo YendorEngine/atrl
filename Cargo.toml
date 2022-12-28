@@ -176,7 +176,6 @@ strum        = "0.24"
 strum_macros = "0.24"
 thiserror    = "1"
 yendor       = { git = "https://github.com/YendorEngine/yendor" }
-
 ######################################
 ######################################
 #########       Package/Optional Dependencies

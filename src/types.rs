@@ -40,5 +40,4 @@ pub mod map_definitions {
     pub use system::*;
 }
 
-pub mod generator;
 pub mod resolution;

@@ -1,7 +1,4 @@
-use crate::{
-    prelude::*,
-    types::generator::{NoiseConfig, TestGenConfig},
-};
+use crate::{prelude::*, utilities::testing::types::*};
 
 pub fn init_generator_config(mut commands: Commands, app_settings: AppSettings) {
     let grid_size = app_settings.get_grid_size();

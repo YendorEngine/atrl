@@ -18,13 +18,14 @@ pub use bevy::{
     app::AppExit,
     ecs::{
         bundle,
+        schedule::StateData,
         system::{SystemParam, SystemState},
     },
     math::Vec3Swizzles,
     prelude::*,
     render::{
         camera::{ScalingMode, WindowOrigin},
-        once_cell::sync::Lazy,
+        once_cell::sync::{Lazy, OnceCell},
         render_resource::{Extent3d, Texture, TextureDimension, TextureFormat},
     },
     utils::{HashMap, HashSet},

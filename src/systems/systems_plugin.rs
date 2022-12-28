@@ -4,7 +4,7 @@ use crate::{
 };
 
 // TODO: Remove this when we want to finalize going to MainMenu.
-pub const SPLASH_SCREEN_TO_THIS_STATE: AppState = AppState::Menu(Main);
+static SPLASH_SCREEN_TO_THIS_STATE: OnceCell<AppState> = OnceCell::new();
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum AppState {
@@ -12,6 +12,17 @@ pub enum AppState {
     SplashScreen,
     Menu(MenuState),
     InGame,
+    Testing(testing::TestState),
+}
+
+impl AppState {
+    #[allow(non_snake_case)]
+    #[must_use]
+    pub fn SPLASH_SCREEN_TO_THIS_STATE() -> AppState {
+        *SPLASH_SCREEN_TO_THIS_STATE.get_or_init(|| AppState::Menu(Main))
+    }
+
+    pub fn set_splash_screen_to_state(state: AppState) { SPLASH_SCREEN_TO_THIS_STATE.set(state).unwrap(); }
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
@@ -123,7 +134,6 @@ impl SystemsPlugin {
             ConditionSet::new()
                 .with_system(init_input)
                 .with_system(spawn_grid)
-                .with_system(init_generator_config)
                 .with_system(cleanup_on_exit_main_menu)
                 .into(),
         );

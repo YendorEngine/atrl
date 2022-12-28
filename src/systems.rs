@@ -17,8 +17,6 @@ pub mod init {
     pub use cleanup::*;
     mod input;
     pub use input::*;
-    mod generator_config;
-    pub use generator_config::*;
     mod spawn_grid;
     pub use spawn_grid::*;
 }
@@ -27,8 +25,6 @@ pub(super) use init::*;
 pub mod functions {
     mod create_tilemap;
     pub use create_tilemap::*;
-    mod generate;
-    pub use generate::*;
     mod styles;
     pub use styles::*;
 }
@@ -71,4 +67,4 @@ mod ui {
 pub use ui::*;
 
 mod systems_plugin;
-pub(super) use systems_plugin::*;
+pub use systems_plugin::*;
