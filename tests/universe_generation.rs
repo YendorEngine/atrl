@@ -14,8 +14,6 @@ fn main() { UniverseGenerationTest::run(); }
 struct UniverseGenerationTest;
 
 impl Test<()> for UniverseGenerationTest {
-    fn frames() -> u64 { 1 }
-
     fn setup(app: &mut App) -> () {
         app.add_enter_system_set(
             AppState::Testing(TestState::Testing),
