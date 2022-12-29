@@ -25,7 +25,7 @@ pub fn settings_menu(
                                         .selectable_value(
                                             &mut current_resolution,
                                             *resolution,
-                                            resolution.get_name(),
+                                            resolution.to_string(),
                                         )
                                         .kbgp_navigation()
                                         .clicked()

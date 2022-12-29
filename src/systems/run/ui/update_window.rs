@@ -6,7 +6,7 @@ pub fn update_window(app_settings: AppSettings, mut windows: ResMut<Windows>) {
 
         if let Some(window) = windows.get_primary_mut() {
             let window_mode = app_settings.get_window_mode();
-            let window_resolution = app_settings.get_window_resolution().get_dimensions();
+            let window_resolution: Vec2 = app_settings.get_window_resolution().into();
 
             let current_window_mode = window.mode();
             let current_window_size = Vec2 {

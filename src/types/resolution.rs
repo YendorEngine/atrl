@@ -16,31 +16,6 @@ pub enum Resolution {
 }
 
 impl Resolution {
-    pub fn get_name(&self) -> String {
-        match self {
-            Resolution::R720 => "720p".to_string(),
-            Resolution::R1080 => "1080p".to_string(),
-            Resolution::R1440 => "1440p".to_string(),
-            Resolution::R2160 => "2160p".to_string(),
-            Resolution::R2160p => "2160p+".to_string(),
-            Resolution::Custom { width, height } => format!("{width}x{height}"),
-        }
-    }
-
-    pub fn get_dimensions(&self) -> Vec2 {
-        match self {
-            Resolution::R720 => Vec2 { x: 1280., y: 720. },
-            Resolution::R1080 => Vec2 { x: 1920., y: 1080. },
-            Resolution::R1440 => Vec2 { x: 2560., y: 1440. },
-            Resolution::R2160 => Vec2 { x: 3840., y: 2160. },
-            Resolution::R2160p => Vec2 { x: 4096., y: 2160. },
-            Resolution::Custom { width, height } => Vec2 {
-                x: *width,
-                y: *height,
-            },
-        }
-    }
-
     pub fn iter() -> impl Iterator<Item = &'static Resolution> {
         [
             Resolution::R720,
@@ -50,6 +25,17 @@ impl Resolution {
             Resolution::R2160p,
         ]
         .iter()
+    }
+}
+
+/////////////////////
+/// Impls
+/////////////////////
+
+impl Display for Resolution {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let resolution_name: String = (*self).into();
+        write!(f, "{resolution_name}")
     }
 }
 
@@ -69,9 +55,28 @@ impl From<Vec2> for Resolution {
     }
 }
 
-impl Display for Resolution {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let resolution_name = self.get_name();
-        write!(f, "{resolution_name}")
+impl From<Resolution> for Vec2 {
+    fn from(value: Resolution) -> Self {
+        match value {
+            Resolution::R720 => Vec2::new(1280.0, 720.0),
+            Resolution::R1080 => Vec2::new(1920.0, 1080.0),
+            Resolution::R1440 => Vec2::new(2560.0, 1440.0),
+            Resolution::R2160 => Vec2::new(3840.0, 2160.0),
+            Resolution::R2160p => Vec2::new(4096.0, 2160.0),
+            Resolution::Custom { width, height } => Vec2::new(width, height),
+        }
+    }
+}
+
+impl From<Resolution> for String {
+    fn from(value: Resolution) -> Self {
+        match value {
+            Resolution::R720 => "720p".to_string(),
+            Resolution::R1080 => "1080p".to_string(),
+            Resolution::R1440 => "1440p".to_string(),
+            Resolution::R2160 => "2160p".to_string(),
+            Resolution::R2160p => "2160p+".to_string(),
+            Resolution::Custom { width, height } => format!("{width}x{height}"),
+        }
     }
 }

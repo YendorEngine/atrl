@@ -13,7 +13,7 @@ repository  = "https://github.com/YendorEngine/atrl"
 version     = "0.1.0"
 #license-file = "LICENSE"
 categories = ["games"]
-exclude    = ["assets/", "tools/", ".github/", "launchers/ios"]
+exclude    = ["assets/", "tools/", ".github/"]
 keywords   = ["game", "ascii", "roguelike"]
 resolver   = "2"
 
@@ -47,7 +47,7 @@ debug = [
 debug-trace = ["debug", "trace"]
 
 # default configuration while developing
-dev = ["bevy/filesystem_watcher", "bevy/dynamic"]
+dev = ["hot", "bevy/dynamic"]
 
 # Parallelism
 parallel = ["rayon"]
@@ -55,6 +55,7 @@ parallel = ["rayon"]
 # Debugging
 debug-graph        = ["bevy_mod_debugdump"]
 debug_asset_server = ["bevy/debug_asset_server"]
+hot                = ["bevy/filesystem_watcher"]
 
 # Tracing
 trace        = ["bevy/trace"]

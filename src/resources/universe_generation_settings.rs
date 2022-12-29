@@ -1,4 +1,7 @@
-use crate::prelude::*;
+use crate::{
+    prelude::*,
+    utilities::testing::{systems::functions::generate_noise, types::NoiseConfig},
+};
 
 #[derive(Debug, Clone, PartialEq, Resource)]
 pub struct UniverseGenerationSettings {
@@ -55,5 +58,18 @@ impl UniverseGenerationSettings {
             height = self.planet_size.0.y,
             size = self.planet_size.1
         )
+    }
+
+    pub fn generate_noise(&mut self, grid_size: UVec2) {
+        let offset_x = -(grid_size.x as i32 / 2);
+        let offset_y = -(grid_size.y as i32 / 2);
+
+        self.stars = generate_noise(&NoiseConfig {
+            left: offset_x,
+            bottom: offset_y,
+            top: grid_size.y as i32 + offset_y,
+            right: grid_size.x as i32 + offset_x,
+            ..default()
+        });
     }
 }

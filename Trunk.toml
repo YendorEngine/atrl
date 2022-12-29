@@ -6,13 +6,7 @@ target = "launchers/wasm/index.html"
 
 [watch]
 # Watch top level dir (all crates)
-watch = [
-    "src",
-    "launchers/native/src",
-    "launchers/ios/src",
-    "launchers/wasm/src",
-    "launchers/wasm/index.html",
-]
+watch = ["src", "launchers/native/src", "launchers/wasm/src", "launchers/wasm/index.html"]
 
 [[hooks]]
 command           = "cp"

@@ -1,13 +1,24 @@
-use crate::{components::CleanupOnExitMainMenu, prelude::*};
+use crate::{
+    components::{CleanupOnExitMainMenu, MainBackgroundTag},
+    prelude::*,
+};
 
-pub fn init_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn init_main_menu(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    q_background: Query<Entity, With<MainBackgroundTag>>,
+) {
+    if !q_background.is_empty() {
+        println!("Main menu already initialized");
+        return;
+    }
+
     commands
         .spawn((
             NodeBundle {
                 style: Style {
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::Center,
-                    size: Size::new(Val::Percent(100.0), Val::Px(100.0)),
                     ..default()
                 },
                 ..default()
@@ -15,13 +26,12 @@ pub fn init_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
             CleanupOnExitMainMenu,
         ))
         .with_children(|parent| {
-            parent.spawn(ImageBundle {
-                style: Style {
-                    size: Size::new(Val::Auto, Val::Auto),
+            parent.spawn((
+                ImageBundle {
+                    image: UiImage(asset_server.load("images/splash.png")),
                     ..default()
                 },
-                image: UiImage(asset_server.load("images/splash.png")),
-                ..default()
-            });
+                MainBackgroundTag,
+            ));
         });
 }

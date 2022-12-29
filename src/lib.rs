@@ -50,27 +50,39 @@ fn add_default_plugins(app: &mut App, app_settings: &AppSettingsResource) {
     let Vec2 {
         x: window_width,
         y: window_height,
-    } = app_settings.window_resolution.get_dimensions();
+    } = app_settings.window_resolution.into();
 
-    app.add_plugins(
-        DefaultPlugins
-            .set(WindowPlugin {
-                window: WindowDescriptor {
-                    title: APP_NAME.to_string(),
-                    width: window_width,
-                    height: window_height,
-                    resize_constraints: WindowResizeConstraints {
-                        min_width: MIN_SCREEN_SIZE.x,
-                        min_height: MIN_SCREEN_SIZE.y,
-                        ..Default::default()
-                    },
-                    mode: window_mode,
+    app.add_plugins({
+        let mut builder = DefaultPlugins.build();
+
+        builder = builder.set(WindowPlugin {
+            window: WindowDescriptor {
+                title: APP_NAME.to_string(),
+                width: window_width,
+                height: window_height,
+                fit_canvas_to_parent: true,
+                resize_constraints: WindowResizeConstraints {
+                    min_width: MIN_SCREEN_SIZE.x,
+                    min_height: MIN_SCREEN_SIZE.y,
                     ..Default::default()
                 },
+                mode: window_mode,
                 ..Default::default()
-            })
-            .set(ImagePlugin::default_nearest()),
-    )
+            },
+            ..Default::default()
+        });
+
+        #[cfg(feature = "hot")]
+        {
+            builder = builder.set(AssetPlugin {
+                // Tell the asset server to watch for asset changes on disk:
+                watch_for_changes: true,
+                ..default()
+            });
+        }
+
+        builder.set(ImagePlugin::default_nearest())
+    })
     .insert_resource(ClearColor(Color::rgb(0.21, 0.21, 0.21))); // matching tiny_galaxy
                                                                 // background
 }

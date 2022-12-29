@@ -29,7 +29,7 @@ pub use bevy::{
         render_resource::{Extent3d, Texture, TextureDimension, TextureFormat},
     },
     utils::{HashMap, HashSet},
-    window::WindowResizeConstraints,
+    window::{WindowResizeConstraints, WindowResized},
 };
 pub use bevy_ecs_tilemap::prelude::*;
 pub use bevy_egui::{

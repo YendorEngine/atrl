@@ -1,10 +1,8 @@
 use crate::{
-    prelude::*,
-    resources::universe_generation_settings::UniverseGenerationSettings,
-    systems::*,
-    ui::*,
-    utilities::testing::{systems::functions::generate_noise, types::NoiseConfig},
+    prelude::*, resources::universe_generation_settings::UniverseGenerationSettings, systems::*, ui::*,
 };
+
+const DEFAULT_SPACING: egui::Vec2 = vec2(20.0, 10.0);
 
 #[derive(Deref, DerefMut)]
 pub struct LocalSeed(pub ValText<u64>);
@@ -64,110 +62,94 @@ pub fn universe_gen_menu(
                 },
             );
 
-            // UNIVERSE SIZE
-            ui.allocate_ui_with_layout(
-                vec2(ui.available_width(), 50.),
-                egui::Layout::left_to_right(egui::Align::Min).with_main_wrap(true),
-                |ui| {
-                    ui.label("Planet Size:");
+            egui::Grid::new("universe").spacing(DEFAULT_SPACING).show(ui, |ui| {
+                // Universe Size
+                ui.label("Universe Size:");
+                ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
+                    for universe_size in UNIVERSE_SIZES.iter() {
+                        ui.selectable_value(
+                            &mut universe_settings.universe_size,
+                            *universe_size,
+                            format!(
+                                "{}: {}x{}",
+                                universe_size.1, universe_size.0.x, universe_size.0.y
+                            ),
+                        )
+                        .kbgp_navigation();
+                    }
+                });
 
-                    egui::Grid::new("universe").num_columns(3).show(ui, |ui| {
-                        for (i, universe_size) in UNIVERSE_SIZES.iter().enumerate() {
-                            ui.selectable_value(
-                                &mut universe_settings.universe_size,
-                                *universe_size,
-                                format!(
-                                    "{}: {}x{}",
-                                    universe_size.1, universe_size.0.x, universe_size.0.y
-                                ),
-                            )
+                ui.end_row();
+
+                // SECTOR SIZE
+                ui.strong("Sector Size: ");
+                ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
+                    ui.add_enabled(
+                        false,
+                        egui::DragValue::new(&mut universe_settings.sector_size.x)
+                            .speed(1.0)
+                            .clamp_range(1..=100)
+                            .prefix("Width: "),
+                    );
+
+                    ui.add_enabled(
+                        false,
+                        egui::DragValue::new(&mut universe_settings.sector_size.y)
+                            .speed(1.0)
+                            .clamp_range(1..=100)
+                            .prefix("Height: "),
+                    );
+                });
+                ui.end_row();
+
+                ui.strong("System Size: ");
+                ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
+                    ui.add_enabled(
+                        false,
+                        egui::DragValue::new(&mut universe_settings.system_size.x)
+                            .speed(1.0)
+                            .clamp_range(1..=100)
+                            .prefix("Width: "),
+                    );
+                    ui.add_enabled(
+                        false,
+                        egui::DragValue::new(&mut universe_settings.system_size.y)
+                            .speed(1.0)
+                            .clamp_range(1..=100)
+                            .prefix("Height: "),
+                    );
+                });
+                ui.end_row();
+
+                // PLANET SIZE
+                ui.label("Planet Size:");
+                ui.with_layout(
+                    egui::Layout::top_down_justified(egui::Align::Center),
+                    |ui| {
+                        egui::ComboBox::from_id_source("planet_size")
+                            .width(300.0)
+                            .selected_text(format!(
+                                "{}: {}x{}",
+                                universe_settings.planet_size.1,
+                                universe_settings.planet_size.0.x,
+                                universe_settings.planet_size.0.y
+                            ))
+                            .show_ui(ui, |ui| {
+                                for planet_size in PLANET_SIZES.iter() {
+                                    ui.selectable_value(
+                                        &mut universe_settings.planet_size,
+                                        *planet_size,
+                                        format!("{}: {}x{}", planet_size.1, planet_size.0.x, planet_size.0.y),
+                                    )
+                                    .kbgp_navigation();
+                                }
+                            })
+                            .response
                             .kbgp_navigation();
-
-                            if i != 0 && i % 3 == 0 {
-                                ui.end_row();
-                            }
-                        }
-                    });
-                },
-            );
-
-            // SECTOR SIZE
-            ui.allocate_ui_with_layout(
-                vec2(ui.available_width(), 50.),
-                egui::Layout::top_down(egui::Align::Min),
-                |ui| {
-                    ui.horizontal_centered(|ui| {
-                        ui.strong("Sector Size: ");
-
-                        ui.add_enabled(
-                            false,
-                            egui::DragValue::new(&mut universe_settings.sector_size.x)
-                                .speed(1.0)
-                                .clamp_range(1..=100)
-                                .prefix("Width: "),
-                        );
-
-                        ui.add_enabled(
-                            false,
-                            egui::DragValue::new(&mut universe_settings.sector_size.y)
-                                .speed(1.0)
-                                .clamp_range(1..=100)
-                                .prefix("Height: "),
-                        );
-                    });
-                },
-            );
-
-            // SYSTEM SIZE
-            ui.allocate_ui_with_layout(
-                vec2(ui.available_width(), 50.),
-                egui::Layout::top_down(egui::Align::Min),
-                |ui| {
-                    ui.horizontal_centered(|ui| {
-                        ui.strong("System Size: ");
-
-                        ui.add_enabled(
-                            false,
-                            egui::DragValue::new(&mut universe_settings.system_size.x)
-                                .speed(1.0)
-                                .clamp_range(1..=100)
-                                .prefix("Width: "),
-                        );
-
-                        ui.add_enabled(
-                            false,
-                            egui::DragValue::new(&mut universe_settings.system_size.y)
-                                .speed(1.0)
-                                .clamp_range(1..=100)
-                                .prefix("Height: "),
-                        );
-                    });
-                },
-            );
-
-            // PLANET SIZE
-            ui.allocate_ui_with_layout(
-                vec2(ui.available_width(), 50.),
-                egui::Layout::left_to_right(egui::Align::Min).with_main_wrap(true),
-                |ui| {
-                    ui.label("Planet Size:");
-
-                    egui::Grid::new("planet").num_columns(3).show(ui, |ui| {
-                        for (i, planet_size) in PLANET_SIZES.iter().enumerate() {
-                            ui.selectable_value(
-                                &mut universe_settings.planet_size,
-                                *planet_size,
-                                format!("{}: {}x{}", planet_size.1, planet_size.0.x, planet_size.0.y),
-                            )
-                            .kbgp_navigation();
-
-                            if i != 0 && i % 3 == 0 {
-                                ui.end_row();
-                            }
-                        }
-                    });
-                },
-            );
+                    },
+                );
+                ui.end_row();
+            });
 
             ui.separator();
 
@@ -177,16 +159,7 @@ pub fn universe_gen_menu(
                     ctx.kbgp_clear_input();
 
                     let grid_size = app_settings.get_grid_size();
-                    let offset_x = -(grid_size.x as i32 / 2);
-                    let offset_y = -(grid_size.y as i32 / 2);
-
-                    universe_settings.stars = generate_noise(&NoiseConfig {
-                        left: offset_x,
-                        bottom: offset_y,
-                        top: grid_size.y as i32 + offset_y,
-                        right: grid_size.x as i32 + offset_x,
-                        ..default()
-                    });
+                    universe_settings.generate_noise(grid_size);
 
                     switch_app_state!(commands, AppState::InGame);
                 }

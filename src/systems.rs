@@ -37,14 +37,18 @@ pub mod quit {
 pub(super) use quit::*;
 
 pub mod run {
+    mod ui {
+        mod update_window;
+        pub use update_window::*;
+    }
+    pub use ui::*;
+
     mod update_app_settings;
     pub use update_app_settings::*;
     mod update_camera_dimensions;
     pub use update_camera_dimensions::*;
     mod update_tilemap;
     pub use update_tilemap::*;
-    mod update_window;
-    pub use update_window::*;
 }
 pub(super) use run::*;
 
