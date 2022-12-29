@@ -17,8 +17,6 @@ pub mod init {
     pub use cleanup::*;
     mod input;
     pub use input::*;
-    mod generator_config;
-    pub use generator_config::*;
     mod spawn_grids;
     pub use spawn_grids::*;
 }
@@ -27,8 +25,6 @@ pub(super) use init::*;
 pub mod functions {
     mod tilemap_builder;
     pub use tilemap_builder::*;
-    mod generate;
-    pub use generate::*;
     mod styles;
     pub use styles::*;
 }

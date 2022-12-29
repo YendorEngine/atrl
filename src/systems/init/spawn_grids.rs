@@ -1,12 +1,13 @@
 use crate::{
     components::{bundles::*, *},
     prelude::*,
-    systems::{*, functions::*},
-    types::asset_ids::tilesets::*,
+    systems::functions::*,
+    types::{asset_ids::tilesets::*, map_definitions::MapLayer},
 };
 
 pub fn spawn_grids(mut commands: Commands, tilesets: Tilesets, app_settings: AppSettings) {
     let grid_size = app_settings.get_grid_size();
+    let render_chunk_size = app_settings.get_render_chunk_size();
 
     let h_number_of_tilemaps = (grid_size.x as f32 / RENDER_CHUNK_SIZE.x as f32).ceil() as u32;
     let v_number_of_tilemaps = (grid_size.y as f32 / RENDER_CHUNK_SIZE.y as f32).ceil() as u32;
@@ -43,37 +44,37 @@ pub fn spawn_grids(mut commands: Commands, tilesets: Tilesets, app_settings: App
                 .build(&mut commands, TerrainMapBundle::default());
             commands.entity(tilemap).insert(ChunkPosition(position));
 
-            // Spawn Feature Tilemaps
-            let tilemap = builder
-                .set_tile_size(feature_tileset.tile_size())
-                .set_tileset_texture(feature_texture)
-                .set_z_level(MapLayer::Features)
-                .build(&mut commands, FeatureMapBundle::default());
-            commands.entity(tilemap).insert(ChunkPosition(position));
+            // // Spawn Feature Tilemaps
+            // let tilemap = builder
+            //     .set_tile_size(feature_tileset.tile_size())
+            //     .set_tileset_texture(feature_texture)
+            //     .set_z_level(MapLayer::Features)
+            //     .build(&mut commands, FeatureMapBundle::default());
+            // commands.entity(tilemap).insert(ChunkPosition(position));
 
-            // Spawn Item Tilemaps
-            let tilemap = builder
-                .set_tile_size(item_tileset.tile_size())
-                .set_tileset_texture(item_texture)
-                .set_z_level(MapLayer::Items)
-                .build(&mut commands, ItemMapBundle::default());
-            commands.entity(tilemap).insert(ChunkPosition(position));
+            // // Spawn Item Tilemaps
+            // let tilemap = builder
+            //     .set_tile_size(item_tileset.tile_size())
+            //     .set_tileset_texture(item_texture)
+            //     .set_z_level(MapLayer::Items)
+            //     .build(&mut commands, ItemMapBundle::default());
+            // commands.entity(tilemap).insert(ChunkPosition(position));
 
-            // Spawn Actor Tilemaps
-            let tilemap = builder
-                .set_tile_size(actor_tileset.tile_size())
-                .set_tileset_texture(actor_texture)
-                .set_z_level(MapLayer::Actors)
-                .build(&mut commands, ActorMapBundle::default());
-            commands.entity(tilemap).insert(ChunkPosition(position));
+            // // Spawn Actor Tilemaps
+            // let tilemap = builder
+            //     .set_tile_size(actor_tileset.tile_size())
+            //     .set_tileset_texture(actor_texture)
+            //     .set_z_level(MapLayer::Actors)
+            //     .build(&mut commands, ActorMapBundle::default());
+            // commands.entity(tilemap).insert(ChunkPosition(position));
 
-            // Spawn UI Tilemaps
-            let tilemap = builder
-                .set_tile_size(ui_tileset.tile_size())
-                .set_tileset_texture(ui_texture)
-                .set_z_level(MapLayer::Ui)
-                .build(&mut commands, UiMapBundle::default());
-            commands.entity(tilemap).insert(ChunkPosition(position));
+            // // Spawn UI Tilemaps
+            // let tilemap = builder
+            //     .set_tile_size(ui_tileset.tile_size())
+            //     .set_tileset_texture(ui_texture)
+            //     .set_z_level(MapLayer::Ui)
+            //     .build(&mut commands, UiMapBundle::default());
+            // commands.entity(tilemap).insert(ChunkPosition(position));
         }
     }
 }

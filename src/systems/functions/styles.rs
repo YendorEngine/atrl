@@ -9,7 +9,7 @@ use bevy_egui_kbgp::egui::Stroke;
 
 use crate::prelude::*;
 
-const BORDER: f32 = 32.;
+const _BORDER: f32 = 32.;
 const PADDING: f32 = 8.;
 
 pub fn get_style() -> egui::Style {

@@ -1,6 +1,4 @@
-use crate::{
-    prelude::*,
-};
+use crate::prelude::*;
 
 pub struct TilemapBuilder {
     map_size: UVec2,
@@ -128,14 +126,14 @@ impl TilemapBuilder {
     }
 
     fn generate_tile_ids(map_size: UVec2) -> Vec<Vec<u32>> {
-        let tile_ids = Vec::with_capacity(map_size.x as usize);
-        for x in 0..map_size.x {
-            let column = Vec::with_capacity(map_size.y as usize);
-            for y in 0..map_size.y {
-                column.push(0);
-            }
+        let mut tile_ids = Vec::with_capacity(map_size.x as usize);
+
+        (0..map_size.x).for_each(|_| {
+            let mut column = Vec::with_capacity(map_size.y as usize);
+            (0..map_size.y).for_each(|_| column.push(0));
             tile_ids.push(column);
-        }
+        });
+
         tile_ids
     }
 }

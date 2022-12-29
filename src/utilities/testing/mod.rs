@@ -7,8 +7,6 @@ pub mod systems {
     mod init {
         mod generator_config;
         pub use generator_config::*;
-        mod spawn_grid;
-        pub use spawn_grid::*;
     }
     pub use init::*;
 
@@ -22,8 +20,14 @@ pub mod systems {
 }
 
 pub mod types {
-    mod generator;
-    pub use generator::*;
+    mod generator_config;
+    pub use generator_config::*;
+    mod generator_type;
+    pub use generator_type::*;
+    mod noise_config;
+    pub use noise_config::*;
+    mod spiral_config;
+    pub use spiral_config::*;
 }
 
 mod test;
