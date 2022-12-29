@@ -103,21 +103,28 @@ impl SystemsPlugin {
         // Main Menu
         app.add_enter_system_set(
             AppState::Menu(MenuState::Main),
-            ConditionSet::new().with_system(init_main_menu).into(),
+            ConditionSet::new().with_system(on_switch_state).with_system(init_main_menu).into(),
         )
         .add_system_set(
             ConditionSet::new().run_in_state(AppState::Menu(MenuState::Main)).with_system(main_menu).into(),
         );
 
         // Settings Menu
-        app.add_system_set(
+        app.add_enter_system_set(
+            AppState::Menu(Settings),
+            ConditionSet::new().with_system(on_switch_state).into(),
+        )
+        .add_system_set(
             ConditionSet::new().run_in_state(AppState::Menu(Settings)).with_system(settings_menu).into(),
         );
 
         // Universe Gen Menu
         app.add_enter_system_set(
             AppState::Menu(UniverseGeneration),
-            ConditionSet::new().with_system(init_resource!(UniverseGenerationSettings)).into(),
+            ConditionSet::new()
+                .with_system(on_switch_state)
+                .with_system(init_resource!(UniverseGenerationSettings))
+                .into(),
         )
         .add_system_set(
             ConditionSet::new()
@@ -125,6 +132,7 @@ impl SystemsPlugin {
                 .with_system(universe_gen_menu)
                 .into(),
         );
+
         self
     }
 

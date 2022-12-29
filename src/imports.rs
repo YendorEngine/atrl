@@ -1,7 +1,7 @@
 pub use std::{
     collections::VecDeque,
     default,
-    fmt::{Debug, Display},
+    fmt::{Debug, Display, Formatter},
     fs::{create_dir_all, File},
     io::{self, BufReader, BufWriter, Read, Write},
     marker::PhantomData,

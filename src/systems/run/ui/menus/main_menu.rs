@@ -16,14 +16,10 @@ pub fn main_menu(
 
             ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
                 if ui.button("New Game").kbgp_navigation().clicked() {
-                    ui.kbgp_clear_input();
-                    ui.kbgp_set_focus_label(FocusLabel::Initial);
                     switch_app_state!(commands, AppState::Menu(UniverseGeneration))
                 }
 
                 if ui.button("Settings").kbgp_navigation().clicked() {
-                    ui.kbgp_clear_input();
-                    ui.kbgp_set_focus_label(FocusLabel::Initial);
                     switch_app_state!(commands, AppState::Menu(Settings))
                 }
 

@@ -69,18 +69,20 @@ pub fn settings_menu(
                         .selected_text(format!("{:?}", match app_settings.get_window_mode() {
                             WindowMode::Windowed => "Windowed",
                             WindowMode::BorderlessFullscreen => "Borderless Fullscreen",
-                            WindowMode::Fullscreen => "Fullscreen",
                             _ => panic!("Unsupported Window Mode"),
                         }))
                         .show_ui(ui, |ui| {
                             let mut current_selected = app_settings.get_window_mode();
-                            for mode in WINDOW_MODES.iter() {
+                            for window_descriptor in WINDOW_DESCRIPTORS.iter() {
+                                let window_mode = window_descriptor.get_data();
+                                let window_name: String = window_descriptor.into();
+
                                 let value = ui
-                                    .selectable_value(&mut current_selected, mode.1, mode.0.to_string())
+                                    .selectable_value(&mut current_selected, window_mode, window_name)
                                     .kbgp_navigation();
 
                                 if value.clicked() {
-                                    app_settings.set_window_mode(mode.1);
+                                    app_settings.set_window_mode(window_mode);
                                 }
                             }
                         })
@@ -96,8 +98,6 @@ pub fn settings_menu(
                 if ui.button("Back").kbgp_navigation().clicked() ||
                     ui.kbgp_user_action() == Some(KbgpUserAction::Back)
                 {
-                    ui.kbgp_clear_input();
-                    ui.kbgp_set_focus_label(FocusLabel::Initial);
                     switch_app_state!(commands, AppState::Menu(Main))
                 }
             });

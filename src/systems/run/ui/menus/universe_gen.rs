@@ -66,14 +66,11 @@ pub fn universe_gen_menu(
                 // Universe Size
                 ui.label("Universe Size:");
                 ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
-                    for universe_size in UNIVERSE_SIZES.iter() {
+                    for universe_descriptor in UNIVERSE_SIZES.iter() {
                         ui.selectable_value(
-                            &mut universe_settings.universe_size,
-                            *universe_size,
-                            format!(
-                                "{}: {}x{}",
-                                universe_size.1, universe_size.0.x, universe_size.0.y
-                            ),
+                            &mut universe_settings.universe_descriptor,
+                            *universe_descriptor,
+                            universe_descriptor.to_display(),
                         )
                         .kbgp_navigation();
                     }
@@ -128,18 +125,13 @@ pub fn universe_gen_menu(
                     |ui| {
                         egui::ComboBox::from_id_source("planet_size")
                             .width(300.0)
-                            .selected_text(format!(
-                                "{}: {}x{}",
-                                universe_settings.planet_size.1,
-                                universe_settings.planet_size.0.x,
-                                universe_settings.planet_size.0.y
-                            ))
+                            .selected_text(universe_settings.planet_descriptor.to_display())
                             .show_ui(ui, |ui| {
-                                for planet_size in PLANET_SIZES.iter() {
+                                for planet_descriptor in PLANET_SIZES.iter() {
                                     ui.selectable_value(
-                                        &mut universe_settings.planet_size,
-                                        *planet_size,
-                                        format!("{}: {}x{}", planet_size.1, planet_size.0.x, planet_size.0.y),
+                                        &mut universe_settings.planet_descriptor,
+                                        *planet_descriptor,
+                                        planet_descriptor.to_display(),
                                     )
                                     .kbgp_navigation();
                                 }
@@ -155,9 +147,10 @@ pub fn universe_gen_menu(
 
             ui.vertical_centered(|ui| {
                 if ui.button("Generate").kbgp_navigation().clicked() {
-                    // Move to Generate State
-                    ctx.kbgp_clear_input();
+                    // set global contants
+                    set_universe_sizes(&universe_settings);
 
+                    // dummy generate star system. remove later
                     let grid_size = app_settings.get_grid_size();
                     universe_settings.generate_noise(grid_size);
 
@@ -167,8 +160,6 @@ pub fn universe_gen_menu(
                 if ui.button("Return to Main Menu").kbgp_navigation().clicked() ||
                     ui.kbgp_user_action() == Some(KbgpUserAction::Back)
                 {
-                    ctx.kbgp_clear_input();
-                    ui.kbgp_set_focus_label(FocusLabel::Initial);
                     switch_app_state!(commands, AppState::Menu(Main))
                 }
             });

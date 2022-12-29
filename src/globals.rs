@@ -1,36 +1,66 @@
-use crate::prelude::*;
+use crate::{
+    prelude::*,
+    resources::universe_generation_settings::UniverseGenerationSettings,
+    types::descriptor::{SizeDescriptor, WindowDescriptor},
+};
+
+//////////////////////////////////
+// App Globals
+//////////////////////////////////
 
 pub const APP_NAME: &str = "World Generator";
-pub const RENDER_CHUNK_SIZE: UVec2 = UVec2 { x: 16, y: 16 };
 
-// Sizes are in RENDER_CHUNKs
-pub const UNIVERSE_SIZES: &[(UVec2, &str)] = &[
-    (UVec2 { x: 1, y: 1 }, "Tiny"),
-    (UVec2 { x: 2, y: 2 }, "Small"),
-    (UVec2 { x: 4, y: 4 }, "Medium"),
-    (UVec2 { x: 8, y: 8 }, "Large"),
-];
-pub const SECTOR_SIZE: UVec2 = UVec2 { x: 10, y: 10 };
-pub const SYSTEM_SIZE: UVec2 = UVec2 { x: 8, y: 8 };
-pub const PLANET_SIZES: &[(UVec2, &str)] = &[
-    (UVec2 { x: 5, y: 5 }, "Extra Tiny"),
-    (UVec2 { x: 15, y: 15 }, "Tiny"),
-    (UVec2 { x: 25, y: 25 }, "Small"),
-    (UVec2 { x: 50, y: 50 }, "Medium"),
-    (UVec2 { x: 75, y: 75 }, "Medium Large"),
-    (UVec2 { x: 100, y: 100 }, "Large"),
-];
+pub const RENDER_CHUNK_SIZE: UVec2 = UVec2 { x: 16, y: 16 };
 
 pub const MIN_SCREEN_SIZE: Vec2 = Vec2 {
     x: 1280.0,
     y: 720.0,
 };
 
+//////////////////////////////////
+// Game Globals
+//////////////////////////////////
+
 pub const DEFAULT_FONT: &str = "julia_mono_regular";
 
-pub static WINDOW_MODES: Lazy<[(&str, WindowMode); 2]> = Lazy::new(|| {
+// Sizes are in RENDER_CHUNKs
+pub static UNIVERSE_SIZES: Lazy<[SizeDescriptor; 4]> = Lazy::new(|| {
     [
-        ("Windowed", WindowMode::Windowed),
-        ("Borderless Fullscreen", WindowMode::BorderlessFullscreen),
+        SizeDescriptor::new("Tiny", UVec2::splat(1)),
+        SizeDescriptor::new("Small", UVec2::splat(2)),
+        SizeDescriptor::new("Medium", UVec2::splat(4)),
+        SizeDescriptor::new("Large", UVec2::splat(8)),
     ]
 });
+
+pub static PLANET_SIZES: Lazy<[SizeDescriptor; 6]> = Lazy::new(|| {
+    [
+        SizeDescriptor::new("Extra Tiny", UVec2::splat(5)),
+        SizeDescriptor::new("Tiny", UVec2::splat(15)),
+        SizeDescriptor::new("Tiny", UVec2::splat(25)),
+        SizeDescriptor::new("Tiny", UVec2::splat(50)),
+        SizeDescriptor::new("Tiny", UVec2::splat(75)),
+        SizeDescriptor::new("Tiny", UVec2::splat(100)),
+    ]
+});
+
+pub static WINDOW_DESCRIPTORS: Lazy<[WindowDescriptor; 2]> = Lazy::new(|| {
+    [
+        WindowDescriptor::new("Windowed", WindowMode::Windowed),
+        WindowDescriptor::new("Borderless Fullscreen", WindowMode::BorderlessFullscreen),
+    ]
+});
+
+//////////////////////////////////
+// Game Set Globals
+//////////////////////////////////
+
+pub const SYSTEM_SIZE: UVec2 = UVec2 { x: 8, y: 8 };
+pub const SECTOR_SIZE: UVec2 = UVec2 { x: 10, y: 10 };
+pub static PLANET_SIZE: OnceCell<SizeDescriptor> = OnceCell::new();
+pub static UNIVERSE_SIZE: OnceCell<SizeDescriptor> = OnceCell::new();
+
+pub fn set_universe_sizes(universe_generation_settings: &UniverseGenerationSettings) {
+    PLANET_SIZE.set(universe_generation_settings.planet_descriptor).unwrap();
+    UNIVERSE_SIZE.set(universe_generation_settings.universe_descriptor).unwrap();
+}

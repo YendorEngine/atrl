@@ -42,4 +42,5 @@ pub mod map_definitions {
     pub use system::*;
 }
 
+pub mod descriptor;
 pub mod resolution;
