@@ -23,6 +23,7 @@ fn reseed(local_seed: &mut Local<LocalSeed>, mut universe_settings: &mut Univers
 
 pub fn universe_gen_menu(
     mut commands: Commands,
+    app_settings: AppSettings,
     mut egui_context: ResMut<EguiContext>,
 
     mut local_seed: Local<LocalSeed>,
@@ -175,7 +176,17 @@ pub fn universe_gen_menu(
                     // Move to Generate State
                     ctx.kbgp_clear_input();
 
-                    universe_settings.stars = generate_noise(&NoiseConfig::default());
+                    let grid_size = app_settings.get_grid_size();
+                    let offset_x = -(grid_size.x as i32 / 2);
+                    let offset_y = -(grid_size.y as i32 / 2);
+
+                    universe_settings.stars = generate_noise(&NoiseConfig {
+                        left: offset_x,
+                        bottom: offset_y,
+                        top: grid_size.y as i32 + offset_y,
+                        right: grid_size.x as i32 + offset_x,
+                        ..default()
+                    });
 
                     switch_app_state!(commands, AppState::InGame);
                 }
