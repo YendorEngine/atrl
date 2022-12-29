@@ -1,5 +1,6 @@
 use crate::{
-    components::*, prelude::*, types::asset_ids::tilesets::*, utilities::testing::types::TestGenConfig,
+    components::*, prelude::*, resources::universe_generation_settings::UniverseGenerationSettings,
+    types::asset_ids::tilesets::*,
 };
 
 pub const STAR_ID: u32 = TILE_TG_WORLD_TELEPORT1_ID;
@@ -9,7 +10,7 @@ pub const CENTER_ID: u32 = TILE_TG_WORLD_ACID_ID;
 #[allow(clippy::too_many_arguments)]
 pub fn update_tilemap(
     app_settings: AppSettings,
-    config: Res<TestGenConfig>,
+    config: Res<UniverseGenerationSettings>,
 
     q_tile_storage: Query<&TileStorage>,
     // mut q_tile_color: Query<&mut TileColor>,
@@ -28,12 +29,13 @@ pub fn update_tilemap(
         for y in 0..grid_size.y {
             for x in 0..grid_size.x {
                 let tile_pos = TilePos { x, y };
-                let Some(tile_entity) = storage.get(&tile_pos) else { continue; };
+                let Some(tile_entity) = storage.checked_get(&tile_pos) else { continue; };
                 let Ok(mut texture_index) = q_tile_ids.get_mut(tile_entity) else { continue; };
                 let xy = IVec2 {
                     x: x as i32 + offset_x,
                     y: y as i32 + offset_y,
                 };
+
                 if config.stars.contains(&xy) {
                     texture_index.0 = STAR_ID;
                 } else {

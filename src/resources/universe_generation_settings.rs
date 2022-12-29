@@ -1,7 +1,10 @@
 use crate::prelude::*;
 
-#[derive(Debug, Clone, Copy, PartialEq, Resource)]
+#[derive(Debug, Clone, PartialEq, Resource)]
 pub struct UniverseGenerationSettings {
+    /// TODO: REMOVE THIS ONCE WE HAVE AN ACTUAL BUILDING FLOW FROM GEN SCREEN TO
+    /// WORLD SCREEN
+    pub stars: Vec<IVec2>,
     pub seed: Option<u64>,
     pub sector_size: UVec2,
     pub system_size: UVec2,
@@ -17,6 +20,7 @@ impl UniverseGenerationSettings {
     pub fn new() -> Self {
         Self {
             seed: None,
+            stars: Vec::new(),
             sector_size: SECTOR_SIZE,
             system_size: SYSTEM_SIZE,
             planet_size: PLANET_SIZES[0],
@@ -27,6 +31,7 @@ impl UniverseGenerationSettings {
     pub fn from_seed(seed: u64) -> Self {
         Self {
             seed: Some(seed),
+            stars: Vec::new(),
             sector_size: SECTOR_SIZE,
             system_size: SYSTEM_SIZE,
             planet_size: PLANET_SIZES[0],

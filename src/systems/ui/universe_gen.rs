@@ -1,5 +1,9 @@
 use crate::{
-    prelude::*, resources::universe_generation_settings::UniverseGenerationSettings, systems::*, ui::*,
+    prelude::*,
+    resources::universe_generation_settings::UniverseGenerationSettings,
+    systems::*,
+    ui::*,
+    utilities::testing::{systems::functions::generate_noise, types::NoiseConfig},
 };
 
 #[derive(Deref, DerefMut)]
@@ -170,6 +174,9 @@ pub fn universe_gen_menu(
                 if ui.button("Generate").kbgp_navigation().clicked() {
                     // Move to Generate State
                     ctx.kbgp_clear_input();
+
+                    universe_settings.stars = generate_noise(&NoiseConfig::default());
+
                     switch_app_state!(commands, AppState::InGame);
                 }
 
